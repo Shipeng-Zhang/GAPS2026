@@ -180,6 +180,7 @@ class FeatureLineType:
     min_depth: int = 0
     max_depth: int | None = None
     include_materials: tuple[str, ...] = ()
+    exclude_materials: tuple[str, ...] = ()
     # Optional Mitsuba shape IDs restricting the dictionary to selected mesh
     # parts.  This is useful when Blender exports many overlapping PLYs that
     # share one BSDF (e.g. the face rings and side shell of Fig. 11 robot 1).
@@ -265,6 +266,13 @@ class FeatureLineType:
         materials = tuple(str(value) for value in self.include_materials)
         if any(not value for value in materials):
             raise ValueError("feature-line include_materials cannot contain empty IDs")
+        excluded_materials = tuple(str(value) for value in self.exclude_materials)
+        if any(not value for value in excluded_materials):
+            raise ValueError("feature-line exclude_materials cannot contain empty IDs")
+        if set(materials).intersection(excluded_materials):
+            raise ValueError(
+                "feature-line material filters cannot include and exclude the same ID"
+            )
         shapes = tuple(str(value) for value in self.include_shapes)
         if any(not value for value in shapes):
             raise ValueError("feature-line include_shapes cannot contain empty IDs")
@@ -357,6 +365,7 @@ class FeatureLineType:
         )
         object.__setattr__(self, "color", _rgb(self.color))
         object.__setattr__(self, "include_materials", materials)
+        object.__setattr__(self, "exclude_materials", excluded_materials)
         object.__setattr__(self, "include_shapes", shapes)
         object.__setattr__(
             self, "depth_colors", tuple(sorted(parsed_depth_colors, key=lambda item: item[0]))
@@ -393,7 +402,10 @@ class FeatureLineType:
         return self.glossy_mix_strength
 
     def applies_to_material(self, material_id: str) -> bool:
-        return not self.include_materials or material_id in self.include_materials
+        return (
+            material_id not in self.exclude_materials
+            and (not self.include_materials or material_id in self.include_materials)
+        )
 
     def applies_to_shape(self, shape_id: str) -> bool:
         return not self.include_shapes or shape_id in self.include_shapes

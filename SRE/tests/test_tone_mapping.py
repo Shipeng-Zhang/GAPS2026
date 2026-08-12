@@ -225,21 +225,50 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     )
     default_hatch = config.default.estimator.function
     np.testing.assert_allclose(
-        default_hatch.activation_thresholds, [0.50, 0.74, 0.90]
+        default_hatch.activation_thresholds, [0.32, 0.60]
     )
+    assert len(default_hatch.angles_degrees) == 2
     assert default_hatch.min_coverage == 0.0
     assert default_hatch.max_coverage == 0.30
     small_robot = config.materials["mat-lambert6"].estimator.function
     np.testing.assert_allclose(
-        small_robot.activation_thresholds, [0.28, 0.66]
+        small_robot.activation_thresholds, [0.30, 0.60]
     )
     np.testing.assert_allclose(small_robot.paper, [0.940, 0.940, 0.936])
     reconstructed_robot = config.materials[
         "mat-fig1-small-robot"
     ].estimator.function
     np.testing.assert_allclose(
-        reconstructed_robot.activation_thresholds, [0.34, 0.70]
+        reconstructed_robot.activation_thresholds, [0.30, 0.60]
     )
+    rear_robot_shell = config.materials[
+        "mat-lambert1.001"
+    ].estimator.function
+    np.testing.assert_allclose(
+        rear_robot_shell.activation_thresholds, [0.42, 0.70]
+    )
+    assert rear_robot_shell.max_coverage == 0.24
+
+
+def test_fig1_tone_hatches_use_three_brightness_bands() -> None:
+    config = load_config(
+        Path(__file__).resolve().parents[1]
+        / "configs"
+        / "llat_feature_lines.json"
+    )
+    bindings = [config.default, *config.materials.values()]
+    hatches = [
+        binding.estimator.function
+        for binding in bindings
+        if isinstance(getattr(binding.estimator, "function", None), ToneHatch)
+    ]
+    assert hatches
+    for hatch in hatches:
+        # Two ordered families form exactly three bands: clean highlight,
+        # one-family midtone, and two-family shadow cross-hatching.
+        assert len(hatch.angles_degrees) == 2
+        assert len(hatch.activation_thresholds) == 2
+        assert hatch.activation_thresholds[0] < hatch.activation_thresholds[1]
 
 
 def test_fig1_robot_thigh_panels_keep_their_original_material() -> None:
@@ -256,3 +285,4 @@ def test_fig1_robot_thigh_panels_keep_their_original_material() -> None:
     ) >= 2
     assert 'id="fig1-small-robot-torso"' in scene
     assert scene.count('id="fig1-small-robot-leg-') == 4
+    assert '<bsdf type="twosided" id="mat-lambert1.001"' in scene

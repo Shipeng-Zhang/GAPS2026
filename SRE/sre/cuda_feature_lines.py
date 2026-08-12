@@ -319,6 +319,8 @@ class CudaFeatureLineTracer:
                 line.include_materials, other.include_materials
             ):
                 continue
+            if line.exclude_materials or other.exclude_materials:
+                return False
             if not self._filters_overlap(line.include_shapes, other.include_shapes):
                 continue
             if float(other.sampling_radius) > float(line.stencil_radius) + 1e-9:
@@ -353,6 +355,11 @@ class CudaFeatureLineTracer:
              if material_id in by_id]
             for line in self.config.types
         ]
+        self._line_excluded_materials = [
+            [by_id[material_id] for material_id in line.exclude_materials
+             if material_id in by_id]
+            for line in self.config.types
+        ]
         self._line_shapes = [
             [shape_by_id[shape_id] for shape_id in line.include_shapes
              if shape_id in shape_by_id]
@@ -362,11 +369,15 @@ class CudaFeatureLineTracer:
     def _material_active(self, line_index: int, material: Any, active: Any) -> Any:
         line = self.config.types[line_index]
         if not line.include_materials:
-            return mi.Bool(active)
-        matches = mi.Bool(False)
-        for expected in self._line_materials[line_index]:
-            matches |= material == expected
-        return mi.Bool(active) & matches
+            matches = mi.Bool(active)
+        else:
+            matches = mi.Bool(False)
+            for expected in self._line_materials[line_index]:
+                matches |= material == expected
+            matches &= active
+        for excluded in self._line_excluded_materials[line_index]:
+            matches &= material != excluded
+        return matches
 
     def _shape_active(self, line_index: int, shape: Any, active: Any) -> Any:
         """Restrict a line dictionary to selected mesh parts, if requested."""
@@ -1179,12 +1190,13 @@ class CudaFeatureLineTracer:
                 stencil_cache[key] = inside
             line_inside[line_index] = inside
 
-        material_mask_cache: dict[tuple[str, ...], Any] = {}
+        material_mask_cache: dict[tuple[tuple[str, ...], tuple[str, ...]], Any] = {}
         line_material_masks: dict[int, Any] = {}
         shape_mask_cache: dict[tuple[str, ...], Any] = {}
         line_shape_masks: dict[int, Any] = {}
         for line_index in active_line_indices:
-            key = self.config.types[line_index].include_materials
+            line = self.config.types[line_index]
+            key = (line.include_materials, line.exclude_materials)
             mask = material_mask_cache.get(key)
             if mask is None:
                 mask = self._material_active(

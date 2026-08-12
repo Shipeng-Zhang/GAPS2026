@@ -6,7 +6,7 @@
 	<default name="resx" value="1920"/>
 	<default name="resy" value="1080"/>
 	<default name="focus_distance" value="8.65"/>
-	<default name="aperture_radius" value="0.030"/>
+	<default name="aperture_radius" value="0.018"/>
 
 <!-- Camera and Rendering Parameters -->
 
@@ -43,9 +43,9 @@
 
 	<bsdf type="roughconductor" id="mat-材质" name="mat-材质">
 		<string name="distribution" value="ggx"/>
-		<float name="alpha" value="0.012"/>
+		<float name="alpha" value="0.006"/>
 		<string name="material" value="none"/>
-		<rgb name="specular_reflectance" value="0.82"/>
+		<rgb name="specular_reflectance" value="0.96"/>
 	</bsdf>
 	<bsdf type="diffuse" id="mat-Wall" name="mat-Wall">
 		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
@@ -134,8 +134,12 @@
 	<bsdf type="diffuse" id="mat-material" name="mat-material">
 		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
 	</bsdf>
-	<bsdf type="diffuse" id="mat-lambert1.001" name="mat-lambert1.001">
-		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	<bsdf type="twosided" id="mat-lambert1.001" name="mat-lambert1.001">
+		<!-- Object_2_001 contains mixed triangle winding. A two-sided diffuse
+		     wrapper prevents its rear half from becoming a false black shadow. -->
+		<bsdf type="diffuse">
+			<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+		</bsdf>
 	</bsdf>
 	<bsdf type="roughplastic" id="mat-Robot_plastico_negro_blinn" name="mat-Robot_plastico_negro_blinn">
 		<string name="distribution" value="ggx"/>
@@ -223,12 +227,15 @@
 <!-- Emitters -->
 
 	<emitter type="directional" id="emit-Light" name="emit-Light">
-		<rgb value="1.200000 1.200000 1.200000" name="irradiance"/>
-		<!-- Frontal high key light, offset slightly towards camera-right. -->
-		<vector name="direction" x="-0.766000" y="-0.454000" z="-0.467000"/>
+		<rgb value="1.350000 1.350000 1.350000" name="irradiance"/>
+		<!-- Camera-aligned key: the horizontal projection follows the camera's
+		     forward vector so cast shadows recede behind the characters. -->
+		<vector name="direction" x="-0.250000" y="-0.936000" z="-0.250000"/>
 	</emitter>
 	<emitter type="constant" id="emit-paper-environment" name="emit-paper-environment">
-		<rgb value="0.900000 0.900000 0.900000" name="radiance"/>
+		<!-- Preserve readable fill without washing every surface above the
+		     first tone-hatch threshold. -->
+		<rgb value="0.650000 0.650000 0.650000" name="radiance"/>
 	</emitter>
 
 <!-- Shapes -->

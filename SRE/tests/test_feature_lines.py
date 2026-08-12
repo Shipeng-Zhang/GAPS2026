@@ -51,6 +51,26 @@ def test_feature_line_material_depth_color_and_displaced_stencil_configuration()
     np.testing.assert_allclose(line.stencil_offset, [0.75, -0.25])
 
 
+def test_feature_line_material_exclusion_overrides_a_global_dictionary():
+    line = FeatureLineType(
+        name="global_except_dense_shell",
+        exclude_materials=("mat-dense-shell",),
+    )
+    assert line.applies_to_material("mat-wall")
+    assert not line.applies_to_material("mat-dense-shell")
+
+    try:
+        FeatureLineType(
+            name="contradictory",
+            include_materials=("mat-dense-shell",),
+            exclude_materials=("mat-dense-shell",),
+        )
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("one line cannot include and exclude a material")
+
+
 def test_feature_line_glossy_mix_can_be_overridden_per_dictionary():
     inherited = FeatureLineType(name="inherited")
     yellow_reflection = FeatureLineType(
