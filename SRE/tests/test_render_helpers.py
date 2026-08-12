@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import tempfile
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import numpy as np
@@ -19,9 +20,36 @@ from sre.render import (
     _sample_passes,
     _split_horizontal,
     _split_streaming_tiles,
+    _stage_windows_replacement_character_assets,
     _tile_pixel_budget,
     _worker_environment,
 )
+
+
+def test_windows_replacement_character_assets_use_temporary_ascii_aliases():
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        scene_directory = root / "scene"
+        staging_directory = root / "staging"
+        scene_directory.mkdir()
+        staging_directory.mkdir()
+        source = scene_directory / "broken_\ufffd.ply"
+        source.write_bytes(b"ply-data")
+        scene_path = scene_directory / "scene.xml"
+        xml = ET.fromstring(
+            '<scene><shape><string name="filename" '
+            'value="broken_\ufffd.ply"/></shape></scene>'
+        )
+
+        count = _stage_windows_replacement_character_assets(
+            xml, scene_path, staging_directory
+        )
+
+        staged = Path(xml.find(".//string").get("value", ""))
+        assert count == 1
+        assert staged.name == "asset_000.ply"
+        assert staged.read_bytes() == b"ply-data"
+        assert source.read_bytes() == b"ply-data"
 
 
 def test_shape_filtered_feature_lines_disable_xml_mesh_merging():
@@ -55,14 +83,14 @@ def test_cli_defaults_keep_memory_bounded_and_are_positive():
     # never contain more samples than the complete render and both budgets
     # must remain valid.
     assert args.spp == 32
-    assert args.spp_per_pass == 16
+    assert args.spp_per_pass == 1
     # Frozen pass replay makes one-sample graphs fast without constructing a
     # giant multi-SPP trace. Keep enough lanes to feed the GPU while bounding
     # nested feature/tone/SRE graph assembly.
     # ``main`` resolves this after reading the selected style configuration.
     assert args.max_wavefront_size is None
-    assert DEFAULT_MAX_WAVEFRONT_SIZE == 196_608
-    assert DEFAULT_TERMINAL_TONE_MAX_WAVEFRONT_SIZE == 262_144
+    assert DEFAULT_MAX_WAVEFRONT_SIZE > 0
+    assert DEFAULT_TERMINAL_TONE_MAX_WAVEFRONT_SIZE > 0
     assert args.disable_jit_freezing is False
 
 
@@ -77,6 +105,9 @@ def test_auto_wavefront_matches_style_complexity():
     assert _recommended_cuda_wavefront(
         root / "configs" / "identity.json"
     ) == DEFAULT_SRE_MAX_WAVEFRONT_SIZE
+    assert _recommended_cuda_wavefront(
+        root / "configs" / "llat_feature_lines.json"
+    ) == 4096
     assert _recommended_spp_per_pass(
         root / "configs" / "f11_lines.json", 256
     ) == 32

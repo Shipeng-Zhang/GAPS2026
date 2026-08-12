@@ -6,7 +6,7 @@
 	<default name="resx" value="1920"/>
 	<default name="resy" value="1080"/>
 	<default name="focus_distance" value="8.65"/>
-	<default name="aperture_radius" value="0.060"/>
+	<default name="aperture_radius" value="0.030"/>
 
 <!-- Camera and Rendering Parameters -->
 
@@ -43,7 +43,7 @@
 
 	<bsdf type="roughconductor" id="mat-材质" name="mat-材质">
 		<string name="distribution" value="ggx"/>
-		<float name="alpha" value="0.020"/>
+		<float name="alpha" value="0.012"/>
 		<string name="material" value="none"/>
 		<rgb name="specular_reflectance" value="0.82"/>
 	</bsdf>
@@ -210,6 +210,14 @@
 	</bsdf>
 	<bsdf type="diffuse" id="mat-lambert6" name="mat-lambert6">
 		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<!-- The migrated teaser export only retained the small robot's feet.
+	     Keep those meshes and give the reconstructed upper body a separate,
+	     moderately dark material so its silhouette remains legible on paper. -->
+	<bsdf type="roughplastic" id="mat-fig1-small-robot" name="mat-fig1-small-robot">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.16"/>
+		<rgb name="diffuse_reflectance" value="0.30"/>
 	</bsdf>
 
 <!-- Emitters -->
@@ -2509,7 +2517,7 @@
 	</shape>
 	<shape type="ply" id="mesh-Pierna_muslo_laterakes_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_laterakes_Robot_metal_color02_blinn_0">
 		<string name="filename" value="meshes/Pierna_muslo_laterakes_Robot_metal_color02_blinn_0.ply"/>
-		<ref id="mat-llat-curved-reflector" name="bsdf"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
 	</shape>
 	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0">
 		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0.ply"/>
@@ -2621,7 +2629,7 @@
 	</shape>
 	<shape type="ply" id="mesh-Pierna_muslo_laterakes_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_laterakes_Robot_metal_color02_blinn_0_001">
 		<string name="filename" value="meshes/Pierna_muslo_laterakes_Robot_metal_color02_blinn_0_001.ply"/>
-		<ref id="mat-llat-curved-reflector" name="bsdf"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
 	</shape>
 	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0_001">
 		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0_001.ply"/>
@@ -2840,6 +2848,56 @@
 	<shape type="ply" id="mesh-Object_29" name="mesh-Object_29">
 		<string name="filename" value="meshes/Object_29.ply"/>
 		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+
+	<!-- Fig. 1 small robot body reconstruction. Object_7..19 are its two
+	     surviving feet at x=3.86..4.16, y=0.01..0.26, z=2.09..2.31. -->
+	<shape type="cube" id="fig1-small-robot-torso" name="fig1-small-robot-torso">
+		<transform name="to_world">
+			<scale x="0.19" y="0.17" z="0.14"/>
+			<translate x="4.020" y="0.560" z="2.190"/>
+		</transform>
+		<ref id="mat-fig1-small-robot" name="bsdf"/>
+	</shape>
+	<shape type="sphere" id="fig1-small-robot-head" name="fig1-small-robot-head">
+		<point name="center" x="4.020" y="0.805" z="2.190"/>
+		<float name="radius" value="0.105"/>
+		<ref id="mat-fig1-small-robot" name="bsdf"/>
+	</shape>
+	<shape type="sphere" id="fig1-small-robot-hip" name="fig1-small-robot-hip">
+		<point name="center" x="4.020" y="0.350" z="2.190"/>
+		<float name="radius" value="0.115"/>
+		<ref id="mat-fig1-small-robot" name="bsdf"/>
+	</shape>
+	<shape type="cylinder" id="fig1-small-robot-neck" name="fig1-small-robot-neck">
+		<point name="p0" x="4.020" y="0.700" z="2.190"/>
+		<point name="p1" x="4.020" y="0.755" z="2.190"/>
+		<float name="radius" value="0.042"/>
+		<ref id="mat-fig1-small-robot" name="bsdf"/>
+	</shape>
+	<shape type="cylinder" id="fig1-small-robot-leg-lf" name="fig1-small-robot-leg-lf">
+		<point name="p0" x="3.910" y="0.165" z="2.225"/>
+		<point name="p1" x="3.965" y="0.355" z="2.205"/>
+		<float name="radius" value="0.032"/>
+		<ref id="mat-fig1-small-robot" name="bsdf"/>
+	</shape>
+	<shape type="cylinder" id="fig1-small-robot-leg-lb" name="fig1-small-robot-leg-lb">
+		<point name="p0" x="3.915" y="0.145" z="2.135"/>
+		<point name="p1" x="3.975" y="0.345" z="2.175"/>
+		<float name="radius" value="0.032"/>
+		<ref id="mat-fig1-small-robot" name="bsdf"/>
+	</shape>
+	<shape type="cylinder" id="fig1-small-robot-leg-rf" name="fig1-small-robot-leg-rf">
+		<point name="p0" x="4.135" y="0.160" z="2.225"/>
+		<point name="p1" x="4.075" y="0.355" z="2.205"/>
+		<float name="radius" value="0.032"/>
+		<ref id="mat-fig1-small-robot" name="bsdf"/>
+	</shape>
+	<shape type="cylinder" id="fig1-small-robot-leg-rb" name="fig1-small-robot-leg-rb">
+		<point name="p0" x="4.130" y="0.140" z="2.135"/>
+		<point name="p1" x="4.065" y="0.345" z="2.175"/>
+		<float name="radius" value="0.032"/>
+		<ref id="mat-fig1-small-robot" name="bsdf"/>
 	</shape>
 
 <!-- Volumes -->

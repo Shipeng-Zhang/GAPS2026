@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -79,6 +80,35 @@ def _feature_lines_require_shape_identity(config_data: Mapping[str, Any]) -> boo
     )
 
 
+def _stage_windows_replacement_character_assets(
+    root: ET.Element, scene_path: Path, directory: Path
+) -> int:
+    """Give malformed exported asset names temporary ASCII aliases on Windows.
+
+    The historical Fig. 1 export contains filenames whose undecodable source
+    bytes were replaced by U+FFFD. Python can address those NTFS entries, while
+    Mitsuba's Windows ``FileStream`` cannot. Keep the checked-in assets intact
+    and rewrite only the in-memory XML to point at short-lived ASCII copies.
+    """
+    staged = 0
+    for element in root.iter("string"):
+        if element.get("name") != "filename":
+            continue
+        value = element.get("value", "")
+        if "\ufffd" not in value:
+            continue
+        source = (scene_path.parent / Path(value)).resolve()
+        if not source.is_file():
+            raise FileNotFoundError(
+                f"Scene asset with a replacement character does not exist: {source}"
+            )
+        destination = directory / f"asset_{staged:03d}{source.suffix.lower()}"
+        shutil.copy2(source, destination)
+        element.set("value", str(destination))
+        staged += 1
+    return staged
+
+
 def _load_scene(
     scene_path: Path,
     config_path: Path,
@@ -116,7 +146,14 @@ def _load_scene(
         "res": str(resolution),
         "max_depth": str(max_depth),
     }
-    if crop is None and width == resolution and height == resolution:
+    scene_text = scene_path.read_text(encoding="utf-8")
+    needs_windows_asset_aliases = os.name == "nt" and "\ufffd" in scene_text
+    if (
+        crop is None
+        and width == resolution
+        and height == resolution
+        and not needs_windows_asset_aliases
+    ):
         return mi.load_file(
             str(scene_path), optimize=not preserve_shape_ids, **substitutions
         )
@@ -124,7 +161,7 @@ def _load_scene(
     # Film dimensions and crop parameters cannot be changed after scene
     # construction. Patch them in memory so arbitrary project scenes support
     # rectangular output and multi-GPU tiles without new XML defaults.
-    root = ET.fromstring(scene_path.read_text(encoding="utf-8"))
+    root = ET.fromstring(scene_text)
     films = list(root.iter("film"))
     if not films:
         raise ValueError(f"Scene has no film to configure: {scene_path}")
@@ -153,12 +190,24 @@ def _load_scene(
 
     resolver = mi.file_resolver()
     resolver.prepend(str(scene_path.parent))
-    xml = ET.tostring(root, encoding="unicode")
-    if "$res" not in xml:
-        substitutions.pop("res")
-    return mi.load_string(
-        xml, optimize=not preserve_shape_ids, **substitutions
-    )
+    def load_root() -> Any:
+        xml = ET.tostring(root, encoding="unicode")
+        active_substitutions = dict(substitutions)
+        if "$res" not in xml:
+            active_substitutions.pop("res")
+        return mi.load_string(
+            xml, optimize=not preserve_shape_ids, **active_substitutions
+        )
+
+    if needs_windows_asset_aliases:
+        with tempfile.TemporaryDirectory(
+            prefix="sre-scene-assets-"
+        ) as temporary_directory:
+            _stage_windows_replacement_character_assets(
+                root, scene_path, Path(temporary_directory)
+            )
+            return load_root()
+    return load_root()
 
 
 def _write_pixels(output_path: Path, pixels: np.ndarray) -> Path:
@@ -256,6 +305,16 @@ def _recommended_cuda_wavefront(config_path: Path) -> int:
     """Select a throughput-oriented budget without unbounding recursive DAGs."""
     with config_path.open("r", encoding="utf-8") as handle:
         data = json.load(handle)
+    configured_budget = data.get("metadata", {}).get(
+        "cuda_max_wavefront_size"
+    )
+    if configured_budget is not None:
+        configured_budget = int(configured_budget)
+        if configured_budget < 1:
+            raise ValueError(
+                "metadata.cuda_max_wavefront_size must be positive"
+            )
+        return configured_budget
     bindings = [
         data.get("default", {}),
         *data.get("materials", {}).values(),

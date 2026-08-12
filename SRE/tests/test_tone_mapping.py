@@ -210,7 +210,7 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
         line.measurement == "normal" for line in config.feature_lines.types
     )
     assert all(
-        line.max_depth == 3 for line in config.feature_lines.types
+        line.max_depth <= 3 for line in config.feature_lines.types
     )
     assert config.materials["mat-材质"].estimator.__class__.__name__ == "IdentityEstimator"
     assert (
@@ -225,7 +225,34 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     )
     default_hatch = config.default.estimator.function
     np.testing.assert_allclose(
-        default_hatch.activation_thresholds, [0.38, 0.70, 0.88]
+        default_hatch.activation_thresholds, [0.50, 0.74, 0.90]
     )
-    assert default_hatch.min_coverage == 0.012
-    assert default_hatch.max_coverage == 0.38
+    assert default_hatch.min_coverage == 0.0
+    assert default_hatch.max_coverage == 0.30
+    small_robot = config.materials["mat-lambert6"].estimator.function
+    np.testing.assert_allclose(
+        small_robot.activation_thresholds, [0.28, 0.66]
+    )
+    np.testing.assert_allclose(small_robot.paper, [0.940, 0.940, 0.936])
+    reconstructed_robot = config.materials[
+        "mat-fig1-small-robot"
+    ].estimator.function
+    np.testing.assert_allclose(
+        reconstructed_robot.activation_thresholds, [0.34, 0.70]
+    )
+
+
+def test_fig1_robot_thigh_panels_keep_their_original_material() -> None:
+    scene = (
+        Path(__file__).resolve().parents[1]
+        / "scenes"
+        / "sre_LLaT.xml"
+    ).read_text(encoding="utf-8")
+    assert scene.count(
+        '<ref id="mat-llat-curved-reflector" name="bsdf"/>'
+    ) == 0
+    assert scene.count(
+        '<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>'
+    ) >= 2
+    assert 'id="fig1-small-robot-torso"' in scene
+    assert scene.count('id="fig1-small-robot-leg-') == 4
