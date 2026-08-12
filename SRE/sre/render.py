@@ -1127,7 +1127,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--output", type=Path, default=Path("./outputs/fig1.png"))
     parser.add_argument("--spp", type=int, default=32)
     parser.add_argument(
-        "--spp-per-pass", type=int, default=1,
+        "--spp-per-pass", type=int, default=16,
         help=(
             "Outer samples per CUDA graph. By default feature-line-only "
             "renders use 32 for throughput, while recursive tone/SRE uses 16."
