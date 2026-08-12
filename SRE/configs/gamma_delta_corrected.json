@@ -1,0 +1,13 @@
+{
+  "metadata": {"description": "Eq. 21 delta-method correction for smooth direct gamma application"},
+  "materials": {
+    "box": {
+      "estimator": "direct",
+      "samples": 8,
+      "bias_correction": "delta",
+      "function": {"type": "gamma", "gamma": 2.2},
+      "when": {"first_hit": true}
+    }
+  }
+}
+

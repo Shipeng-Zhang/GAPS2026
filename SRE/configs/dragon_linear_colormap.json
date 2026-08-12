@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "description": "Figure 7 near-linear peach-to-rose color mapping for the Stanford Dragon, using 32 inner samples",
+    "mse_reference": "../outputs/dragon_linear_colormap_base.png"
+  },
+  "materials": {
+    "dragon": {
+      "estimator": "direct",
+      "samples": 1,
+      "bias_correction": "none",
+      "function": {
+        "type": "color_map",
+        "colors": [
+          [0.514918, 0.114435, 0.234551],
+          [0.617207, 0.208637, 0.291771],
+          [0.730461, 0.337164, 0.356400],
+          [0.854993, 0.496933, 0.428690],
+          [0.982251, 0.701102, 0.502886]
+        ],
+        "positions": [0.0, 0.25, 0.5, 0.75, 1.0],
+        "input_range": [0.0, 1.0]
+      },
+      "when": {"first_hit": true}
+    }
+  }
+}

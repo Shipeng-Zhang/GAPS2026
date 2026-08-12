@@ -1,0 +1,17 @@
+{
+  "metadata": {"description": "Gooch technical-illustration shading as a function of expected radiance"},
+  "materials": {
+    "box": {
+      "estimator": "direct",
+      "samples": 8,
+      "function": {
+        "type": "gooch",
+        "cool": [0.08, 0.2, 0.72],
+        "warm": [0.96, 0.76, 0.12],
+        "max_value": 1.0
+      },
+      "when": {"first_hit": true}
+    }
+  }
+}
+

@@ -1,0 +1,2098 @@
+<scene version="2.1.0">
+    <default name="spp" value="256" />
+    <default name="res" value="640" />
+    <default name="max_depth" value="2" />
+    <default name="integrator" value="sre_cuda" />
+    <default name="style_config" value="../configs/f11_lines.json" />
+    <!-- Fig. 11 floor reflection roughness. 0 is a perfect mirror; the paper
+         uses a recognizable but visibly broadened glossy reflection. -->
+    <default name="floor_alpha" value="0.04" />
+    <integrator type="$integrator" id="fig11-sre">
+        <integer name="max_depth" value="$max_depth" />
+        <integer name="rr_depth" value="4" />
+        <float name="rr_probability" value="0.95" />
+        <string name="style_config" value="$style_config" />
+    </integrator>
+    <sensor type="perspective" id="elm__2" name="elm__2">
+        <string name="fov_axis" value="x" />
+        <float name="fov" value="65.470450" />
+        <float name="principal_point_offset_x" value="0.020000" />
+        <float name="principal_point_offset_y" value="-0.000000" />
+        <float name="near_clip" value="0.100000" />
+        <float name="far_clip" value="100.000000" />
+        <transform name="to_world">
+            <rotate x="1" angle="-167.9270309339335" />
+            <rotate y="1" angle="0.7103594171968957" />
+            <rotate z="1" angle="-179.9999640278213" />
+            <translate value="-0.294528 1.749828 8.078369" />
+        </transform>
+        <sampler type="independent" name="sampler">
+            <integer name="sample_count" value="$spp" />
+        </sampler>
+        <film type="hdrfilm" name="film">
+            <integer name="width" value="$res" />
+            <integer name="height" value="$res" />
+            <rfilter type="box" />
+            <string name="pixel_format" value="rgb" />
+            <string name="component_format" value="float32" />
+        </film>
+    </sensor>
+    <bsdf type="diffuse" id="mat-f11-blue" name="mat-f11-blue">
+        <rgb name="reflectance" value="0.781" />
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-blue-face" name="mat-f11-blue-face">
+        <rgb name="reflectance" value="0.781" />
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-purple" name="mat-f11-purple">
+        <rgb name="reflectance" value="0.773" />
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-magenta" name="mat-f11-magenta">
+        <rgb name="reflectance" value="0.765" />
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-pink" name="mat-f11-pink">
+        <rgb name="reflectance" value="0.757" />
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-red" name="mat-f11-red">
+        <rgb name="reflectance" value="0.741" />
+    </bsdf>
+    <bsdf type="roughconductor" id="mat-f11-floor" name="mat-f11-floor">
+        <string name="distribution" value="ggx" />
+        <!-- Conditional half-vector transport keeps each glossy sample
+             coherent; accumulation across outer samples creates the paper's
+             soft reflection instead of duplicating the robot exactly. -->
+        <float name="alpha" value="$floor_alpha" />
+        <string name="material" value="none" />
+        <rgb name="specular_reflectance" value="0.94" />
+    </bsdf>
+    <shape type="rectangle" id="fig11-reflective-floor" name="fig11-reflective-floor">
+        <transform name="to_world">
+            <scale x="5.6" y="4.0" />
+            <rotate x="1" angle="-90" />
+            <translate x="0.0" y="-0.01" z="0.4" />
+        </transform>
+        <ref id="mat-f11-floor" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__20" name="elm__20">
+        <string name="filename" value="fig11_meshes/meshes/Cube-Material.031.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0.075 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue-face" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__21" name="elm__21">
+        <string name="filename" value="fig11_meshes/meshes/Cube-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0.075 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue-face" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__22" name="elm__22">
+        <string name="filename" value="fig11_meshes/meshes/Cube-Material.035.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0.075 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue-face" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__23" name="elm__23">
+        <string name="filename" value="fig11_meshes/meshes/Cube-Material.041.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0.075 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue-face" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__24" name="elm__24">
+        <string name="filename" value="fig11_meshes/meshes/Cube-Material.045.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0.075 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue-face" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__25" name="elm__25">
+        <string name="filename" value="fig11_meshes/meshes/Cube-Material.046.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0.075 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue-face" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__26" name="elm__26">
+        <string name="filename" value="fig11_meshes/meshes/Cube-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue-face" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__27" name="elm__27">
+        <string name="filename" value="fig11_meshes/meshes/Cube_002-Material.045.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__28" name="elm__28">
+        <string name="filename" value="fig11_meshes/meshes/Cube_002-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__29" name="elm__29">
+        <string name="filename" value="fig11_meshes/meshes/Cube_003-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__30" name="elm__30">
+        <string name="filename" value="fig11_meshes/meshes/Cube_003-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__32" name="elm__32">
+        <string name="filename" value="fig11_meshes/meshes/Cube_004-Material.031.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__33" name="elm__33">
+        <string name="filename" value="fig11_meshes/meshes/Cube_004-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__34" name="elm__34">
+        <string name="filename" value="fig11_meshes/meshes/Cube_004-Material.035.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__35" name="elm__35">
+        <string name="filename" value="fig11_meshes/meshes/Cube_004-Material.045.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__36" name="elm__36">
+        <string name="filename" value="fig11_meshes/meshes/Cube_004-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__37" name="elm__37">
+        <string name="filename" value="fig11_meshes/meshes/Cube_004-Material.052.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__38" name="elm__38">
+        <string name="filename" value="fig11_meshes/meshes/Cube_005-Material.031.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__39" name="elm__39">
+        <string name="filename" value="fig11_meshes/meshes/Cube_005-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__40" name="elm__40">
+        <string name="filename" value="fig11_meshes/meshes/Cube_005-Material.045.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__41" name="elm__41">
+        <string name="filename" value="fig11_meshes/meshes/Cube_005-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__42" name="elm__42">
+        <string name="filename" value="fig11_meshes/meshes/Cube_006-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__43" name="elm__43">
+        <string name="filename" value="fig11_meshes/meshes/Cube_006-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__44" name="elm__44">
+        <string name="filename" value="fig11_meshes/meshes/Cube_007-Material.041.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__45" name="elm__45">
+        <string name="filename" value="fig11_meshes/meshes/Cube_007-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__47" name="elm__47">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__48" name="elm__48">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_001-Material.031.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__49" name="elm__49">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_001-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__50" name="elm__50">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_001-Material.035.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__51" name="elm__51">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_001-Material.041.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__52" name="elm__52">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_001-Material.045.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__53" name="elm__53">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_001-Material.046.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__54" name="elm__54">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_001-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__55" name="elm__55">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_003-Material.035.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__56" name="elm__56">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_003-Material.046.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__57" name="elm__57">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_003-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__58" name="elm__58">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_003-Material.052.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__59" name="elm__59">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_008-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__60" name="elm__60">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_008-Material.045.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__61" name="elm__61">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_008-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__62" name="elm__62">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_009-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__63" name="elm__63">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_009-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__64" name="elm__64">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_011-Material.032.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__65" name="elm__65">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_011-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 1.4000000000000004 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-blue" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__72" name="elm__72">
+        <string name="filename" value="fig11_meshes/meshes/Cube_001-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__73" name="elm__73">
+        <string name="filename" value="fig11_meshes/meshes/Cube_001-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__74" name="elm__74">
+        <string name="filename" value="fig11_meshes/meshes/Cube_001-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__75" name="elm__75">
+        <string name="filename" value="fig11_meshes/meshes/Cube_001-Material.055.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__76" name="elm__76">
+        <string name="filename" value="fig11_meshes/meshes/Cube_001-Material.056.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__77" name="elm__77">
+        <string name="filename" value="fig11_meshes/meshes/Cube_001-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__78" name="elm__78">
+        <string name="filename" value="fig11_meshes/meshes/Cube_001-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__79" name="elm__79">
+        <string name="filename" value="fig11_meshes/meshes/Cube_009-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__80" name="elm__80">
+        <string name="filename" value="fig11_meshes/meshes/Cube_009-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__81" name="elm__81">
+        <string name="filename" value="fig11_meshes/meshes/Cube_009-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__82" name="elm__82">
+        <string name="filename" value="fig11_meshes/meshes/Cube_009-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__83" name="elm__83">
+        <string name="filename" value="fig11_meshes/meshes/Cube_011-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__84" name="elm__84">
+        <string name="filename" value="fig11_meshes/meshes/Cube_011-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__85" name="elm__85">
+        <string name="filename" value="fig11_meshes/meshes/Cube_012-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__86" name="elm__86">
+        <string name="filename" value="fig11_meshes/meshes/Cube_012-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__87" name="elm__87">
+        <string name="filename" value="fig11_meshes/meshes/Cube_012-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__88" name="elm__88">
+        <string name="filename" value="fig11_meshes/meshes/Cube_012-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__89" name="elm__89">
+        <string name="filename" value="fig11_meshes/meshes/Cube_013-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__90" name="elm__90">
+        <string name="filename" value="fig11_meshes/meshes/Cube_013-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__91" name="elm__91">
+        <string name="filename" value="fig11_meshes/meshes/Cube_015-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__92" name="elm__92">
+        <string name="filename" value="fig11_meshes/meshes/Cube_015-Material.056.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__93" name="elm__93">
+        <string name="filename" value="fig11_meshes/meshes/Cube_015-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__94" name="elm__94">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_002-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__95" name="elm__95">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_002-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__96" name="elm__96">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_004-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__97" name="elm__97">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_004-Material.056.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__98" name="elm__98">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_004-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__99" name="elm__99">
+        <string name="filename" value="fig11_meshes/meshes/Cube_016-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__100" name="elm__100">
+        <string name="filename" value="fig11_meshes/meshes/Cube_016-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__101" name="elm__101">
+        <string name="filename" value="fig11_meshes/meshes/Cube_016-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__102" name="elm__102">
+        <string name="filename" value="fig11_meshes/meshes/Cube_016-Material.056.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__103" name="elm__103">
+        <string name="filename" value="fig11_meshes/meshes/Plane_001-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__104" name="elm__104">
+        <string name="filename" value="fig11_meshes/meshes/Plane_001-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__105" name="elm__105">
+        <string name="filename" value="fig11_meshes/meshes/Cube_018-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__106" name="elm__106">
+        <string name="filename" value="fig11_meshes/meshes/Cube_018-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__107" name="elm__107">
+        <string name="filename" value="fig11_meshes/meshes/Cube_019-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__108" name="elm__108">
+        <string name="filename" value="fig11_meshes/meshes/Cube_019-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__109" name="elm__109">
+        <string name="filename" value="fig11_meshes/meshes/Cube_019-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__110" name="elm__110">
+        <string name="filename" value="fig11_meshes/meshes/Cube_019-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__111" name="elm__111">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_006-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__112" name="elm__112">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_006-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__113" name="elm__113">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_006-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__114" name="elm__114">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_006-Material.056.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__115" name="elm__115">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_006-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__116" name="elm__116">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_006-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__117" name="elm__117">
+        <string name="filename" value="fig11_meshes/meshes/Cube_021-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__118" name="elm__118">
+        <string name="filename" value="fig11_meshes/meshes/Cube_021-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__119" name="elm__119">
+        <string name="filename" value="fig11_meshes/meshes/Cube_021-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__120" name="elm__120">
+        <string name="filename" value="fig11_meshes/meshes/Cube_021-Material.055.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__121" name="elm__121">
+        <string name="filename" value="fig11_meshes/meshes/Cube_021-Material.056.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__122" name="elm__122">
+        <string name="filename" value="fig11_meshes/meshes/Cube_021-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__123" name="elm__123">
+        <string name="filename" value="fig11_meshes/meshes/Cube_021-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__124" name="elm__124">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_007-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__125" name="elm__125">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_007-Material.056.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__126" name="elm__126">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_007-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__127" name="elm__127">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_012-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__128" name="elm__128">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_012-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__129" name="elm__129">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_012-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__130" name="elm__130">
+        <string name="filename" value="fig11_meshes/meshes/Cube_022-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__131" name="elm__131">
+        <string name="filename" value="fig11_meshes/meshes/Cube_022-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__132" name="elm__132">
+        <string name="filename" value="fig11_meshes/meshes/Cube_022-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__133" name="elm__133">
+        <string name="filename" value="fig11_meshes/meshes/Cube_022-Material.055.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__134" name="elm__134">
+        <string name="filename" value="fig11_meshes/meshes/Cube_022-Material.056.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__135" name="elm__135">
+        <string name="filename" value="fig11_meshes/meshes/Cube_022-Material.057.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__136" name="elm__136">
+        <string name="filename" value="fig11_meshes/meshes/Cube_023-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__137" name="elm__137">
+        <string name="filename" value="fig11_meshes/meshes/Cube_023-Material.058.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__138" name="elm__138">
+        <string name="filename" value="fig11_meshes/meshes/Cube_024-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__139" name="elm__139">
+        <string name="filename" value="fig11_meshes/meshes/Cube_024-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__140" name="elm__140">
+        <string name="filename" value="fig11_meshes/meshes/Cube_024-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__141" name="elm__141">
+        <string name="filename" value="fig11_meshes/meshes/Cube_024-Material.055.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__142" name="elm__142">
+        <string name="filename" value="fig11_meshes/meshes/Cube_027-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__143" name="elm__143">
+        <string name="filename" value="fig11_meshes/meshes/Cube_027-Material.053.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__144" name="elm__144">
+        <string name="filename" value="fig11_meshes/meshes/Cube_027-Material.054.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-purple" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__149" name="elm__149">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_005-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__150" name="elm__150">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_005-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__151" name="elm__151">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_005-Material.063.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__152" name="elm__152">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_005-Material.064.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__153" name="elm__153">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_005-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__158" name="elm__158">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_010-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__159" name="elm__159">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_010-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__160" name="elm__160">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_010-Material.065.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__161" name="elm__161">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_010-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__162" name="elm__162">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_010-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__163" name="elm__163">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_010-Material.068.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__164" name="elm__164">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_010-Material.069.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__165" name="elm__165">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_013-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__166" name="elm__166">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_013-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__167" name="elm__167">
+        <string name="filename" value="fig11_meshes/meshes/Cube_017-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__168" name="elm__168">
+        <string name="filename" value="fig11_meshes/meshes/Cube_017-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__169" name="elm__169">
+        <string name="filename" value="fig11_meshes/meshes/Cube_017-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__170" name="elm__170">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_014-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__171" name="elm__171">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_014-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__172" name="elm__172">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_014-Material.065.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__173" name="elm__173">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_014-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__174" name="elm__174">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_016-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__175" name="elm__175">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_016-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__176" name="elm__176">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_016-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__177" name="elm__177">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_018-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__178" name="elm__178">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_018-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__179" name="elm__179">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_018-Material.065.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__180" name="elm__180">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_018-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__181" name="elm__181">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_019-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__182" name="elm__182">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_019-Material.069.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__183" name="elm__183">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_020-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__184" name="elm__184">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_020-Material.068.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__185" name="elm__185">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_020-Material.069.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__186" name="elm__186">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_022-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__187" name="elm__187">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_022-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__188" name="elm__188">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_023-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__189" name="elm__189">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_023-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__190" name="elm__190">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_023-Material.065.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__191" name="elm__191">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_023-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__192" name="elm__192">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_023-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__193" name="elm__193">
+        <string name="filename" value="fig11_meshes/meshes/Cube_026-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__194" name="elm__194">
+        <string name="filename" value="fig11_meshes/meshes/Cube_026-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__195" name="elm__195">
+        <string name="filename" value="fig11_meshes/meshes/Cube_026-Material.065.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__196" name="elm__196">
+        <string name="filename" value="fig11_meshes/meshes/Cube_026-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__197" name="elm__197">
+        <string name="filename" value="fig11_meshes/meshes/Cube_026-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__198" name="elm__198">
+        <string name="filename" value="fig11_meshes/meshes/Cube_029-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__199" name="elm__199">
+        <string name="filename" value="fig11_meshes/meshes/Cube_029-Material.068.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__200" name="elm__200">
+        <string name="filename" value="fig11_meshes/meshes/Cube_029-Material.069.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__201" name="elm__201">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_024-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__202" name="elm__202">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_024-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__203" name="elm__203">
+        <string name="filename" value="fig11_meshes/meshes/Cube_008-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__204" name="elm__204">
+        <string name="filename" value="fig11_meshes/meshes/Cube_008-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__205" name="elm__205">
+        <string name="filename" value="fig11_meshes/meshes/Cube_010-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__206" name="elm__206">
+        <string name="filename" value="fig11_meshes/meshes/Cube_010-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__207" name="elm__207">
+        <string name="filename" value="fig11_meshes/meshes/Cube_014-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__208" name="elm__208">
+        <string name="filename" value="fig11_meshes/meshes/Cube_014-Material.062.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__209" name="elm__209">
+        <string name="filename" value="fig11_meshes/meshes/Cube_014-Material.066.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__210" name="elm__210">
+        <string name="filename" value="fig11_meshes/meshes/Cube_014-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__211" name="elm__211">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_015-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__212" name="elm__212">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_015-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__213" name="elm__213">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_017-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__214" name="elm__214">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_017-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__215" name="elm__215">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_025-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__216" name="elm__216">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_025-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__217" name="elm__217">
+        <string name="filename" value="fig11_meshes/meshes/Sphere-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__218" name="elm__218">
+        <string name="filename" value="fig11_meshes/meshes/Sphere-Material.067.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__223" name="elm__223">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_001-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__224" name="elm__224">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_001-Material.072.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__225" name="elm__225">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_001-Material.073.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__226" name="elm__226">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_001-Material.074.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__227" name="elm__227">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_001-Material.076.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__229" name="elm__229">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_003-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__230" name="elm__230">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_003-Material.072.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__231" name="elm__231">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_003-Material.073.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__232" name="elm__232">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_003-Material.074.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__233" name="elm__233">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_003-Material.075.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__234" name="elm__234">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_003-Material.076.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__235" name="elm__235">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_004-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__236" name="elm__236">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_004-Material.073.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__237" name="elm__237">
+        <string name="filename" value="fig11_meshes/meshes/Sphere_004-Material.074.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__238" name="elm__238">
+        <string name="filename" value="fig11_meshes/meshes/Cube_020-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__239" name="elm__239">
+        <string name="filename" value="fig11_meshes/meshes/Cube_020-Material.075.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__240" name="elm__240">
+        <string name="filename" value="fig11_meshes/meshes/Cube_020-Material.076.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__241" name="elm__241">
+        <string name="filename" value="fig11_meshes/meshes/Cube_025-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__242" name="elm__242">
+        <string name="filename" value="fig11_meshes/meshes/Cube_025-Material.075.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__243" name="elm__243">
+        <string name="filename" value="fig11_meshes/meshes/Cube_025-Material.076.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__244" name="elm__244">
+        <string name="filename" value="fig11_meshes/meshes/Cube_028-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__245" name="elm__245">
+        <string name="filename" value="fig11_meshes/meshes/Cube_028-Material.072.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__246" name="elm__246">
+        <string name="filename" value="fig11_meshes/meshes/Cube_028-Material.073.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__247" name="elm__247">
+        <string name="filename" value="fig11_meshes/meshes/Cube_028-Material.074.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__248" name="elm__248">
+        <string name="filename" value="fig11_meshes/meshes/Cube_031-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__249" name="elm__249">
+        <string name="filename" value="fig11_meshes/meshes/Cube_031-Material.074.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__250" name="elm__250">
+        <string name="filename" value="fig11_meshes/meshes/Cube_031-Material.075.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__251" name="elm__251">
+        <string name="filename" value="fig11_meshes/meshes/Cube_031-Material.076.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__252" name="elm__252">
+        <string name="filename" value="fig11_meshes/meshes/Cube_032-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__253" name="elm__253">
+        <string name="filename" value="fig11_meshes/meshes/Cube_032-Material.072.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__254" name="elm__254">
+        <string name="filename" value="fig11_meshes/meshes/Cube_032-Material.073.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__255" name="elm__255">
+        <string name="filename" value="fig11_meshes/meshes/Cube_032-Material.074.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__256" name="elm__256">
+        <string name="filename" value="fig11_meshes/meshes/Cube_033-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__257" name="elm__257">
+        <string name="filename" value="fig11_meshes/meshes/Cube_033-Material.074.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__258" name="elm__258">
+        <string name="filename" value="fig11_meshes/meshes/Cube_033-Material.075.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__259" name="elm__259">
+        <string name="filename" value="fig11_meshes/meshes/Cube_033-Material.076.ply" />
+        <transform name="to_world">
+            <matrix value="1.35 0 0 -0.7000000000000002 0 1.35 0 0 0 0 1.35 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-pink" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__265" name="elm__265">
+        <string name="filename" value="fig11_meshes/meshes/Cube_030-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__266" name="elm__266">
+        <string name="filename" value="fig11_meshes/meshes/Cube_030-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__267" name="elm__267">
+        <string name="filename" value="fig11_meshes/meshes/Cube_030-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__268" name="elm__268">
+        <string name="filename" value="fig11_meshes/meshes/Cube_030-Material.080.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__269" name="elm__269">
+        <string name="filename" value="fig11_meshes/meshes/Cube_030-Material.081.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__270" name="elm__270">
+        <string name="filename" value="fig11_meshes/meshes/Cube_030-Material.082.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__271" name="elm__271">
+        <string name="filename" value="fig11_meshes/meshes/Cube_034-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__272" name="elm__272">
+        <string name="filename" value="fig11_meshes/meshes/Cube_034-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__273" name="elm__273">
+        <string name="filename" value="fig11_meshes/meshes/Cube_034-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__274" name="elm__274">
+        <string name="filename" value="fig11_meshes/meshes/Cube_034-Material.080.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__275" name="elm__275">
+        <string name="filename" value="fig11_meshes/meshes/Cube_034-Material.081.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__276" name="elm__276">
+        <string name="filename" value="fig11_meshes/meshes/Circle-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__277" name="elm__277">
+        <string name="filename" value="fig11_meshes/meshes/Circle-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__278" name="elm__278">
+        <string name="filename" value="fig11_meshes/meshes/Circle-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__279" name="elm__279">
+        <string name="filename" value="fig11_meshes/meshes/Circle_001-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__280" name="elm__280">
+        <string name="filename" value="fig11_meshes/meshes/Circle_001-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__281" name="elm__281">
+        <string name="filename" value="fig11_meshes/meshes/Circle_001-Material.081.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__283" name="elm__283">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_021-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__284" name="elm__284">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_021-Material.081.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__285" name="elm__285">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_021-Material.085.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__286" name="elm__286">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_026-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__287" name="elm__287">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_026-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__288" name="elm__288">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_026-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__289" name="elm__289">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_026-Material.080.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__290" name="elm__290">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_026-Material.082.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__291" name="elm__291">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_027-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__292" name="elm__292">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_027-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__293" name="elm__293">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_027-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__294" name="elm__294">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_027-Material.080.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__295" name="elm__295">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_027-Material.082.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__296" name="elm__296">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_029-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__297" name="elm__297">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_029-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__298" name="elm__298">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_029-Material.080.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__299" name="elm__299">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_029-Material.081.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__300" name="elm__300">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_028-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__301" name="elm__301">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_028-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__302" name="elm__302">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_028-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__303" name="elm__303">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_028-Material.080.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__304" name="elm__304">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_028-Material.081.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__305" name="elm__305">
+        <string name="filename" value="fig11_meshes/meshes/Circle_002-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__306" name="elm__306">
+        <string name="filename" value="fig11_meshes/meshes/Circle_002-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__307" name="elm__307">
+        <string name="filename" value="fig11_meshes/meshes/Circle_002-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__308" name="elm__308">
+        <string name="filename" value="fig11_meshes/meshes/Cube_035-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__309" name="elm__309">
+        <string name="filename" value="fig11_meshes/meshes/Cube_035-Material.078.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__310" name="elm__310">
+        <string name="filename" value="fig11_meshes/meshes/Cube_035-Material.079.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__311" name="elm__311">
+        <string name="filename" value="fig11_meshes/meshes/Cube_035-Material.080.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__312" name="elm__312">
+        <string name="filename" value="fig11_meshes/meshes/Cube_035-Material.081.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__313" name="elm__313">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_030-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__314" name="elm__314">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_030-Material.081.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__315" name="elm__315">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_030-Material.085.ply" />
+        <transform name="to_world">
+            <matrix value="1.32 0 0 -1.2800000000000002 0 1.32 0 0 0 0 1.32 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-red" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__317" name="elm__317">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_033-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__318" name="elm__318">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_033-Material.087.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__320" name="elm__320">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4_-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__321" name="elm__321">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4_-Иллюстрация_без_названия (4).ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__322" name="elm__322">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_035-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__323" name="elm__323">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_035-Material.087.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__324" name="elm__324">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4__001-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__325" name="elm__325">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4__001-Иллюстрация_без_названия (4).ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__326" name="elm__326">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_037-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__327" name="elm__327">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_037-Material.087.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__328" name="elm__328">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4__002-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__329" name="elm__329">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4__002-Иллюстрация_без_названия (4).ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__330" name="elm__330">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_039-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__331" name="elm__331">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_039-Material.087.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__332" name="elm__332">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4__003-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__333" name="elm__333">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4__003-Иллюстрация_без_названия (4).ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__334" name="elm__334">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_040-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__335" name="elm__335">
+        <string name="filename" value="fig11_meshes/meshes/Cylinder_040-Material.087.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__336" name="elm__336">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4__004-Material.050.ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+    <shape type="ply" id="elm__337" name="elm__337">
+        <string name="filename" value="fig11_meshes/meshes/Иллюстрация_без_названия__4__004-Иллюстрация_без_названия (4).ply" />
+        <transform name="to_world">
+            <matrix value="1.38 0 0 -0.0 0 1.38 0 0 0 0 1.38 0 0 0 0 1" />
+        </transform>
+        <ref id="mat-f11-magenta" name="bsdf" />
+    </shape>
+</scene>

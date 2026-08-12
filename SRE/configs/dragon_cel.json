@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "description": "Fig. 8 supplemental S5.2 GI cel mapping; 128 is the paper's highest plotted inner-sample budget (official reference uses 4096)",
+    "source": "Stylized Rendering as a Function of Expectation, Supplemental Section S5.2",
+    "source_url": "https://media.githubusercontent.com/media/Potla1995/potla1995.github.io/refs/heads/master/files/stylizedRenderingSupplemental.pdf",
+    "mse_reference": "../outputs/dragon_cel_base.png"
+  },
+  "materials": {
+    "dragon": {
+      "estimator": "direct",
+      "samples": 1,
+      "bias_correction": "none",
+      "function": {
+        "type": "cel",
+        "levels": 2,
+        "max_value": 1.0,
+        "brightness_mode": "mean",
+        "thresholds": [0.75],
+        "band_values": [0.4, 0.95],
+        "preserve_chroma": false
+      },
+      "when": {"first_hit": true}
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "metadata": {"description": "Material-level cel shading with controlled direct-application bias"},
+  "materials": {
+    "box": {
+      "estimator": "direct",
+      "samples": 8,
+      "bias_correction": "none",
+      "function": {"type": "cel", "levels": 4, "max_value": 1.0},
+      "when": {"first_hit": true}
+    }
+  }
+}
+

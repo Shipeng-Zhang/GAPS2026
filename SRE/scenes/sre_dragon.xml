@@ -1,0 +1,90 @@
+<scene version="3.0.0">
+    <default name="spp" value="256"/>
+    <default name="res" value="256"/>
+    <default name="max_depth" value="5"/>
+    <default name="integrator" value="sre"/>
+    <default name="style_config" value="configs/dragon_cel_8.json"/>
+
+    <integrator type="$integrator">
+        <integer name="max_depth" value="$max_depth"/>
+        <integer name="rr_depth" value="4"/>
+        <float name="rr_probability" value="0.95"/>
+        <string name="style_config" value="$style_config"/>
+    </integrator>
+
+    <sensor type="perspective">
+        <float name="fov" value="38"/>
+        <transform name="to_world">
+            <lookat origin="-0.52, 0.88, 1.38" target="0.0, 0.28, 0.0" up="0, 1, 0"/>
+        </transform>
+        <sampler type="independent">
+            <integer name="sample_count" value="$spp"/>
+        </sampler>
+        <film type="hdrfilm">
+            <integer name="width" value="$res"/>
+            <integer name="height" value="$res"/>
+            <rfilter type="box"/>
+            <string name="pixel_format" value="rgb"/>
+            <string name="component_format" value="float32"/>
+        </film>
+    </sensor>
+
+    <bsdf type="principled" id="dragon">
+        <rgb name="base_color" value="0.82, 0.64, 0.42"/>
+        <float name="roughness" value="0.38"/>
+        <float name="metallic" value="0.0"/>
+        <float name="specular" value="0.48"/>
+        <float name="spec_tint" value="0.08"/>
+        <float name="flatness" value="0.48"/>
+        <float name="sheen" value="0.06"/>
+        <float name="sheen_tint" value="0.20"/>
+        <float name="clearcoat" value="0.04"/>
+        <float name="clearcoat_gloss" value="0.45"/>
+    </bsdf>
+    <!-- <bsdf type="roughplastic" id="floor"> -->
+    <bsdf type='diffuse' id='floor'>
+        <!-- <float name="alpha" value="0.18"/>
+        <rgb name="diffuse_reflectance" value="0.55, 0.57, 0.52"/> -->
+        <rgb name="reflectance" value="0.7,0.7,0.7"/>
+    </bsdf>
+    <bsdf type="diffuse" id="backdrop">
+        <rgb name="reflectance" value="0.64, 0.68, 0.61"/>
+    </bsdf>
+    <shape type="ply" id="dragon_shape">
+        <string name="filename" value="stanford_dragon/dragon_recon/dragon_vrip.ply"/>
+        <boolean name="face_normals" value="false"/>
+        <transform name="to_world">
+            <rotate y="1" angle="22"/>
+            <matrix value="4.5 0 0 0.026456  0 4.5 0 -0.237283  0 0 4.5 0.020715  0 0 0 1"/>
+        </transform>
+        <ref id="dragon"/>
+    </shape>
+
+    <shape type="rectangle" id="floor_shape">
+        <transform name="to_world">
+            <scale x="1.6" y="1.35"/>
+            <rotate x="1" angle="-90"/>
+            <translate y="-0.002" z="0.1"/>
+        </transform>
+        <ref id="floor"/>
+    </shape>
+    <shape type="rectangle" id="backdrop_shape">
+        <transform name="to_world">
+            <scale x="1.6" y="0.85"/>
+            <translate y="0.65" z="-0.8"/>
+        </transform>
+        <ref id="backdrop"/>
+    </shape>
+    <shape type="rectangle" id="key_light">
+        <transform name="to_world">
+            <scale x="0.42" y="0.32"/>
+            <lookat origin="0.45, 1.35, 0.75" target="0, 0.28, 0" up="0, 1, 0"/>
+        </transform>
+        <emitter type="area">
+            <rgb name="radiance" value="15, 13, 10"/>
+        </emitter>
+    </shape>
+    <emitter type="constant">
+        <rgb name="radiance" value="0.08, 0.10, 0.12"/>
+    </emitter>
+</scene>

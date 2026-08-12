@@ -1,0 +1,15 @@
+{
+  "metadata": {"description": "Eq. 24 gamma correction with random-prefix unbiased estimation"},
+  "materials": {
+    "box": {
+      "estimator": "power_series_gamma",
+      "gamma": 2.2,
+      "expansion_point": 0.5,
+      "continuation_probability": 0.75,
+      "pilot_samples": 8,
+      "min_expansion_point": 0.1,
+      "oversampling": 8,
+      "when": {"first_hit": true}
+    }
+  }
+}

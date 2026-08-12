@@ -1,0 +1,181 @@
+<scene version="3.0.0">
+    <default name="spp" value="256"/>
+    <default name="res" value="640"/>
+    <default name="max_depth" value="4"/>
+    <default name="integrator" value="sre_cuda"/>
+    <default name="style_config" value="../configs/f11_lines.json"/>
+
+    <integrator type="$integrator">
+        <integer name="max_depth" value="$max_depth"/>
+        <integer name="rr_depth" value="4"/>
+        <float name="rr_probability" value="0.95"/>
+        <string name="style_config" value="$style_config"/>
+    </integrator>
+
+    <!-- The paper's Fig. 11 is a 3:1 horizontal lineup on a black stage. -->
+    <sensor type="perspective" id="f11-camera">
+        <string name="fov_axis" value="x"/>
+        <float name="fov" value="64"/>
+        <transform name="to_world">
+            <lookat origin="0, 3.55, 16.5" target="0, 2.05, 0" up="0, 1, 0"/>
+        </transform>
+        <sampler type="independent">
+            <integer name="sample_count" value="$spp"/>
+        </sampler>
+        <film type="hdrfilm">
+            <integer name="width" value="$res"/>
+            <integer name="height" value="$res"/>
+            <rfilter type="box"/>
+            <string name="pixel_format" value="rgb"/>
+            <string name="component_format" value="float32"/>
+        </film>
+    </sensor>
+
+    <bsdf type="diffuse" id="mat-f11-blue">
+        <rgb name="reflectance" value="0.781, 0.781, 0.781"/>
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-purple">
+        <rgb name="reflectance" value="0.773, 0.773, 0.773"/>
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-magenta">
+        <rgb name="reflectance" value="0.765, 0.765, 0.765"/>
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-pink">
+        <rgb name="reflectance" value="0.757, 0.757, 0.757"/>
+    </bsdf>
+    <bsdf type="diffuse" id="mat-f11-red">
+        <rgb name="reflectance" value="0.72, 0.72, 0.72"/>
+    </bsdf>
+    <bsdf type="roughconductor" id="mat-f11-floor">
+        <string name="distribution" value="ggx"/>
+        <!-- Fig. 11 uses broad, transport-blurred colored reflections. -->
+        <float name="alpha" value="0.145"/>
+        <string name="material" value="none"/>
+        <rgb name="specular_reflectance" value="0.94, 0.94, 0.94"/>
+    </bsdf>
+
+    <!-- Very weak frontal illumination keeps CrossHatch tone responsive while
+         avoiding the broad gray floor highlight absent from the paper. -->
+    <shape type="rectangle" id="f11-key-light">
+        <transform name="to_world">
+            <scale x="4.0" y="2.0"/>
+            <lookat origin="1.5, 9.0, 8.0" target="0, 2.0, 0" up="0, 1, 0"/>
+        </transform>
+        <emitter type="area">
+            <rgb name="radiance" value="0.22, 0.22, 0.22"/>
+        </emitter>
+    </shape>
+
+    <shape type="rectangle" id="f11-reflective-floor">
+        <transform name="to_world">
+            <scale x="12.0" y="6.0"/>
+            <rotate x="1" angle="-90"/>
+            <translate y="-0.015" z="0.8"/>
+        </transform>
+        <ref id="mat-f11-floor"/>
+    </shape>
+
+    <!-- 1. Compact camera robot: two overlaid blue/cyan feature-line families. -->
+    <shape type="cube" id="blue-head">
+        <transform name="to_world"><scale x="1.0" y="0.66" z="0.55"/><translate x="-8.0" y="2.72"/></transform>
+        <ref id="mat-f11-blue"/>
+    </shape>
+    <shape type="cylinder" id="blue-lens-rim">
+        <point name="p0" x="-8.0" y="2.72" z="0.54"/><point name="p1" x="-8.0" y="2.72" z="0.96"/><float name="radius" value="0.43"/><ref id="mat-f11-blue"/>
+    </shape>
+    <shape type="cylinder" id="blue-lens-inner">
+        <point name="p0" x="-8.0" y="2.72" z="0.95"/><point name="p1" x="-8.0" y="2.72" z="1.02"/><float name="radius" value="0.25"/><ref id="mat-f11-blue"/>
+    </shape>
+    <shape type="cube" id="blue-neck">
+        <transform name="to_world"><scale x="0.22" y="0.22" z="0.25"/><translate x="-8.0" y="1.95"/></transform><ref id="mat-f11-blue"/>
+    </shape>
+    <shape type="cube" id="blue-torso">
+        <transform name="to_world"><scale x="0.62" y="0.48" z="0.48"/><translate x="-8.0" y="1.38"/></transform><ref id="mat-f11-blue"/>
+    </shape>
+    <shape type="cylinder" id="blue-arm-left">
+        <point name="p0" x="-8.48" y="1.45" z="0"/><point name="p1" x="-9.08" y="0.72" z="0.04"/><float name="radius" value="0.18"/><ref id="mat-f11-blue"/>
+    </shape>
+    <shape type="cylinder" id="blue-arm-right">
+        <point name="p0" x="-7.52" y="1.45" z="0"/><point name="p1" x="-6.92" y="0.72" z="0.04"/><float name="radius" value="0.18"/><ref id="mat-f11-blue"/>
+    </shape>
+    <shape type="sphere" id="blue-joint-left"><point name="center" x="-8.5" y="1.46" z="0"/><float name="radius" value="0.27"/><ref id="mat-f11-blue"/></shape>
+    <shape type="sphere" id="blue-joint-right"><point name="center" x="-7.5" y="1.46" z="0"/><float name="radius" value="0.27"/><ref id="mat-f11-blue"/></shape>
+    <shape type="cylinder" id="blue-foot-left"><point name="p0" x="-9.08" y="0.72" z="0.04"/><point name="p1" x="-9.08" y="0.25" z="0.18"/><float name="radius" value="0.23"/><ref id="mat-f11-blue"/></shape>
+    <shape type="cylinder" id="blue-foot-right"><point name="p0" x="-6.92" y="0.72" z="0.04"/><point name="p1" x="-6.92" y="0.25" z="0.18"/><float name="radius" value="0.23"/><ref id="mat-f11-blue"/></shape>
+    <!-- Extra panels/joints approximate the source model's line-producing detail. -->
+    <shape type="cube" id="blue-head-top"><transform name="to_world"><scale x="0.62" y="0.10" z="0.60"/><translate x="-8.10" y="3.43"/></transform><ref id="mat-f11-blue"/></shape>
+    <shape type="cube" id="blue-head-side"><transform name="to_world"><scale x="0.16" y="0.46" z="0.62"/><rotate z="1" angle="-12"/><translate x="-6.93" y="2.69"/></transform><ref id="mat-f11-blue"/></shape>
+    <shape type="sphere" id="blue-elbow-left"><point name="center" x="-8.83" y="1.02" z="0.05"/><float name="radius" value="0.20"/><ref id="mat-f11-blue"/></shape>
+    <shape type="sphere" id="blue-elbow-right"><point name="center" x="-7.17" y="1.02" z="0.05"/><float name="radius" value="0.20"/><ref id="mat-f11-blue"/></shape>
+    <shape type="cube" id="blue-chest-panel"><transform name="to_world"><scale x="0.40" y="0.25" z="0.08"/><translate x="-8.0" y="1.42" z="0.54"/></transform><ref id="mat-f11-blue"/></shape>
+
+    <!-- 2. Broad industrial robot: square stencil emphasizes its corners. -->
+    <shape type="cube" id="purple-body"><transform name="to_world"><scale x="1.25" y="0.82" z="0.65"/><translate x="-4.1" y="1.62"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-head"><transform name="to_world"><scale x="0.72" y="0.56" z="0.58"/><translate x="-4.1" y="2.92"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cylinder" id="purple-eye"><point name="p0" x="-4.1" y="2.9" z="0.57"/><point name="p1" x="-4.1" y="2.9" z="0.88"/><float name="radius" value="0.24"/><ref id="mat-f11-purple"/></shape>
+    <shape type="cylinder" id="purple-antenna"><point name="p0" x="-4.45" y="3.45" z="0"/><point name="p1" x="-4.45" y="4.02" z="0"/><float name="radius" value="0.07"/><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-shoulder-left"><transform name="to_world"><scale x="0.48" y="0.58" z="0.58"/><translate x="-5.55" y="1.95"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-shoulder-right"><transform name="to_world"><scale x="0.48" y="0.58" z="0.58"/><translate x="-2.65" y="1.95"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-arm-left"><transform name="to_world"><scale x="0.4" y="0.72" z="0.46"/><translate x="-5.62" y="0.92"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-arm-right"><transform name="to_world"><scale x="0.4" y="0.72" z="0.46"/><translate x="-2.58" y="0.92"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-leg-left"><transform name="to_world"><scale x="0.46" y="0.68" z="0.52"/><translate x="-4.72" y="0.55"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-leg-right"><transform name="to_world"><scale x="0.46" y="0.68" z="0.52"/><translate x="-3.48" y="0.55"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-chest-slot"><transform name="to_world"><scale x="0.72" y="0.18" z="0.72"/><translate x="-4.1" y="1.58" z="0.28"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cylinder" id="purple-eye-left"><point name="p0" x="-4.34" y="2.92" z="0.58"/><point name="p1" x="-4.34" y="2.92" z="0.90"/><float name="radius" value="0.13"/><ref id="mat-f11-purple"/></shape>
+    <shape type="cylinder" id="purple-eye-right"><point name="p0" x="-3.86" y="2.92" z="0.58"/><point name="p1" x="-3.86" y="2.92" z="0.90"/><float name="radius" value="0.13"/><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-chest-upper"><transform name="to_world"><scale x="0.78" y="0.18" z="0.10"/><translate x="-4.1" y="2.03" z="0.69"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-track-left-a"><transform name="to_world"><scale x="0.31" y="0.06" z="0.54"/><rotate z="1" angle="-18"/><translate x="-5.61" y="1.30"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-track-left-b"><transform name="to_world"><scale x="0.31" y="0.06" z="0.54"/><rotate z="1" angle="-18"/><translate x="-5.61" y="0.94"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-track-right-a"><transform name="to_world"><scale x="0.31" y="0.06" z="0.54"/><rotate z="1" angle="18"/><translate x="-2.59" y="1.30"/></transform><ref id="mat-f11-purple"/></shape>
+    <shape type="cube" id="purple-track-right-b"><transform name="to_world"><scale x="0.31" y="0.06" z="0.54"/><rotate z="1" angle="18"/><translate x="-2.59" y="0.94"/></transform><ref id="mat-f11-purple"/></shape>
+
+    <!-- 3. Ornate tower robot: displaced stencils create doubled sketch lines. -->
+    <shape type="cylinder" id="magenta-base"><point name="p0" x="0" y="0.08" z="0"/><point name="p1" x="0" y="0.52" z="0"/><float name="radius" value="0.82"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="sphere" id="magenta-core"><point name="center" x="0" y="1.28" z="0"/><float name="radius" value="0.68"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="cylinder" id="magenta-tower"><point name="p0" x="0" y="1.72" z="0"/><point name="p1" x="0" y="3.35" z="0"/><float name="radius" value="0.58"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="sphere" id="magenta-crown"><point name="center" x="0" y="3.55" z="0"/><float name="radius" value="0.78"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="cylinder" id="magenta-ring-low"><point name="p0" x="0" y="1.65" z="0"/><point name="p1" x="0" y="1.82" z="0"/><float name="radius" value="0.9"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="cylinder" id="magenta-ring-high"><point name="p0" x="0" y="3.05" z="0"/><point name="p1" x="0" y="3.2" z="0"/><float name="radius" value="0.78"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="cylinder" id="magenta-arm-left"><point name="p0" x="-0.52" y="1.5" z="0"/><point name="p1" x="-1.45" y="0.78" z="0.08"/><float name="radius" value="0.25"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="cylinder" id="magenta-arm-right"><point name="p0" x="0.52" y="1.5" z="0"/><point name="p1" x="1.45" y="0.78" z="0.08"/><float name="radius" value="0.25"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="sphere" id="magenta-claw-left"><point name="center" x="-1.52" y="0.7" z="0.08"/><float name="radius" value="0.42"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="sphere" id="magenta-claw-right"><point name="center" x="1.52" y="0.7" z="0.08"/><float name="radius" value="0.42"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="sphere" id="magenta-eye"><point name="center" x="0" y="3.58" z="0.69"/><float name="radius" value="0.22"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="cube" id="magenta-crown-left"><transform name="to_world"><scale x="0.18" y="0.34" z="0.22"/><translate x="-0.53" y="4.18"/></transform><ref id="mat-f11-magenta"/></shape>
+    <shape type="cube" id="magenta-crown-center"><transform name="to_world"><scale x="0.18" y="0.28" z="0.22"/><translate x="0" y="4.24"/></transform><ref id="mat-f11-magenta"/></shape>
+    <shape type="cube" id="magenta-crown-right"><transform name="to_world"><scale x="0.18" y="0.34" z="0.22"/><translate x="0.53" y="4.18"/></transform><ref id="mat-f11-magenta"/></shape>
+    <shape type="sphere" id="magenta-shoulder-left"><point name="center" x="-0.73" y="1.46" z="0"/><float name="radius" value="0.29"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="sphere" id="magenta-shoulder-right"><point name="center" x="0.73" y="1.46" z="0"/><float name="radius" value="0.29"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="cylinder" id="magenta-leg-left"><point name="p0" x="-0.42" y="0.50" z="0"/><point name="p1" x="-1.18" y="0.18" z="0.08"/><float name="radius" value="0.18"/><ref id="mat-f11-magenta"/></shape>
+    <shape type="cylinder" id="magenta-leg-right"><point name="p0" x="0.42" y="0.50" z="0"/><point name="p1" x="1.18" y="0.18" z="0.08"/><float name="radius" value="0.18"/><ref id="mat-f11-magenta"/></shape>
+
+    <!-- 4. Four-blade rotor: direct paths are pink; floor-reflected paths yellow. -->
+    <shape type="sphere" id="pink-hub"><point name="center" x="4.15" y="2.25" z="0"/><float name="radius" value="0.72"/><ref id="mat-f11-pink"/></shape>
+    <shape type="cylinder" id="pink-hub-ring"><point name="p0" x="4.15" y="2.25" z="0.65"/><point name="p1" x="4.15" y="2.25" z="0.92"/><float name="radius" value="0.34"/><ref id="mat-f11-pink"/></shape>
+    <shape type="cube" id="pink-blade-top"><transform name="to_world"><scale x="0.55" y="0.78" z="0.24"/><rotate z="1" angle="35"/><translate x="4.15" y="3.73"/></transform><ref id="mat-f11-pink"/></shape>
+    <shape type="cube" id="pink-blade-bottom"><transform name="to_world"><scale x="0.55" y="0.78" z="0.24"/><rotate z="1" angle="35"/><translate x="4.15" y="0.77"/></transform><ref id="mat-f11-pink"/></shape>
+    <shape type="cube" id="pink-blade-left"><transform name="to_world"><scale x="0.78" y="0.55" z="0.24"/><rotate z="1" angle="-35"/><translate x="2.67" y="2.25"/></transform><ref id="mat-f11-pink"/></shape>
+    <shape type="cube" id="pink-blade-right"><transform name="to_world"><scale x="0.78" y="0.55" z="0.24"/><rotate z="1" angle="-35"/><translate x="5.63" y="2.25"/></transform><ref id="mat-f11-pink"/></shape>
+    <shape type="sphere" id="pink-pin-top"><point name="center" x="4.15" y="2.74" z="0.68"/><float name="radius" value="0.16"/><ref id="mat-f11-pink"/></shape>
+    <shape type="sphere" id="pink-pin-bottom"><point name="center" x="4.15" y="1.76" z="0.68"/><float name="radius" value="0.16"/><ref id="mat-f11-pink"/></shape>
+    <shape type="sphere" id="pink-pin-left"><point name="center" x="3.66" y="2.25" z="0.68"/><float name="radius" value="0.16"/><ref id="mat-f11-pink"/></shape>
+    <shape type="sphere" id="pink-pin-right"><point name="center" x="4.64" y="2.25" z="0.68"/><float name="radius" value="0.16"/><ref id="mat-f11-pink"/></shape>
+    <!-- Blade inset geometry creates the paper's thin internal pink strokes. -->
+    <shape type="cube" id="pink-blade-top-inset"><transform name="to_world"><scale x="0.08" y="0.55" z="0.27"/><rotate z="1" angle="35"/><translate x="4.15" y="3.73" z="0.05"/></transform><ref id="mat-f11-pink"/></shape>
+    <shape type="cube" id="pink-blade-bottom-inset"><transform name="to_world"><scale x="0.08" y="0.55" z="0.27"/><rotate z="1" angle="35"/><translate x="4.15" y="0.77" z="0.05"/></transform><ref id="mat-f11-pink"/></shape>
+    <shape type="cube" id="pink-blade-left-inset"><transform name="to_world"><scale x="0.55" y="0.08" z="0.27"/><rotate z="1" angle="-35"/><translate x="2.67" y="2.25" z="0.05"/></transform><ref id="mat-f11-pink"/></shape>
+    <shape type="cube" id="pink-blade-right-inset"><transform name="to_world"><scale x="0.55" y="0.08" z="0.27"/><rotate z="1" angle="-35"/><translate x="5.63" y="2.25" z="0.05"/></transform><ref id="mat-f11-pink"/></shape>
+
+    <!-- 5. Chair-like service robot with stable object-space diagonal hatching. -->
+    <shape type="cube" id="red-body"><transform name="to_world"><scale x="1.0" y="0.92" z="0.62"/><translate x="8.25" y="1.18"/></transform><ref id="mat-f11-red"/></shape>
+    <shape type="cube" id="red-back"><transform name="to_world"><scale x="0.82" y="0.82" z="0.5"/><translate x="8.25" y="2.82"/></transform><ref id="mat-f11-red"/></shape>
+    <shape type="cube" id="red-arm-left"><transform name="to_world"><scale x="0.38" y="0.62" z="0.48"/><translate x="6.98" y="1.25"/></transform><ref id="mat-f11-red"/></shape>
+    <shape type="cube" id="red-arm-right"><transform name="to_world"><scale x="0.38" y="0.62" z="0.48"/><translate x="9.52" y="1.25"/></transform><ref id="mat-f11-red"/></shape>
+    <shape type="cylinder" id="red-ear-left"><point name="p0" x="7.78" y="3.5" z="0"/><point name="p1" x="7.78" y="4.48" z="0"/><float name="radius" value="0.22"/><ref id="mat-f11-red"/></shape>
+    <shape type="cylinder" id="red-ear-right"><point name="p0" x="8.72" y="3.5" z="0"/><point name="p1" x="8.72" y="4.48" z="0"/><float name="radius" value="0.22"/><ref id="mat-f11-red"/></shape>
+    <shape type="cube" id="red-seat"><transform name="to_world"><scale x="1.04" y="0.23" z="0.82"/><translate x="8.25" y="1.95" z="0.12"/></transform><ref id="mat-f11-red"/></shape>
+    <shape type="cube" id="red-base"><transform name="to_world"><scale x="0.72" y="0.22" z="0.58"/><translate x="8.25" y="0.2"/></transform><ref id="mat-f11-red"/></shape>
+    <shape type="cube" id="red-front-window"><transform name="to_world"><scale x="0.60" y="0.48" z="0.08"/><translate x="8.25" y="2.86" z="0.56"/></transform><ref id="mat-f11-red"/></shape>
+    <shape type="cylinder" id="red-track-left"><point name="p0" x="7.10" y="0.68" z="0.12"/><point name="p1" x="7.10" y="1.52" z="0.12"/><float name="radius" value="0.36"/><ref id="mat-f11-red"/></shape>
+    <shape type="cylinder" id="red-track-right"><point name="p0" x="9.40" y="0.68" z="0.12"/><point name="p1" x="9.40" y="1.52" z="0.12"/><float name="radius" value="0.36"/><ref id="mat-f11-red"/></shape>
+</scene>

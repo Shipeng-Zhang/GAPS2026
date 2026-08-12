@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "description": "Fig. 11 supplemental S5.5 RGB cosine tie-dye using a degree-20 Chebyshev approximation and 32 samples per evaluation",
+    "source": "Stylized Rendering as a Function of Expectation, Supplemental Section S5.5",
+    "source_url": "https://media.githubusercontent.com/media/Potla1995/potla1995.github.io/refs/heads/master/files/stylizedRenderingSupplemental.pdf",
+    "mse_reference": "../outputs/dragon_tie_base.png"
+  },
+  "materials": {
+    "dragon": {
+      "estimator": "polynomial",
+      "degree": 20,
+      "sample_count": 32,
+      "projection": "component",
+      "basis": "chebyshev",
+      "fit_interval": [-1.0, 4.0],
+      "normalized_domain": true,
+      "evaluation_precision": "float64",
+      "clamp_samples": true,
+      "fit_samples": 4096,
+      "function": {
+        "type": "tie_dye",
+        "frequency_multipliers": [2.0, 2.15, 2.3],
+        "input_shifts": [1.0, 1.13, 1.29],
+        "amplitude": 0.5,
+        "offset": 0.5,
+        "inverted": true
+      },
+      "when": {"first_hit": true}
+    }
+  }
+}

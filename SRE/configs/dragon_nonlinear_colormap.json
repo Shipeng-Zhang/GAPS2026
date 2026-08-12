@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "description": "Figure 7 nonlinear purple-shadow to sculptural-gold mapping for the Stanford Dragon, using 32 inner samples",
+    "mse_reference": "../outputs/dragon_nonlinear_colormap_base.png"
+  },
+  "materials": {
+    "dragon": {
+      "estimator": "direct",
+      "samples": 1,
+      "bias_correction": "none",
+      "function": {
+        "type": "colormap_nonlinear",
+        "colors": [
+          [0.230740, 0.082283, 0.462077],
+          [0.496933, 0.114435, 0.508881],
+          [0.745404, 0.208637, 0.262251],
+          [0.854993, 0.434154, 0.250158],
+          [1.000000, 0.913099, 0.323143],
+          [1.000000, 0.938686, 0.514918]
+        ],
+        "positions": [0.0, 0.15, 0.35, 0.55, 0.75, 1.0],
+        "input_range": [0.0, 1.0]
+      },
+      "when": {"first_hit": true}
+    }
+  }
+}

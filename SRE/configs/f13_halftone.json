@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "description": "Fig. 13 scene using the same canonical lifting with a 2D halftone field",
+    "usage": "Pass this file instead of f13_tone.json to verify image-space dot scale through mirrors."
+  },
+  "tone_mapping": {
+    "enabled": true,
+    "anchor_samples": 16,
+    "max_depth": 4,
+    "search_radius": 256.0,
+    "min_radius": 1.5,
+    "reference_width": 960.0,
+    "radial_rings": 4,
+    "min_candidates": 4,
+    "sigma_scale": 1.0,
+    "angular_limit_degrees": 35.0,
+    "condition_epsilon": 1e-6,
+    "cuda_anchor_batch_size": 2
+  },
+  "materials": {
+    "default-bsdf": {
+      "estimator": "direct",
+      "samples": 8,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_halftone",
+        "spacing": 8.0,
+        "angle_degrees": 45.0,
+        "min_radius": 0.35,
+        "max_radius": 3.55,
+        "radius_gamma": 0.78,
+        "dot_threshold": 0.025,
+        "edge_softness": 0.58,
+        "max_value": 0.75,
+        "phase": [0.19, 0.37],
+        "ink": [0.012, 0.013, 0.014],
+        "paper": [0.975, 0.968, 0.935]
+      },
+      "when": {"max_depth": 3}
+    },
+    "mat-Material": {
+      "estimator": "direct",
+      "samples": 8,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_halftone",
+        "spacing": 8.0,
+        "angle_degrees": 45.0,
+        "min_radius": 0.35,
+        "max_radius": 3.55,
+        "radius_gamma": 0.78,
+        "dot_threshold": 0.025,
+        "edge_softness": 0.58,
+        "max_value": 0.75,
+        "phase": [0.19, 0.37],
+        "ink": [0.012, 0.013, 0.014],
+        "paper": [0.975, 0.968, 0.935]
+      },
+      "when": {"max_depth": 3}
+    },
+    "mat-Material.001": {
+      "estimator": "direct",
+      "samples": 4,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_halftone",
+        "spacing": 8.0,
+        "angle_degrees": 45.0,
+        "min_radius": 0.2,
+        "max_radius": 2.8,
+        "radius_gamma": 0.85,
+        "dot_threshold": 0.04,
+        "edge_softness": 0.58,
+        "max_value": 0.75,
+        "phase": [0.19, 0.37],
+        "ink": [0.04, 0.041, 0.043],
+        "paper": [0.985, 0.98, 0.955]
+      },
+      "when": {"max_depth": 2}
+    }
+  },
+  "default": {"estimator": "identity"}
+}

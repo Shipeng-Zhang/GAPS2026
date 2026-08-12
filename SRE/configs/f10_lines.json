@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "description": "Paper-matched Fig. 10 feature-line reproduction for the McLaren scene from Lifting Lines and Tone",
+    "paper_parameters": "Section 4 and Supplemental S1: 16 auxiliary paths, 16 finite-difference searches, stratified disk stencils, parallel-transported path perturbations, and front-to-back DFS composition",
+    "scene_notes": "当前可调基线为三类线均使用 2.55 px stencil、16 次比较；轮廓/材质/曲率线分别使用 0.0、0.002、0.008 的近黑颜色。地面和曲面镜保持 identity，使倒影和景深软化来自真实路径传输。"
+  },
+  "feature_lines": {
+    "enabled": true,
+    "auxiliary_samples": 16,
+    "_cuda批大小注释": "只控制CUDA辅助光线相交的临时计算图批大小，不改变采样或线条。4兼顾速度与显存；显存紧张时设为1。",
+    "cuda_auxiliary_batch_size": 4,
+    "max_normal_angle_degrees": 75.0,
+    "types": [
+      {
+        "_注释": "轮廓与遮挡线。优先调 stencil_radius 控制粗细，调 threshold 控制深度变化敏感度。",
+        "name": "silhouette_and_occlusion",
+        "measurement": "depth",
+        "threshold": 0.08,
+        "relative_depth": true,
+        "stencil": "disk",
+        "stencil_radius": 3.0,
+        "comparisons": 16,
+        "color": [0.0, 0.0, 0.0],
+        "min_depth": 0,
+        "max_depth": 3
+      },
+      {
+        "_注释": "材质边界线。主要勾勒车身零件、玻璃、轮毂等材质 ID 发生变化的位置。",
+        "name": "material_boundaries",
+        "measurement": "material_id",
+        "threshold": 0.08,
+        "stencil": "disk",
+        "stencil_radius": 1.2,
+        "comparisons": 16,
+        "color": [0.00, 0.0, 0.0],
+        "min_depth": 0,
+        "max_depth": 3
+      },
+      {
+        "_注释": "曲率、折痕和表面方向变化线。负责轮毂细节、进气口、机械结构和车身折线。",
+        "name": "curvature_and_crease_features",
+        "measurement": "curvature",
+        "threshold": 0.08,
+        "stencil": "disk",
+        "stencil_radius": 3.0,
+        "comparisons": 16,
+        "color": [0.0, 0.0, 0.0],
+        "min_depth": 0,
+        "max_depth": 3
+      }
+    ]
+  },
+  "materials": {
+    "mat-f10-floor-glossy": {
+      "_注释": "地面保持 identity，才能让线条通过真实的粗糙镜面传输形成模糊倒影。",
+      "estimator": "identity"
+    },
+    "mat-f10-curved-specular": {
+      "_注释": "右侧曲面镜保持 identity，用于验证曲面反射中的线宽保持。",
+      "estimator": "identity"
+    }
+  },
+  "default": {
+    "_注释": "其余车体材质使用常量纸白色。value 越接近 1 背景越白、黑线对比越强；过大可能丢失浅灰层次。",
+    "estimator": "constant",
+    "value": [0.985, 0.985, 0.985]
+  }
+}

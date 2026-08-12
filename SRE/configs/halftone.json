@@ -1,0 +1,12 @@
+{
+  "metadata": {"description": "Material-level object-space halftone style"},
+  "materials": {
+    "box": {
+      "estimator": "direct",
+      "samples": 3,
+      "function": {"type": "halftone", "scale": 24.0, "max_value": 1.0},
+      "when": {"first_hit": true}
+    }
+  }
+}
+

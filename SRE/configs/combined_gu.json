@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "description": "Theorem 4.1 composition: B(A(I)), A(I)=0.6I+0.05 and B(I)=I^2"
+  },
+  "materials": {
+    "box": {
+      "estimator": "composition",
+      "outer": {
+        "estimator": "polynomial",
+        "coefficients": [0.0, 0.0, 1.0],
+        "sample_count": 3
+      },
+      "inner": {
+        "estimator": "polynomial",
+        "coefficients": [0.05, 0.6],
+        "sample_count": 1
+      },
+      "when": {"first_hit": true}
+    }
+  }
+}
+

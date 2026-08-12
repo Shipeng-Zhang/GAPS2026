@@ -1,0 +1,332 @@
+[
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/identity.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/identity.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/identity.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 6.713740429840982,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.19758303463459015,
+      0.11099661886692047,
+      0.02575766108930111
+    ],
+    "max_rgb": [
+      19.015153884887695,
+      11.357540130615234,
+      3.079775810241699
+    ],
+    "aov_means": {
+      "tree_nodes": 2.6683349609375,
+      "style_evaluations": 0.0,
+      "inner_variance": 0.0,
+      "estimated_bias": 0.0
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/cel_1.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/cel_1.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/cel_1.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 7.559356207959354,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.20163494348526,
+      0.1127377599477768,
+      0.02608051709830761
+    ],
+    "max_rgb": [
+      18.887805938720703,
+      11.283522605895996,
+      3.063260555267334
+    ],
+    "aov_means": {
+      "tree_nodes": 2.6683349609375,
+      "style_evaluations": 0.3062744140625,
+      "inner_variance": 0.0,
+      "estimated_bias": 0.0
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/cel_8.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/cel_8.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/cel_8.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 22.636920643039048,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.22455337643623352,
+      0.12128815799951553,
+      0.027371706441044807
+    ],
+    "max_rgb": [
+      19.055923461914062,
+      11.393177032470703,
+      3.0885605812072754
+    ],
+    "aov_means": {
+      "tree_nodes": 5.31494140625,
+      "style_evaluations": 0.3087158203125,
+      "inner_variance": 0.0019471680279821157,
+      "estimated_bias": 1.5429680347442627
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/cel_32.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/cel_32.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/cel_32.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 47.34314668178558,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.23830382525920868,
+      0.12599694728851318,
+      0.02834211476147175
+    ],
+    "max_rgb": [
+      18.887741088867188,
+      11.285383224487305,
+      3.072262763977051
+    ],
+    "aov_means": {
+      "tree_nodes": 14.247802734375,
+      "style_evaluations": 0.3055419921875,
+      "inner_variance": 0.000622966792434454,
+      "estimated_bias": 7.895312786102295
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/cel_polynomial.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/cel_polynomial.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/cel_polynomial.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 25.657627762295306,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.2072712481021881,
+      0.13210299611091614,
+      0.0551798976957798
+    ],
+    "max_rgb": [
+      18.85452651977539,
+      11.35789680480957,
+      3.3221170902252197
+    ],
+    "aov_means": {
+      "tree_nodes": 9.15924072265625,
+      "style_evaluations": 0.31036376953125,
+      "inner_variance": 0.0,
+      "estimated_bias": 0.0
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/gamma_unbiased.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/gamma_unbiased.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/gamma_unbiased.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 35.03424900583923,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.25445321202278137,
+      0.1635897308588028,
+      0.05075496807694435
+    ],
+    "max_rgb": [
+      18.86477279663086,
+      41.376407623291016,
+      3.3239145278930664
+    ],
+    "aov_means": {
+      "tree_nodes": 14.028076171875,
+      "style_evaluations": 0.306396484375,
+      "inner_variance": 0.0,
+      "estimated_bias": 0.0
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/telescoping_saturation.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/telescoping_saturation.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/telescoping_saturation.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 9.706757282838225,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.21192912757396698,
+      0.12035438418388367,
+      0.020083919167518616
+    ],
+    "max_rgb": [
+      20.196773529052734,
+      46.41695785522461,
+      3.0390963554382324
+    ],
+    "aov_means": {
+      "tree_nodes": 3.41217041015625,
+      "style_evaluations": 0.60943603515625,
+      "inner_variance": 0.0,
+      "estimated_bias": 0.0
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/combined_gu.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/combined_gu.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/combined_gu.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 10.66805109102279,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.17900386452674866,
+      0.10140971839427948,
+      0.024299675598740578
+    ],
+    "max_rgb": [
+      18.668746948242188,
+      11.229874610900879,
+      3.0390963554382324
+    ],
+    "aov_means": {
+      "tree_nodes": 3.42584228515625,
+      "style_evaluations": 1.232666015625,
+      "inner_variance": 0.0,
+      "estimated_bias": 0.0
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/crosshatch.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/crosshatch.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/crosshatch.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 28.698498148005456,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.27483609318733215,
+      0.18508706986904144,
+      0.08383642137050629
+    ],
+    "max_rgb": [
+      18.912460327148438,
+      11.466907501220703,
+      3.339456081390381
+    ],
+    "aov_means": {
+      "tree_nodes": 6.86444091796875,
+      "style_evaluations": 0.309814453125,
+      "inner_variance": 0.0012497821589931846,
+      "estimated_bias": 0.011861527338624
+    }
+  },
+  {
+    "scene": "/data1/swx/Project/GAPS2026/SRE/scenes/sre_cbox.xml",
+    "config": "/data1/swx/Project/GAPS2026/SRE/configs/recursive_saturation.json",
+    "output": "/data1/swx/Project/GAPS2026/SRE/outputs/recursive_saturation.exr",
+    "preview": "/data1/swx/Project/GAPS2026/SRE/outputs/recursive_saturation.png",
+    "spp": 4,
+    "resolution": 64,
+    "max_depth": 5,
+    "seed": 23,
+    "seconds": 17.552773733623326,
+    "shape": [
+      64,
+      64,
+      7
+    ],
+    "finite_fraction": 1.0,
+    "mean_rgb": [
+      0.20967966318130493,
+      0.11167319118976593,
+      0.01764170452952385
+    ],
+    "max_rgb": [
+      18.774887084960938,
+      11.231952667236328,
+      3.0390963554382324
+    ],
+    "aov_means": {
+      "tree_nodes": 3.6436767578125,
+      "style_evaluations": 0.43145751953125,
+      "inner_variance": 0.009626975283026695,
+      "estimated_bias": 1.3741604208694636e-11
+    }
+  }
+]

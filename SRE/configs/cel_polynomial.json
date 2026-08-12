@@ -1,0 +1,17 @@
+{
+  "metadata": {"description": "Eq. 17 degree-9 Chebyshev approximation of discontinuous cel shading"},
+  "materials": {
+    "box": {
+      "estimator": "polynomial",
+      "degree": 9,
+      "sample_count": 18,
+      "projection": "luminance",
+      "basis": "chebyshev",
+      "fit_interval": [0.0, 1.0],
+      "clamp_samples": true,
+      "function": {"type": "cel", "levels": 4, "max_value": 1.0},
+      "when": {"first_hit": true}
+    }
+  }
+}
+

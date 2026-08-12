@@ -1,0 +1,13 @@
+{
+  "metadata": {"description": "Eq. 15 random-prefix debiasing for a continuous saturation function"},
+  "materials": {
+    "box": {
+      "estimator": "telescoping",
+      "base_samples": 2,
+      "continuation_probability": 0.5,
+      "function": {"type": "saturation", "amount": 1.5},
+      "when": {"first_hit": true}
+    }
+  }
+}
+

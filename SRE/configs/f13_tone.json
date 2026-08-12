@@ -1,0 +1,202 @@
+{
+  "metadata": {
+    "description": "Lifting Lines and Tone Fig. 13: canonical image-space hatching through direct, planar-specular and curved-glossy paths",
+    "paper_parameters": "Section 5 and Supplemental S2: material-independent perfect-mirror anchor paths, compatible surface-prefix lookup, incoming-direction chart, angular candidate filtering, adaptive Gaussian linear MLS, and analytic/affine/nearest/first-edge fallbacks.",
+    "usage": "CUDA_VISIBLE_DEVICES=1,3 python ./sre/render.py --scene ./scenes/fig13.xml --config ./configs/f13_tone.json --width 1080 --height 786 --spp 32 --spp-per-pass 1 --max-depth 4"
+  },
+  "tone_mapping": {
+    "enabled": true,
+    "anchor_samples": 16,
+    "max_depth": 4,
+    "search_radius": 256.0,
+    "min_radius": 1.5,
+    "reference_width": 960.0,
+    "radial_rings": 4,
+    "min_candidates": 4,
+    "sigma_scale": 1.0,
+    "angular_limit_degrees": 55.0,
+    "condition_epsilon": 1e-6,
+    "cuda_anchor_batch_size": 4,
+    "_搜索半径注释": "论文在1920x1080使用最大512 px；本场景参考宽度960使用256 px，其他输出宽度会自动同比缩放。",
+    "_显存注释": "anchor_samples决定每个lane的紧凑锚状态；显存紧张先降到12，cuda_anchor_batch_size可降到1。"
+  },
+  "feature_lines": {
+    "enabled": true,
+    "auxiliary_samples": 16,
+    "cuda_auxiliary_batch_size": 4,
+    "max_normal_angle_degrees": 78.0,
+    "glossy_line_strength": 0.06,
+    "glossy_line_color": [0.20, 0.20, 0.20],
+    "types": [
+      {
+        "name": "f13_mirror_frame",
+        "measurement": "depth",
+        "threshold": 0.045,
+        "relative_depth": true,
+        "stencil": "disk",
+        "stencil_radius": 1.65,
+        "comparisons": 16,
+        "color": [0.010, 0.010, 0.011],
+        "include_materials": ["mat-f13-planar-mirror"],
+        "min_depth": 0,
+        "max_depth": 0
+      },
+      {
+        "name": "f13_curved_reflector_outline",
+        "measurement": "depth",
+        "threshold": 0.060,
+        "relative_depth": true,
+        "stencil": "disk",
+        "stencil_radius": 0.90,
+        "comparisons": 16,
+        "color": [0.11, 0.11, 0.115],
+        "include_materials": ["mat-f13-glossy-mirror"],
+        "min_depth": 0,
+        "max_depth": 0
+      },
+      {
+        "name": "f13_silhouette",
+        "measurement": "depth",
+        "threshold": 0.095,
+        "relative_depth": true,
+        "stencil": "disk",
+        "stencil_radius": 1.52,
+        "comparisons": 16,
+        "color": [0.008, 0.008, 0.009],
+        "include_materials": ["default-bsdf", "mat-Material"],
+        "min_depth": 0,
+        "max_depth": 3
+      },
+      {
+        "name": "f13_part_boundaries",
+        "measurement": "shape_id",
+        "threshold": 0.0,
+        "stencil": "disk",
+        "stencil_radius": 0.68,
+        "comparisons": 16,
+        "color": [0.012, 0.012, 0.013],
+        "include_materials": ["default-bsdf", "mat-Material"],
+        "min_depth": 0,
+        "max_depth": 2
+      },
+      {
+        "name": "f13_curvature_detail",
+        "measurement": "curvature",
+        "threshold": 0.15,
+        "stencil": "disk",
+        "stencil_radius": 0.66,
+        "comparisons": 16,
+        "color": [0.018, 0.018, 0.019],
+        "include_materials": ["default-bsdf", "mat-Material"],
+        "min_depth": 0,
+        "max_depth": 2
+      }
+    ]
+  },
+  "materials": {
+    "default-bsdf": {
+      "estimator": "direct",
+      "samples": 16,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 6.0,
+        "angles_degrees": [78.0, -12.0, 33.0],
+        "activation_thresholds": [0.48, 0.70, 0.86],
+        "phase_offsets": [0.17, 0.43, 0.71],
+        "family_widths": [0.78, 0.52, 0.36],
+        "min_coverage": 0.004,
+        "max_coverage": 0.39,
+        "darkness_gamma": 0.95,
+        "edge_softness": 0.48,
+        "max_value": 0.90,
+        "ink": [0.008, 0.008, 0.009],
+        "paper": [0.995, 0.995, 0.992]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    },
+    "mat-Material": {
+      "estimator": "direct",
+      "samples": 16,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 5.0,
+        "angles_degrees": [78.0, -12.0, 33.0],
+        "activation_thresholds": [0.22, 0.72, 0.90],
+        "phase_offsets": [0.17, 0.43, 0.71],
+        "family_widths": [0.90, 0.52, 0.34],
+        "min_coverage": 0.004,
+        "max_coverage": 0.48,
+        "darkness_gamma": 0.95,
+        "edge_softness": 0.48,
+        "max_value": 1.10,
+        "ink": [0.008, 0.008, 0.009],
+        "paper": [0.995, 0.995, 0.992]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    },
+    "mat-f13-planar-mirror": {
+      "_注释": "identity在镜面顶点抽取一个物理delta方向并递归到下一顶点；镜面不被贴线，镜内物体继续执行ToneHatch和特征线。",
+      "estimator": "identity"
+    },
+    "mat-f13-glossy-mirror": {
+      "_注释": "identity逐外层样本抽取GGX方向并递归传播镜内ToneHatch；外层SPP形成无偏分布模糊，避免direct×地面64的嵌套爆炸。",
+      "estimator": "identity"
+    },
+    "mat-Material.001": {
+      "_注释": "Fig.13地面通过物理GGX反射后的期望亮度控制单向排线；关闭嵌套风格递归以避免16x16采样爆炸，边缘随光泽与景深柔和渐隐。",
+      "estimator": "direct",
+      "samples": 64,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 8.5,
+        "angles_degrees": [78.0],
+        "activation_thresholds": [0.36],
+        "phase_offsets": [0.17],
+        "family_widths": [0.68],
+        "min_coverage": 0.015,
+        "max_coverage": 0.70,
+        "darkness_gamma": 1.08,
+        "edge_softness": 0.26,
+        "max_value": 0.72,
+        "shadow_strength": 0.90,
+        "region_center": [500.0, 445.0],
+        "region_radius": [260.0, 110.0],
+        "region_feather": 0.58,
+        "ink": [0.008, 0.008, 0.010],
+        "paper": [0.998, 0.998, 0.995]
+      },
+      "when": {"max_depth": 2, "first_hit": true, "max_occurrences": 1}
+    }
+  },
+  "shapes": {
+    "mesh-Cube": {
+      "estimator": "direct",
+      "samples": 16,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 4.8,
+        "angles_degrees": [78.0, -12.0, 33.0],
+        "activation_thresholds": [0.08, 0.62, 0.88],
+        "phase_offsets": [0.17, 0.43, 0.71],
+        "family_widths": [1.00, 0.58, 0.36],
+        "min_coverage": 0.16,
+        "max_coverage": 0.62,
+        "darkness_gamma": 0.72,
+        "edge_softness": 0.42,
+        "max_value": 1.15,
+        "ink": [0.006, 0.006, 0.007],
+        "paper": [0.995, 0.995, 0.992]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    }
+  },
+  "default": {"estimator": "identity"}
+}

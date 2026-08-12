@@ -1,0 +1,333 @@
+<scene version="2.1.0">
+
+<!-- Defaults, these can be set via the command line: -Darg=value -->
+
+	<default name="spp" value="128"/>
+	<default name="res" value="960"/>
+	<default name="max_depth" value="4"/>
+	<default name="integrator" value="sre_cuda"/>
+	<default name="style_config" value="../configs/f13_tone.json"/>
+
+<!-- Camera and Rendering Parameters -->
+
+	<integrator type="$integrator" id="fig13-sre" name="fig13-sre">
+		<integer name="max_depth" value="$max_depth"/>
+		<integer name="rr_depth" value="4"/>
+		<float name="rr_probability" value="0.95"/>
+		<string name="style_config" value="$style_config"/>
+	</integrator>
+	<sensor type="thinlens" id="Camera" name="Camera">
+		<string name="fov_axis" value="x"/>
+		<float name="fov" value="83.267082"/>
+		<float name="near_clip" value="0.100000"/>
+		<float name="far_clip" value="100.000000"/>
+		<!-- Focus the main robot while allowing the floor pattern and curved
+		     reflection to acquire the gradual distribution blur in Fig. 13. -->
+		<float name="focus_distance" value="15.0"/>
+		<float name="aperture_radius" value="0.03"/>
+		<transform name="to_world">
+			<rotate x="1" angle="-163.1564579873814"/>
+			<rotate y="1" angle="-49.28376954117144"/>
+			<rotate z="1" angle="178.77521548698965"/>
+			<translate value="12.315414 5.396643 12.884549"/>
+		</transform>
+		<sampler type="independent" name="sampler">
+			<integer name="sample_count" value="$spp"/>
+		</sampler>
+		<film type="hdrfilm" name="film">
+			<integer name="width" value="$res"/>
+			<integer name="height" value="$res"/>
+			<rfilter type="box"/>
+			<string name="pixel_format" value="rgb"/>
+			<string name="component_format" value="float32"/>
+		</film>
+	</sensor>
+
+<!-- Materials -->
+
+	<bsdf type="twosided" id="mat-Material.001" name="mat-Material.001">
+		<!-- Paper-white diffuse base plus a restrained polished clear coat.
+		     The 35% GGX branch carries a readable robot reflection, while the
+		     roughness creates the transport-driven softening shown in Fig. 13. -->
+		<bsdf type="blendbsdf">
+			<float name="weight" value="0.35"/>
+			<bsdf type="diffuse">
+				<rgb value="0.80, 0.80, 0.80" name="reflectance"/>
+			</bsdf>
+			<bsdf type="roughconductor">
+				<string name="distribution" value="ggx"/>
+				<float name="alpha" value="0.030"/>
+				<string name="material" value="none"/>
+				<rgb value="0.90, 0.90, 0.90" name="specular_reflectance"/>
+			</bsdf>
+		</bsdf>
+	</bsdf>
+	<bsdf type="twosided" id="default-bsdf" name="default-bsdf">
+		<bsdf type="diffuse" name="bsdf"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material" name="mat-Material">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<!-- Fig. 13: left is a perfect planar mirror; right is the curved GGX
+	     reflector whose distribution should blur tone through transport. -->
+	<bsdf type="twosided" id="mat-f13-planar-mirror">
+		<!-- Blender exported this thin mirror with the geometric normal facing
+		     away from the camera. A two-sided wrapper preserves the same ideal
+		     delta reflection on the visible side instead of showing its back. -->
+		<bsdf type="conductor">
+			<string name="material" value="none"/>
+			<rgb name="specular_reflectance" value="0.99, 0.99, 0.99"/>
+		</bsdf>
+	</bsdf>
+	<bsdf type="twosided" id="mat-f13-glossy-mirror">
+		<!-- The curved reflector is visible both directly and through the
+		     planar mirror.  Its exported winding exposes opposite sides in
+		     those two views, so a one-sided conductor made the reflected side
+		     an artificial solid-black disk. -->
+		<bsdf type="roughconductor">
+			<string name="distribution" value="ggx"/>
+			<!-- The source reflector has only 960 triangles.  Smooth normals below
+			     provide the curved macro surface; a small nonzero GGX width retains
+			     the paper's distributional path without erasing the reflected robot. -->
+			<!-- A small but visible GGX spread keeps the robot legible while
+			     naturally softening the stylized reflection on the sphere. -->
+			<float name="alpha" value="0.012"/>
+			<string name="material" value="none"/>
+			<rgb name="specular_reflectance" value="0.97, 0.97, 0.97"/>
+		</bsdf>
+	</bsdf>
+
+<!-- Emitters -->
+
+	<emitter type="constant" id="World" name="World">
+		<!-- Paper-white studio surround used by Fig. 13. -->
+		<rgb value="0.800000 0.800000 0.800000" name="radiance"/>
+	</emitter>
+	<emitter type="directional" id="emit-Lamp" name="emit-Lamp">
+		<rgb value="0.550000 0.550000 0.550000" name="irradiance"/>
+		<transform name="to_world">
+			<matrix value="0.671683 0.600998 -0.433178 7.059191 -0.372875 -0.230998 -0.898668 13.497950 -0.640161 0.765141 0.068939 2.657435 0.000000 0.000000 0.000000 1.000000"/>
+		</transform>
+	</emitter>
+
+<!-- Shapes -->
+
+	<shape type="ply" id="mesh-Cylinder_016" name="mesh-Cylinder_016">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_016.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Material.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_015" name="mesh-Cylinder_015">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_015.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_014" name="mesh-Cylinder_014">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_014.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_011" name="mesh-Cylinder_011">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_011.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Torus" name="mesh-Torus">
+		<string name="filename" value="fig13_meshes/meshes/Torus.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_010" name="mesh-Cylinder_010">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_010.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_005" name="mesh-Cube_005">
+		<string name="filename" value="fig13_meshes/meshes/Cube_005.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="mat-Material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_009" name="mesh-Cylinder_009">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_009.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_008" name="mesh-Cylinder_008">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_008.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Sphere_001" name="mesh-Sphere_001">
+		<string name="filename" value="fig13_meshes/meshes/Sphere_001.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Sphere" name="mesh-Sphere">
+		<string name="filename" value="fig13_meshes/meshes/Sphere.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_004" name="mesh-Cube_004">
+		<string name="filename" value="fig13_meshes/meshes/Cube_004.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="mat-Material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_003" name="mesh-Cube_003">
+		<string name="filename" value="fig13_meshes/meshes/Cube_003.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_007" name="mesh-Cylinder_007">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_007.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_006" name="mesh-Cylinder_006">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_006.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="shapegroup" id="mesh-BezierCurve_002" name="mesh-BezierCurve_002">
+		<shape type="ply" name="BezierCurve_002">
+			<string name="filename" value="fig13_meshes/meshes/BezierCurve_002.ply"/>
+			<ref id="default-bsdf" name="bsdf"/>
+		</shape>
+	</shape>
+	<shape type="instance" id="elm__21" name="elm__21">
+		<ref id="mesh-BezierCurve_002" name="shape"/>
+		<transform name="to_world">
+			<matrix value="1.000000 0.000000 0.000000 -0.002873 0.000000 0.000000 0.908067 3.999745 0.000000 -1.000000 0.000000 3.246629 0.000000 0.000000 0.000000 1.000000"/>
+		</transform>
+	</shape>
+	<shape type="ply" id="mesh-Cube_002" name="mesh-Cube_002">
+		<string name="filename" value="fig13_meshes/meshes/Cube_002.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="mat-Material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_001" name="mesh-Cube_001">
+		<string name="filename" value="fig13_meshes/meshes/Cube_001.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="mat-Material" name="bsdf"/>
+	</shape>
+	<shape type="shapegroup" id="mesh-BezierCurve_005" name="mesh-BezierCurve_005">
+		<shape type="ply" name="BezierCurve_005">
+			<string name="filename" value="fig13_meshes/meshes/BezierCurve_005.ply"/>
+			<ref id="default-bsdf" name="bsdf"/>
+		</shape>
+	</shape>
+	<shape type="instance" id="elm__25" name="elm__25">
+		<ref id="mesh-BezierCurve_005" name="shape"/>
+		<transform name="to_world">
+			<matrix value="0.960994 0.000000 0.000000 -0.002873 0.000000 0.000000 0.960994 -1.332509 0.000000 -0.960994 0.000000 3.463316 0.000000 0.000000 0.000000 1.000000"/>
+		</transform>
+	</shape>
+	<shape type="shapegroup" id="mesh-BezierCurve_004" name="mesh-BezierCurve_004">
+		<shape type="ply" name="BezierCurve_004">
+			<string name="filename" value="fig13_meshes/meshes/BezierCurve_004.ply"/>
+			<ref id="default-bsdf" name="bsdf"/>
+		</shape>
+	</shape>
+	<shape type="instance" id="elm__27" name="elm__27">
+		<ref id="mesh-BezierCurve_004" name="shape"/>
+		<transform name="to_world">
+			<matrix value="1.000000 0.000000 0.000000 -0.002873 0.000000 0.000000 1.000000 3.184685 0.000000 -1.000000 0.000000 0.063515 0.000000 0.000000 0.000000 1.000000"/>
+		</transform>
+	</shape>
+	<shape type="shapegroup" id="mesh-BezierCurve_003" name="mesh-BezierCurve_003">
+		<shape type="ply" name="BezierCurve_003">
+			<string name="filename" value="fig13_meshes/meshes/BezierCurve_003.ply"/>
+			<ref id="default-bsdf" name="bsdf"/>
+		</shape>
+	</shape>
+	<shape type="instance" id="elm__29" name="elm__29">
+		<ref id="mesh-BezierCurve_003" name="shape"/>
+		<transform name="to_world">
+			<matrix value="1.000000 0.000000 0.000000 -0.002873 0.000000 0.000000 1.000000 3.901426 0.000000 -1.000000 0.000000 3.235754 0.000000 0.000000 0.000000 1.000000"/>
+		</transform>
+	</shape>
+	<shape type="shapegroup" id="mesh-BezierCurve_001" name="mesh-BezierCurve_001">
+		<shape type="ply" name="BezierCurve_001">
+			<string name="filename" value="fig13_meshes/meshes/BezierCurve_001.ply"/>
+			<ref id="default-bsdf" name="bsdf"/>
+		</shape>
+	</shape>
+	<shape type="instance" id="elm__31" name="elm__31">
+		<ref id="mesh-BezierCurve_001" name="shape"/>
+		<transform name="to_world">
+			<matrix value="1.000000 0.000000 0.000000 -0.002873 0.000000 0.000000 0.908067 4.050432 0.000000 -1.000000 0.000000 3.264535 0.000000 0.000000 0.000000 1.000000"/>
+		</transform>
+	</shape>
+	<shape type="shapegroup" id="mesh-BezierCurve" name="mesh-BezierCurve">
+		<shape type="ply" name="BezierCurve">
+			<string name="filename" value="fig13_meshes/meshes/BezierCurve.ply"/>
+			<ref id="default-bsdf" name="bsdf"/>
+		</shape>
+	</shape>
+	<shape type="instance" id="elm__33" name="elm__33">
+		<ref id="mesh-BezierCurve" name="shape"/>
+		<transform name="to_world">
+			<matrix value="0.898798 0.000000 0.000000 0.000000 0.000000 0.000000 0.939258 3.009978 0.000000 -1.000000 0.000000 0.471511 0.000000 0.000000 0.000000 1.000000"/>
+		</transform>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_005" name="mesh-Cylinder_005">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_005.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_004" name="mesh-Cylinder_004">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_004.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_003" name="mesh-Cylinder_003">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_003.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_002" name="mesh-Cylinder_002">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_002.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_001" name="mesh-Cylinder_001">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder_001.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder" name="mesh-Cylinder">
+		<string name="filename" value="fig13_meshes/meshes/Cylinder.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="default-bsdf" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube" name="mesh-Cube">
+		<string name="filename" value="fig13_meshes/meshes/Cube.ply"/>
+		<boolean name="face_normals" value="false"/>
+		<ref id="mat-Material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-立方体" name="mesh-立方体">
+		<string name="filename" value="fig13_meshes/meshes/立方体.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<!-- The Blender export placed the mirror at x=-15.5, which sends the
+		     reflected robots outside this camera frustum. Move it to the
+		     paper-like near-background position without changing its tilt. -->
+		<transform name="to_world">
+			<scale x="1.0" y="0.65" z="0.65"/>
+			<translate value="7.5, 0.0, 0.0"/>
+		</transform>
+		<ref id="mat-f13-planar-mirror" name="bsdf"/>
+	</shape>
+	<shape type="sphere" id="mesh-球体" name="mesh-球体">
+		<!-- Fig.13 uses a large curved reflector whose centre lies outside the
+		     right side of the image; only its left arc is visible behind the
+		     robot. Keep it analytic (rather than the 482-vertex source PLY) so
+		     the silhouette and reflection normals remain perfectly smooth. The
+		     radius is the exact source-mesh radius, and this centre reproduces
+		     the paper composition: arc at the right rear, reflected robot inside. -->
+		<point name="center" value="12.3156, 13.7874, -2.5335"/>
+		<float name="radius" value="11.5825"/>
+		<ref id="mat-f13-glossy-mirror" name="bsdf"/>
+	</shape>
+
+<!-- Volumes -->
+
+</scene>

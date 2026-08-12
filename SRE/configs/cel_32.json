@@ -1,0 +1,12 @@
+{
+  "metadata": {"description": "Low-bias 32-sample cel-shading reference"},
+  "materials": {
+    "box": {
+      "estimator": "direct",
+      "samples": 32,
+      "function": {"type": "cel", "levels": 4, "max_value": 1.0},
+      "when": {"first_hit": true}
+    }
+  }
+}
+

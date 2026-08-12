@@ -1,0 +1,195 @@
+{
+  "metadata": {
+    "description": "Lifting Lines and Tone Fig. 1 Wasteland teaser: geometric-normal feature lines plus canonical MLS tone hatching",
+    "paper_parameters": "Section 4 and Supplemental S1: 16 auxiliary paths and 16 extremal finite-difference searches. Section 5 and Supplemental S2: material-independent mirror anchors, incoming-direction chart, compatible-prefix lookup and local linear MLS inverse.",
+    "usage": "CUDA_VISIBLE_DEVICES=5,7 python ./sre/render.py --scene ./scenes/sre_LLaT.xml --config ./configs/llat_feature_lines.json --width 1920 --height 1080 --spp 32 --spp-per-pass 1 --max-depth 4"
+  },
+  "tone_mapping": {
+    "enabled": true,
+    "anchor_samples": 16,
+    "max_depth": 4,
+    "search_radius": 512.0,
+    "min_radius": 2.0,
+    "reference_width": 1920.0,
+    "radial_rings": 4,
+    "min_candidates": 4,
+    "sigma_scale": 1.0,
+    "angular_limit_degrees": 55.0,
+    "condition_epsilon": 1e-6,
+    "cuda_anchor_batch_size": 4
+  },
+  "feature_lines": {
+    "enabled": true,
+    "auxiliary_samples": 16,
+    "cuda_auxiliary_batch_size": 4,
+    "cuda_line_eval_interval": 3,
+    "max_normal_angle_degrees": 80.0,
+    "glossy_line_strength": 0.10,
+    "glossy_line_color": [0.10, 0.10, 0.105],
+    "types": [
+      {
+        "name": "geometric_normal_outer_contour",
+        "measurement": "normal",
+        "threshold": 0.46,
+        "normal_orientation_invariant": true,
+        "relative_depth": false,
+        "stencil": "disk",
+        "stencil_radius": 2.20,
+        "comparisons": 16,
+        "color": [0.006, 0.006, 0.007],
+        "include_silhouette": true,
+        "min_depth": 0,
+        "max_depth": 3
+      },
+      {
+        "name": "geometric_normal_major_creases",
+        "measurement": "normal",
+        "threshold": 0.13,
+        "normal_orientation_invariant": true,
+        "relative_depth": false,
+        "stencil": "disk",
+        "stencil_radius": 1.25,
+        "comparisons": 16,
+        "color": [0.010, 0.010, 0.011],
+        "include_silhouette": false,
+        "min_depth": 0,
+        "max_depth": 3
+      },
+      {
+        "name": "geometric_normal_fine_curvature",
+        "measurement": "normal",
+        "threshold": 0.22,
+        "normal_orientation_invariant": true,
+        "relative_depth": false,
+        "stencil": "disk",
+        "stencil_radius": 0.72,
+        "comparisons": 16,
+        "color": [0.014, 0.014, 0.015],
+        "include_silhouette": false,
+        "min_depth": 0,
+        "max_depth": 3
+      }
+    ]
+  },
+  "materials": {
+    "mat-材质": {
+      "estimator": "identity"
+    },
+    "mat-Cromo_claro_blinn": {
+      "estimator": "identity"
+    },
+    "mat-llat-curved-reflector": {
+      "estimator": "identity"
+    },
+    "mat-Ground": {
+      "estimator": "direct",
+      "samples": 8,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 7.2,
+        "angles_degrees": [76.0, -14.0],
+        "activation_thresholds": [0.50, 0.78],
+        "phase_offsets": [0.17, 0.43],
+        "family_widths": [0.72, 0.46],
+        "min_coverage": 0.006,
+        "max_coverage": 0.34,
+        "darkness_gamma": 1.0,
+        "edge_softness": 0.42,
+        "max_value": 1.10,
+        "ink": [0.010, 0.010, 0.011],
+        "paper": [0.995, 0.995, 0.992]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    },
+    "mat-body_two_mat.001": {
+      "estimator": "direct",
+      "samples": 16,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 5.2,
+        "angles_degrees": [76.0, -14.0, 31.0],
+        "activation_thresholds": [0.16, 0.52, 0.80],
+        "phase_offsets": [0.17, 0.43, 0.71],
+        "family_widths": [0.94, 0.62, 0.40],
+        "min_coverage": 0.10,
+        "max_coverage": 0.62,
+        "darkness_gamma": 0.90,
+        "edge_softness": 0.38,
+        "max_value": 0.48,
+        "ink": [0.006, 0.006, 0.007],
+        "paper": [0.990, 0.990, 0.986]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    },
+    "mat-body_one_mat.001": {
+      "estimator": "direct",
+      "samples": 16,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 5.2,
+        "angles_degrees": [76.0, -14.0, 31.0],
+        "activation_thresholds": [0.16, 0.52, 0.80],
+        "phase_offsets": [0.17, 0.43, 0.71],
+        "family_widths": [0.94, 0.62, 0.40],
+        "min_coverage": 0.10,
+        "max_coverage": 0.62,
+        "darkness_gamma": 0.90,
+        "edge_softness": 0.38,
+        "max_value": 0.48,
+        "ink": [0.006, 0.006, 0.007],
+        "paper": [0.990, 0.990, 0.986]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    },
+    "mat-roof_and_floor_mat": {
+      "estimator": "direct",
+      "samples": 16,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 5.2,
+        "angles_degrees": [76.0, -14.0, 31.0],
+        "activation_thresholds": [0.16, 0.52, 0.80],
+        "phase_offsets": [0.17, 0.43, 0.71],
+        "family_widths": [0.94, 0.62, 0.40],
+        "min_coverage": 0.10,
+        "max_coverage": 0.62,
+        "darkness_gamma": 0.90,
+        "edge_softness": 0.38,
+        "max_value": 0.48,
+        "ink": [0.006, 0.006, 0.007],
+        "paper": [0.990, 0.990, 0.986]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    }
+  },
+  "default": {
+    "estimator": "direct",
+    "samples": 8,
+    "recursive": false,
+    "bias_correction": "none",
+    "function": {
+      "type": "tone_hatch",
+      "spacing": 7.0,
+      "angles_degrees": [76.0, -14.0, 31.0],
+      "activation_thresholds": [0.38, 0.70, 0.88],
+      "phase_offsets": [0.17, 0.43, 0.71],
+      "family_widths": [0.86, 0.56, 0.38],
+      "min_coverage": 0.012,
+      "max_coverage": 0.38,
+      "darkness_gamma": 0.96,
+      "edge_softness": 0.46,
+      "max_value": 0.95,
+      "ink": [0.008, 0.008, 0.009],
+      "paper": [0.992, 0.992, 0.988]
+    },
+    "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+  }
+}

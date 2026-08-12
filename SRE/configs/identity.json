@@ -1,0 +1,5 @@
+{
+  "metadata": {"description": "Rendering equation control: g(I) = I"},
+  "default": {"estimator": "identity"}
+}
+

@@ -1,0 +1,626 @@
+{
+  "metadata": {
+    "description": "Fig. 11 high-detail multi-style feature-line reproduction for the rebuilt 289-part production scene",
+    "paper_parameters": "Section 4 and Supplemental S1: 16 auxiliary paths, 16 extremal finite-difference searches, path-space parallel transport, square stencil on the second robot, displaced lines on the third robot, path-dependent reflection color on the fourth robot, and object-space hatching on the fifth robot.",
+    "scene_notes": "从左至右为蓝色双线型、紫色方形模板粗外轮廓/细内线、洋红偏移草图线、粉色直视/黄色反射线、红色斜排线。新版场景按44/73/86/36/50个独立PLY零件映射到五个mat-f11材质；shape_id线负责零件接缝，curvature线补足单个网格内部的折角细节。直接表面与反射路径均使用大小模板混合采样，总辅助路径仍为16。"
+  },
+  "feature_lines": {
+    "enabled": true,
+    "auxiliary_samples": 16,
+    "_cuda批大小注释": "只控制CUDA辅助光线相交的临时计算图批大小，不改变采样或线条。4兼顾速度与显存；显存紧张时设为1。",
+    "_CUDA辅助批次注释": "24GB单卡吞吐模式：一次提交全部16条辅助光线，减少两次半批求值之间的同步；不改变采样数和线条结果。",
+    "cuda_auxiliary_batch_size": 16,
+    "_CUDA线字典批次注释": "每4组线字典物化一次Dr.Jit计算图，减少逐字典CUDA同步，同时把临时图限制在安全范围。",
+    "cuda_line_eval_interval": 4,
+    "_镜面局部重采样注释": "在理想或GGX粗糙镜面的一次反射后启用：先用平行传输路径拟合镜像像素微分，再按镜中机器人材质选择有限差分模板。GGX的分布标记会被保留，使外采样自然累积成柔和倒影；直接可见机器人不受影响。",
+    "resample_delta_reflections": true,
+    "resample_glossy_reflections": true,
+    "max_normal_angle_degrees": 82.0,
+    "types": [
+      {
+        "_注释": "第一个机器人面部右侧大圆环：共面补偿负责闭环，0.08几何法线阈值抑制零散断点；4.20px模板强化外环笔触，同时保留内外环间隔。",
+        "name": "blue_face_nested_seams",
+        "measurement": "normal",
+        "threshold": 0.08,
+        "normal_orientation_invariant": true,
+        "normal_shape_boundary_fallback": true,
+        "stencil": "disk",
+        "stencil_radius": 5.0,
+        "comparisons": 16,
+        "color": [0.0, 1.75, 3.55],
+        "depth_colors": {
+          "1": [0.0, 6.2, 7.0]
+        },
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue-face"],
+        "include_shapes": ["elm__22", "elm__24"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "大圆环至头壳外框的四条连接线：0.06几何法线阈值保留连接段上的弱法线变化，9.0px模板衔接相邻响应，使红框内折线连续且仍不影响其他面部结构。",
+        "name": "blue_face_right_connector",
+        "measurement": "normal",
+        "threshold": 0.02,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 15.0,
+        "comparisons": 32,
+        "color": [0.0, 1.8, 3.55],
+        "depth_colors": {
+          "1": [0.0, 5.8, 7.0]
+        },
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue-face"],
+        "include_shapes": ["elm__21"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一位机器人右上壳体局部补线：仅作用于elm__26；0.045阈值保留右上斜面与侧面交界处较弱的几何法线变化，3.2px模板使该段清晰连续，但不增粗头部其他线条。",
+        "name": "blue_face_upper_right_detail",
+        "measurement": "normal",
+        "threshold": 0.045,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 3.2,
+        "comparisons": 16,
+        "color": [0.0, 1.7, 3.5],
+        "depth_colors": {
+          "1": [0.0, 5.7, 7.0]
+        },
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue-face"],
+        "include_shapes": ["elm__26"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一位机器人下方正面机身局部补线：射线检查确认elm__36位于直接可见的深度0，缺线来自全局0.20阈值过高而非路径深度不足；0.055阈值与4.5px模板恢复面板下缘和两侧的连续轮廓。",
+        "name": "blue_lower_body_panel_detail",
+        "measurement": "normal",
+        "threshold": 0.055,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 4.5,
+        "comparisons": 16,
+        "color": [0.0, 1.55, 3.35],
+        "depth_colors": {
+          "1": [0.0, 5.6, 6.9]
+        },
+        "include_silhouette": true,
+        "include_materials": ["mat-f11-blue"],
+        "include_shapes": ["elm__36"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一个机器人：使用0.13几何法线梯度阈值和1.40px模板检测青色零件折角；关闭hit/miss轮廓，分离面部圆孔、右侧壳体和关节零件。",
+        "name": "blue_inner_shape",
+        "measurement": "normal",
+        "threshold": 0.20,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 10.0,
+        "comparisons": 16,
+        "color": [0.0, 1.9, 3.65],
+        "depth_colors": {
+          "1": [0.0, 6.0, 7.2]
+        },
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue", "mat-f11-blue-face"],
+        "include_shapes": [
+          "elm__23", "elm__25",
+          "elm__30", "elm__36", "elm__49", "elm__52",
+          "elm__54", "elm__61", "elm__63"
+        ],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一个机器人右侧面板使用论文中的蓝紫次级轮廓；与主青色分开后，面部正面、斜面和侧面具有明确冷暖层次。一次地板反射仍统一为高亮青绿色。",
+        "name": "blue_right_side_shape",
+        "measurement": "normal",
+        "threshold": 0.12,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 1.40,
+        "comparisons": 16,
+        "color": [0.38, 0.48, 3.55],
+        "depth_colors": {
+          "1": [0.0, 5.8, 7.0]
+        },
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue"],
+        "include_shapes": ["elm__28", "elm__41", "elm__43", "elm__45"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一个机器人：浅层深度线，用于同时显出面部圆孔的内外两圈和侧板前后层次，不参与物体外轮廓。",
+        "name": "blue_shallow_depth",
+        "measurement": "normal",
+        "threshold": 0.085,
+        "normal_orientation_invariant": true,
+        "relative_depth": true,
+        "stencil": "disk",
+        "stencil_radius": 10.0,
+        "comparisons": 16,
+        "color": [0.0, 1.55, 3.35],
+        "depth_colors": {
+          "1": [0.0, 5.5, 6.8]
+        },
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue-face"],
+        "include_shapes": [
+          "elm__23", "elm__25"
+        ],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一个机器人：用0.18阈值补充elm__25内部较强的几何法线折角；0.95px模板保持它仍是最细线族，避免面部圆孔和侧边线粘连。",
+        "name": "blue_fine_curvature",
+        "measurement": "normal",
+        "threshold": 0.18,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 0.95,
+        "comparisons": 16,
+        "color": [0.0, 1.25, 3.1],
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue-face"],
+        "include_shapes": ["elm__25"],
+        "min_depth": 0,
+        "max_depth": 0
+      },
+      {
+        "_注释": "第一位机器人主面板补线：只在elm__20上用0.09几何法线阈值检测镜头凹槽外围圆线和面部四角通向外框的折线；2.0px模板形成论文中的中等粗细，且不启用shape/silhouette补偿。",
+        "name": "blue_face_recess_and_corners",
+        "measurement": "normal",
+        "threshold": 0.09,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 10.0,
+        "comparisons": 16,
+        "color": [0.0, 1.7, 3.5],
+        "depth_colors": {
+          "1": [0.0, 5.7, 7.0]
+        },
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue-face"],
+        "include_shapes": ["elm__20"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一个机器人面部外轮廓：10.0px模板形成论文中最醒目的粗蓝色头部轮廓；双命中时仍须超过0.58阈值，避免内部平面被填色。",
+        "name": "blue_face_outer_silhouette",
+        "measurement": "normal",
+        "threshold": 0.58,
+        "normal_orientation_invariant": true,
+        "relative_depth": true,
+        "stencil": "disk",
+        "stencil_radius": 30.0,
+        "comparisons": 16,
+        "color": [0.0, 1.15, 6.5],
+        "depth_colors": {
+          "1": [0.0, 5.0, 7.0]
+        },
+        "include_materials": ["mat-f11-blue-face"],
+        "include_shapes": ["elm__20", "elm__23", "elm__25", "elm__26"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一个机器人身体内部几何特征线：优先于粗轮廓检测躯干、机械臂和腿部折角；0.16阈值抑制平面噪声，1.20px模板形成论文中的中等粗细结构线。",
+        "name": "blue_body_fine_normal",
+        "measurement": "normal",
+        "threshold": 0.16,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 1.20,
+        "comparisons": 16,
+        "color": [0.0, 1.55, 3.35],
+        "depth_colors": {
+          "1": [0.0, 5.6, 6.9]
+        },
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-blue"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第一个机器人身体、手臂和腿部外轮廓：放在1.20px内部线之后，8.0px模板形成略细于头部的论文式粗轮廓；0.58阈值避免内部结构被粗线覆盖。",
+        "name": "blue_body_outer_silhouette",
+        "measurement": "normal",
+        "threshold": 0.58,
+        "normal_orientation_invariant": true,
+        "relative_depth": true,
+        "stencil": "disk",
+        "stencil_radius": 8.0,
+        "comparisons": 16,
+        "color": [0.0, 1.15, 3.5],
+        "depth_colors": {
+          "1": [0.0, 5.0, 7.0]
+        },
+        "include_materials": ["mat-f11-blue"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第二个机器人：论文指定的 square stencil 粗外轮廓；统一用几何法线有限差分判定两侧方向突变，7.0px模板避免跨越胸前和腰部面板细节。",
+        "name": "purple_square_outer",
+        "measurement": "normal",
+        "threshold": 0.58,
+        "normal_orientation_invariant": true,
+        "relative_depth": true,
+        "stencil": "square",
+        "stencil_radius": 35.0,
+        "comparisons": 16,
+        "color": [0.16, 0.0, 3.2],
+        "include_materials": ["mat-f11-purple"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第二个机器人：细紫色内部结构线；由shape边界改为几何法线有限差分，0.10阈值和1.35px模板补全胸前面板、腰部横梁及关节折角。",
+        "name": "purple_fine_internal",
+        "measurement": "normal",
+        "threshold": 0.10,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 5.5,
+        "comparisons": 16,
+        "color": [0.42, 0.015, 3.4],
+        "include_materials": ["mat-f11-purple"],
+        "include_silhouette": false,
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第二个机器人：用几何法线有限差分补充机械面板折角，0.08阈值和0.90px模板恢复红框中的连续细线，同时保持线条分离。",
+        "name": "purple_fine_curvature",
+        "measurement": "normal",
+        "threshold": 0.08,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 0.90,
+        "comparisons": 16,
+        "color": [0.52, 0.018, 3.5],
+        "include_materials": ["mat-f11-purple"],
+        "include_silhouette": false,
+        "min_depth": 0,
+        "max_depth": 0
+      },
+      {
+        "_注释": "第三个机器人主波浪笔触：0.20几何法线阈值和7.0px模板形成论文式粗主线；22/16px高振幅、52/44高频物体空间ripple产生明显连续弯折。",
+        "name": "magenta_displaced_positive",
+        "measurement": "normal",
+        "threshold": 0.20,
+        "relative_depth": false,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 7.0,
+        "stencil_offset": [2.0, -0.75],
+        "stencil_warp_amplitude": [22.0, 16.0],
+        "stencil_warp_frequency": [52.0, 44.0],
+        "stencil_warp_phase": [0.35, 1.25],
+        "stencil_warp_axes": [[0.0, 1.0, 0.2], [1.0, 0.0, 0.25]],
+        "stencil_warp_profile": "ripple",
+        "include_silhouette": true,
+        "comparisons": 16,
+        "color": [5.2, 0.01, 4.8],
+        "depth_colors": {
+          "1": [6.8, 0.04, 7.4]
+        },
+        "include_materials": ["mat-f11-magenta"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第三个机器人反向波浪笔触：0.18阈值和6.0px模板与主笔共享高振幅ripple，并采用相反固定偏移形成粗双重草图线。",
+        "name": "magenta_displaced_negative",
+        "measurement": "normal",
+        "threshold": 0.18,
+        "relative_depth": false,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 6.0,
+        "stencil_offset": [-1.7, 0.8],
+        "stencil_warp_amplitude": [22.0, 16.0],
+        "stencil_warp_frequency": [52.0, 44.0],
+        "stencil_warp_phase": [0.35, 1.25],
+        "stencil_warp_axes": [[0.0, 1.0, 0.2], [1.0, 0.0, 0.25]],
+        "stencil_warp_profile": "ripple",
+        "include_silhouette": true,
+        "comparisons": 16,
+        "color": [3.8, 0.008, 4.6],
+        "depth_colors": {
+          "1": [5.8, 0.035, 7.0]
+        },
+        "include_materials": ["mat-f11-magenta"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第三个机器人几何法线外轮廓兜底：0.16阈值和5.0px模板连接粗主波纹之间的断点，并保留命中/未命中补偿。",
+        "name": "magenta_original_silhouette",
+        "measurement": "normal",
+        "threshold": 0.16,
+        "relative_depth": false,
+        "normal_orientation_invariant": true,
+        "stencil_radius": 5.0,
+        "stencil_warp_amplitude": [22.0, 16.0],
+        "stencil_warp_frequency": [52.0, 44.0],
+        "stencil_warp_phase": [0.35, 1.25],
+        "stencil_warp_axes": [[0.0, 1.0, 0.2], [1.0, 0.0, 0.25]],
+        "stencil_warp_profile": "ripple",
+        "comparisons": 16,
+        "color": [4.2, 0.01, 4.5],
+        "depth_colors": {
+          "1": [5.8, 0.03, 6.8]
+        },
+        "include_materials": ["mat-f11-magenta"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第三个机器人内部几何法线线：0.24阈值和2.2px模板连接真实折角，不检测86个PLY的shape_id拼缝。",
+        "name": "magenta_inner_normal",
+        "measurement": "normal",
+        "threshold": 0.24,
+        "relative_depth": false,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 2.2,
+        "stencil_warp_amplitude": [22.0, 16.0],
+        "stencil_warp_frequency": [52.0, 44.0],
+        "stencil_warp_phase": [0.35, 1.25],
+        "stencil_warp_axes": [[0.0, 1.0, 0.2], [1.0, 0.0, 0.25]],
+        "stencil_warp_profile": "ripple",
+        "include_silhouette": false,
+        "comparisons": 16,
+        "color": [5.0, 0.015, 5.2],
+        "depth_colors": {
+          "1": [6.2, 0.04, 7.0]
+        },
+        "include_materials": ["mat-f11-magenta"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第三个机器人窄法线锚线：0.22阈值和3.2px模板恢复同一PLY内部的侧板折线、圆柱层次和中心机构。",
+        "name": "magenta_anchor_normal",
+        "measurement": "normal",
+        "threshold": 0.22,
+        "relative_depth": false,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 3.2,
+        "stencil_offset": [2.15, -0.78],
+        "stencil_warp_amplitude": [22.0, 16.0],
+        "stencil_warp_frequency": [52.0, 44.0],
+        "stencil_warp_phase": [0.35, 1.25],
+        "stencil_warp_axes": [[0.0, 1.0, 0.2], [1.0, 0.0, 0.25]],
+        "stencil_warp_profile": "ripple",
+        "include_silhouette": false,
+        "comparisons": 16,
+        "color": [3.6, 0.008, 4.0],
+        "depth_colors": {
+          "1": [5.2, 0.03, 6.4]
+        },
+        "include_materials": ["mat-f11-magenta"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第三个机器人细法线差分线：在1.6px局部模板内以0.28阈值搜索几何法线极值，补足复杂中心机构的细折角。",
+        "name": "magenta_fine_normal",
+        "measurement": "normal",
+        "threshold": 0.28,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 1.6,
+        "stencil_warp_amplitude": [22.0, 16.0],
+        "stencil_warp_frequency": [52.0, 44.0],
+        "stencil_warp_phase": [0.35, 1.25],
+        "stencil_warp_axes": [[0.0, 1.0, 0.2], [1.0, 0.0, 0.25]],
+        "stencil_warp_profile": "ripple",
+        "include_silhouette": false,
+        "comparisons": 16,
+        "color": [4.8, 0.02, 4.9],
+        "include_materials": ["mat-f11-magenta"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第四个机器人主外轮廓：统一用有限差分检测几何法线。0.46阈值只保留明显折角与命中/未命中的外轮廓；深度0为粉色，地板一次反射后的同一轮廓改为金黄色。",
+        "name": "pink_direct_yellow_reflection",
+        "measurement": "normal",
+        "threshold": 0.46,
+        "normal_orientation_invariant": true,
+        "relative_depth": false,
+        "stencil": "disk",
+        "stencil_radius": 5.5,
+        "comparisons": 16,
+        "color": [3.5, 0.0, 0.34],
+        "depth_colors": {
+          "1": [7.8, 4.8, 0.065]
+        },
+        "glossy_mix_strength": 0.0,
+        "include_silhouette": true,
+        "include_materials": ["mat-f11-pink"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第四个机器人内部结构线：不再使用shape_id拼缝，而以0.09阈值检测几何法线的有限差分；关闭轮廓补偿，让叶片折线和中心组件与粗外轮廓分离。一次反射中改为亮黄色。",
+        "name": "pink_inner_shape",
+        "measurement": "normal",
+        "threshold": 0.09,
+        "normal_orientation_invariant": true,
+        "relative_depth": false,
+        "stencil": "disk",
+        "stencil_radius": 2.4,
+        "comparisons": 16,
+        "color": [3.8, 0.0, 0.48],
+        "depth_colors": {
+          "1": [8.3, 5.3, 0.085]
+        },
+        "glossy_mix_strength": 0.0,
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-pink"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第四个机器人直接可见的最细结构线：同样使用几何法线有限差分，0.17阈值与0.9px模板补充叶片折角，不启用外轮廓且不进入反射路径。",
+        "name": "pink_fine_curvature",
+        "measurement": "normal",
+        "threshold": 0.17,
+        "normal_orientation_invariant": true,
+        "relative_depth": false,
+        "stencil": "disk",
+        "stencil_radius": 0.9,
+        "comparisons": 16,
+        "color": [3.9, 0.0, 0.52],
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-pink"],
+        "min_depth": 0,
+        "max_depth": 0
+      },
+      {
+        "_注释": "第四个机器人地板倒影专用兜底：仅在一次反射深度1用0.04阈值的几何法线有限差分恢复叶片外缘和中心轮廓。10px模板连接粗糙镜面下稀疏的黄色边缘；它不参与直接可见的粉色机器人，也不与中性灰混合。",
+        "name": "pink_reflection_normal_fallback",
+        "measurement": "normal",
+        "threshold": 0.04,
+        "normal_orientation_invariant": true,
+        "relative_depth": false,
+        "stencil": "disk",
+        "stencil_radius": 10.0,
+        "comparisons": 16,
+        "color": [9.2, 5.8, 0.070],
+        "glossy_mix_strength": 0.0,
+        "include_silhouette": true,
+        "include_materials": ["mat-f11-pink"],
+        "min_depth": 1,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第五个机器人：用几何法线有限差分检测外轮廓；0.48阈值和8.0px边缘域由高亮斜线裁切，并保留hit/miss轮廓补偿。",
+        "name": "red_hatched_outline",
+        "measurement": "normal",
+        "threshold": 0.48,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 8.0,
+        "comparisons": 16,
+        "color": [6.0, 0.120, 0.050],
+        "depth_colors": {
+          "1": [7.2, 0.22, 0.075]
+        },
+        "glossy_mix_strength": 0.08,
+        "line_hatch_scale": 42.0,
+        "line_hatch_width": 0.240,
+        "line_hatch_direction": [0.66162164, 0.66162164, 0.35286487],
+        "line_hatch_phase": 0.0,
+        "line_hatch_edge_softness": 0.012,
+        "include_materials": ["mat-f11-red"],
+        "min_depth": 0,
+        "max_depth": 1
+      },
+      {
+        "_注释": "第五个机器人：用0.10几何法线有限差分阈值和5.0px模板恢复面板、轮胎及窗口折角；关闭轮廓补偿以抑制PLY拼缝。",
+        "name": "red_hatched_internal",
+        "measurement": "normal",
+        "threshold": 0.10,
+        "normal_orientation_invariant": true,
+        "stencil": "disk",
+        "stencil_radius": 5.0,
+        "comparisons": 16,
+        "color": [5.4, 0.100, 0.045],
+        "depth_colors": {
+          "1": [6.6, 0.18, 0.065]
+        },
+        "glossy_mix_strength": 0.08,
+        "line_hatch_scale": 42.0,
+        "line_hatch_width": 0.220,
+        "line_hatch_direction": [0.66162164, 0.66162164, 0.35286487],
+        "line_hatch_phase": 0.0,
+        "line_hatch_edge_softness": 0.012,
+        "include_silhouette": false,
+        "include_materials": ["mat-f11-red"],
+        "min_depth": 0,
+        "max_depth": 1
+      }
+    ]
+  },
+  "materials": {
+    "mat-f11-floor": {
+      "_注释": "地面保持真实路径积分；镜面粗糙度完全由fig11.xml中的mat-f11-floor控制，不在风格函数中伪造或模糊倒影。机器人1、2、3、5保持各自原色，只有机器人4的深度1特征线改为黄色。",
+      "estimator": "identity"
+    },
+    "mat-f11-blue": {
+      "_注释": "论文蓝色机器人并非纯黑剪影；极弱深蓝底色提供手臂、腿部和反射中的体积层次，同时不填平青色结构线。",
+      "estimator": "constant",
+      "value": [0.0015, 0.004, 0.014]
+    },
+    "mat-f11-blue-face": {
+      "_注释": "面部保留接近黑色的冷蓝底色，让圆环和双弧内部仍为深色，但避免当前结果完全无层次。",
+      "estimator": "constant",
+      "value": [0.001, 0.003, 0.011]
+    },
+    "mat-f11-magenta": {
+      "_注释": "论文第三个机器人在线条之间仍保留暗紫红体积与反射能量；该底色很弱，不会把机械细节填平。",
+      "estimator": "constant",
+      "value": [0.015, 0.0005, 0.025]
+    },
+    "mat-f11-red": {
+      "_注释": "第五机器人只保留近黑的极弱斜线底纹；主要红色条纹由几何法线有限差分检测后的red_hatched_*边缘域提供。",
+      "estimator": "direct",
+      "samples": 1,
+      "bias_correction": "none",
+      "function": {
+        "type": "crosshatch",
+        "scale": 42.0,
+        "width": 0.105,
+        "max_value": 1.0,
+        "ink": [0.035, 0.0006, 0.0004],
+        "paper": [0.003, 0.0002, 0.006],
+        "directions": [[0.66162164, 0.66162164, 0.35286487]],
+        "activation_thresholds": [0.0],
+        "phase_offsets": [0.0],
+        "scale_factors": [1.0],
+        "family_widths": [1.0],
+        "width_growth": 0.0,
+        "edge_softness": 0.010,
+        "darkness_gamma": 1.0
+      }
+    }
+  },
+  "shapes": {
+    "elm__28": {
+      "_注释": "机器人1右侧可见斜面：论文中呈暗蓝紫色。",
+      "estimator": "constant",
+      "value": [0.012, 0.0025, 0.040]
+    },
+    "elm__41": {
+      "estimator": "constant",
+      "value": [0.012, 0.0025, 0.040]
+    },
+    "elm__43": {
+      "estimator": "constant",
+      "value": [0.012, 0.0025, 0.040]
+    },
+    "elm__45": {
+      "estimator": "constant",
+      "value": [0.012, 0.0025, 0.040]
+    }
+  },
+  "default": {
+    "_注释": "除地面和红色排线对象外，表面本身保持黑色，仅显示路径空间特征线。",
+    "estimator": "constant",
+    "value": [0.0, 0.0, 0.0]
+  }
+}

@@ -1,0 +1,2847 @@
+<scene version="2.1.0">
+
+<!-- Defaults, these can be set via the command line: -Darg=value -->
+
+	<default name="spp" value="4096"/>
+	<default name="resx" value="1920"/>
+	<default name="resy" value="1080"/>
+	<default name="focus_distance" value="8.65"/>
+	<default name="aperture_radius" value="0.060"/>
+
+<!-- Camera and Rendering Parameters -->
+
+	<integrator type="$integrator" id="elm__0" name="elm__0">
+		<integer name="max_depth" value="$max_depth"/>
+		<integer name="rr_depth" value="4"/>
+		<float name="rr_probability" value="0.95"/>
+		<string name="style_config" value="$style_config"/>
+	</integrator>
+	<sensor type="thinlens" id="Camera" name="Camera">
+		<string name="fov_axis" value="x"/>
+		<float name="fov" value="67.380137"/>
+		<float name="near_clip" value="0.100000"/>
+		<float name="far_clip" value="100.000000"/>
+		<float name="focus_distance" value="$focus_distance"/>
+		<float name="aperture_radius" value="$aperture_radius"/>
+		<transform name="to_world">
+			<rotate x="1" angle="-170.48673994804415"/>
+			<rotate y="1" angle="-44.409230870168"/>
+			<rotate z="1" angle="179.99981376365957"/>
+			<translate value="8.984934 2.130575 6.797470"/>
+		</transform>
+		<sampler type="independent" name="sampler">
+			<integer name="sample_count" value="$spp"/>
+		</sampler>
+		<film type="hdrfilm" name="film">
+			<integer name="width" value="$resx"/>
+			<integer name="height" value="$resy"/>
+			<rfilter type="box"/>
+		</film>
+	</sensor>
+
+<!-- Materials -->
+
+	<bsdf type="roughconductor" id="mat-材质" name="mat-材质">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.020"/>
+		<string name="material" value="none"/>
+		<rgb name="specular_reflectance" value="0.82"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Wall" name="mat-Wall">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-HouseEquip" name="mat-HouseEquip">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-material_0" name="mat-material_0">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Glass" name="mat-Glass">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-RoofSaver" name="mat-RoofSaver">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Roof" name="mat-Roof">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Elements" name="mat-Elements">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Ground" name="mat-Ground">
+		<rgb value="0.720000 0.720000 0.720000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-material_0.001" name="mat-material_0.001">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-body_two_mat" name="mat-body_two_mat">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.14"/>
+		<rgb name="diffuse_reflectance" value="0.18"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-interior_mat" name="mat-interior_mat">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-details_two_mat" name="mat-details_two_mat">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-details_one_mat" name="mat-details_one_mat">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-body_one_mat" name="mat-body_one_mat">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.12"/>
+		<rgb name="diffuse_reflectance" value="0.14"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-glass_mat" name="mat-glass_mat">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.055"/>
+		<rgb name="diffuse_reflectance" value="0.025"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-wheels_mat" name="mat-wheels_mat">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.033" name="mat-Material.033">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.024" name="mat-Material.024">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.028" name="mat-Material.028">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.034" name="mat-Material.034">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.011" name="mat-Material.011">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.023" name="mat-Material.023">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.027" name="mat-Material.027">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.026" name="mat-Material.026">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.025" name="mat-Material.025">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Material.051" name="mat-Material.051">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-material" name="mat-material">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-lambert1.001" name="mat-lambert1.001">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-Robot_plastico_negro_blinn" name="mat-Robot_plastico_negro_blinn">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.18"/>
+		<rgb name="diffuse_reflectance" value="0.34"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-Robot_metal_negro_blinn" name="mat-Robot_metal_negro_blinn">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.10"/>
+		<rgb name="diffuse_reflectance" value="0.26"/>
+	</bsdf>
+	<bsdf type="roughconductor" id="mat-Cromo_claro_blinn" name="mat-Cromo_claro_blinn">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.045"/>
+		<string name="material" value="none"/>
+		<rgb name="specular_reflectance" value="0.86"/>
+	</bsdf>
+	<bsdf type="roughconductor" id="mat-llat-curved-reflector" name="mat-llat-curved-reflector">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.055"/>
+		<string name="material" value="none"/>
+		<rgb name="specular_reflectance" value="0.80"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-lambert1" name="mat-lambert1">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-Robot_metal_color02_blinn" name="mat-Robot_metal_color02_blinn">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.08"/>
+		<rgb name="diffuse_reflectance" value="0.42"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-roboter_2_0Roboter_Glass01_mat" name="mat-roboter_2_0Roboter_Glass01_mat">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-lente_interior" name="mat-lente_interior">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-Default_Material" name="mat-Default_Material">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-exterior_details_mat" name="mat-exterior_details_mat">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-body_two_mat.001" name="mat-body_two_mat.001">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.11"/>
+		<float name="int_ior" value="1.90"/>
+		<rgb name="diffuse_reflectance" value="0.12"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-glass_mat.001" name="mat-glass_mat.001">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.045"/>
+		<rgb name="diffuse_reflectance" value="0.018"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-interior_mat.001" name="mat-interior_mat.001">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-wheels_and_bottom_mat" name="mat-wheels_and_bottom_mat">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-body_one_mat.001" name="mat-body_one_mat.001">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.09"/>
+		<float name="int_ior" value="1.90"/>
+		<rgb name="diffuse_reflectance" value="0.10"/>
+	</bsdf>
+	<bsdf type="roughplastic" id="mat-roof_and_floor_mat" name="mat-roof_and_floor_mat">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.075"/>
+		<float name="int_ior" value="1.90"/>
+		<rgb name="diffuse_reflectance" value="0.075"/>
+	</bsdf>
+	<bsdf type="diffuse" id="mat-lambert6" name="mat-lambert6">
+		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
+	</bsdf>
+
+<!-- Emitters -->
+
+	<emitter type="directional" id="emit-Light" name="emit-Light">
+		<rgb value="1.200000 1.200000 1.200000" name="irradiance"/>
+		<!-- Frontal high key light, offset slightly towards camera-right. -->
+		<vector name="direction" x="-0.766000" y="-0.454000" z="-0.467000"/>
+	</emitter>
+	<emitter type="constant" id="emit-paper-environment" name="emit-paper-environment">
+		<rgb value="0.900000 0.900000 0.900000" name="radiance"/>
+	</emitter>
+
+<!-- Shapes -->
+
+	<shape type="ply" id="mesh-立方体" name="mesh-立方体">
+		<string name="filename" value="meshes/water_puddle.ply"/>
+		<transform name="to_world">
+			<translate x="1.500000" y="0.000000" z="-1.050000"/>
+		</transform>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-材质" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_4" name="mesh-Object_4">
+		<string name="filename" value="meshes/Object_4.ply"/>
+		<ref id="mat-Wall" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_6" name="mesh-Object_6">
+		<string name="filename" value="meshes/Object_6.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_8" name="mesh-Object_8">
+		<string name="filename" value="meshes/Object_8.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_10" name="mesh-Object_10">
+		<string name="filename" value="meshes/Object_10.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-material_0" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_12" name="mesh-Object_12">
+		<string name="filename" value="meshes/Object_12.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_14" name="mesh-Object_14">
+		<string name="filename" value="meshes/Object_14.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_16" name="mesh-Object_16">
+		<string name="filename" value="meshes/Object_16.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_18" name="mesh-Object_18">
+		<string name="filename" value="meshes/Object_18.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_20" name="mesh-Object_20">
+		<string name="filename" value="meshes/Object_20.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_22" name="mesh-Object_22">
+		<string name="filename" value="meshes/Object_22.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_24" name="mesh-Object_24">
+		<string name="filename" value="meshes/Object_24.ply"/>
+		<ref id="mat-Glass" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_26" name="mesh-Object_26">
+		<string name="filename" value="meshes/Object_26.ply"/>
+		<ref id="mat-Glass" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_28" name="mesh-Object_28">
+		<string name="filename" value="meshes/Object_28.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Glass" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_30" name="mesh-Object_30">
+		<string name="filename" value="meshes/Object_30.ply"/>
+		<ref id="mat-Glass" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_32" name="mesh-Object_32">
+		<string name="filename" value="meshes/Object_32.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_34" name="mesh-Object_34">
+		<string name="filename" value="meshes/Object_34.ply"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_36" name="mesh-Object_36">
+		<string name="filename" value="meshes/Object_36.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_38" name="mesh-Object_38">
+		<string name="filename" value="meshes/Object_38.ply"/>
+		<ref id="mat-RoofSaver" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_40" name="mesh-Object_40">
+		<string name="filename" value="meshes/Object_40.ply"/>
+		<ref id="mat-Roof" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_42" name="mesh-Object_42">
+		<string name="filename" value="meshes/Object_42.ply"/>
+		<ref id="mat-Roof" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_44" name="mesh-Object_44">
+		<string name="filename" value="meshes/Object_44.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-RoofSaver" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_46" name="mesh-Object_46">
+		<string name="filename" value="meshes/Object_46.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-RoofSaver" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_48" name="mesh-Object_48">
+		<string name="filename" value="meshes/Object_48.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_50" name="mesh-Object_50">
+		<string name="filename" value="meshes/Object_50.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_52" name="mesh-Object_52">
+		<string name="filename" value="meshes/Object_52.ply"/>
+		<ref id="mat-Roof" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_54" name="mesh-Object_54">
+		<string name="filename" value="meshes/Object_54.ply"/>
+		<ref id="mat-RoofSaver" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_56" name="mesh-Object_56">
+		<string name="filename" value="meshes/Object_56.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_58" name="mesh-Object_58">
+		<string name="filename" value="meshes/Object_58.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_60" name="mesh-Object_60">
+		<string name="filename" value="meshes/Object_60.ply"/>
+		<ref id="mat-RoofSaver" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_62" name="mesh-Object_62">
+		<string name="filename" value="meshes/Object_62.ply"/>
+		<ref id="mat-RoofSaver" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_64" name="mesh-Object_64">
+		<string name="filename" value="meshes/Object_64.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-RoofSaver" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_66" name="mesh-Object_66">
+		<string name="filename" value="meshes/Object_66.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_68" name="mesh-Object_68">
+		<string name="filename" value="meshes/Object_68.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_70" name="mesh-Object_70">
+		<string name="filename" value="meshes/Object_70.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_72" name="mesh-Object_72">
+		<string name="filename" value="meshes/Object_72.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Ground" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_74" name="mesh-Object_74">
+		<string name="filename" value="meshes/Object_74.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_76" name="mesh-Object_76">
+		<string name="filename" value="meshes/Object_76.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_78" name="mesh-Object_78">
+		<string name="filename" value="meshes/Object_78.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_80" name="mesh-Object_80">
+		<string name="filename" value="meshes/Object_80.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_82" name="mesh-Object_82">
+		<string name="filename" value="meshes/Object_82.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_84" name="mesh-Object_84">
+		<string name="filename" value="meshes/Object_84.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_86" name="mesh-Object_86">
+		<string name="filename" value="meshes/Object_86.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_88" name="mesh-Object_88">
+		<string name="filename" value="meshes/Object_88.ply"/>
+		<ref id="mat-HouseEquip" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_90" name="mesh-Object_90">
+		<string name="filename" value="meshes/Object_90.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_92" name="mesh-Object_92">
+		<string name="filename" value="meshes/Object_92.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_94" name="mesh-Object_94">
+		<string name="filename" value="meshes/Object_94.ply"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_96" name="mesh-Object_96">
+		<string name="filename" value="meshes/Object_96.ply"/>
+		<ref id="mat-Roof" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_98" name="mesh-Object_98">
+		<string name="filename" value="meshes/Object_98.ply"/>
+		<ref id="mat-Roof" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_100" name="mesh-Object_100">
+		<string name="filename" value="meshes/Object_100.ply"/>
+		<ref id="mat-Roof" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_102" name="mesh-Object_102">
+		<string name="filename" value="meshes/Object_102.ply"/>
+		<ref id="mat-Roof" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_104" name="mesh-Object_104">
+		<string name="filename" value="meshes/Object_104.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Elements" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_2" name="mesh-Object_2">
+		<string name="filename" value="meshes/Object_2.ply"/>
+		<ref id="mat-material_0.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_3" name="mesh-Object_3">
+		<string name="filename" value="meshes/Object_3.ply"/>
+		<ref id="mat-material_0.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-car_body_body_two_mat_0" name="mesh-car_body_body_two_mat_0">
+		<string name="filename" value="meshes/car_body_body_two_mat_0.ply"/>
+		<ref id="mat-body_two_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-car_body_interior_mat_0" name="mesh-car_body_interior_mat_0">
+		<string name="filename" value="meshes/car_body_interior_mat_0.ply"/>
+		<ref id="mat-interior_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-car_body_details_two_mat_0" name="mesh-car_body_details_two_mat_0">
+		<string name="filename" value="meshes/car_body_details_two_mat_0.ply"/>
+		<ref id="mat-details_two_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-car_body_details_one_mat_0" name="mesh-car_body_details_one_mat_0">
+		<string name="filename" value="meshes/car_body_details_one_mat_0.ply"/>
+		<ref id="mat-details_one_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-car_body_body_one_mat_0" name="mesh-car_body_body_one_mat_0">
+		<string name="filename" value="meshes/car_body_body_one_mat_0.ply"/>
+		<ref id="mat-body_one_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-car_body_glass_mat_0" name="mesh-car_body_glass_mat_0">
+		<string name="filename" value="meshes/car_body_glass_mat_0.ply"/>
+		<ref id="mat-glass_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-back_w_wheels_mat_0" name="mesh-back_w_wheels_mat_0">
+		<string name="filename" value="meshes/back_w_wheels_mat_0.ply"/>
+		<ref id="mat-wheels_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-door_l_interior_mat_0" name="mesh-door_l_interior_mat_0">
+		<string name="filename" value="meshes/door_l_interior_mat_0.ply"/>
+		<ref id="mat-interior_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-door_l_details_two_mat_0" name="mesh-door_l_details_two_mat_0">
+		<string name="filename" value="meshes/door_l_details_two_mat_0.ply"/>
+		<ref id="mat-details_two_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-door_l_body_two_mat_0" name="mesh-door_l_body_two_mat_0">
+		<string name="filename" value="meshes/door_l_body_two_mat_0.ply"/>
+		<ref id="mat-body_two_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-door_l_glass_mat_0" name="mesh-door_l_glass_mat_0">
+		<string name="filename" value="meshes/door_l_glass_mat_0.ply"/>
+		<ref id="mat-glass_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-door_r_interior_mat_0" name="mesh-door_r_interior_mat_0">
+		<string name="filename" value="meshes/door_r_interior_mat_0.ply"/>
+		<ref id="mat-interior_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-door_r_details_two_mat_0" name="mesh-door_r_details_two_mat_0">
+		<string name="filename" value="meshes/door_r_details_two_mat_0.ply"/>
+		<ref id="mat-details_two_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-door_r_body_two_mat_0" name="mesh-door_r_body_two_mat_0">
+		<string name="filename" value="meshes/door_r_body_two_mat_0.ply"/>
+		<ref id="mat-body_two_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-door_r_glass_mat_0" name="mesh-door_r_glass_mat_0">
+		<string name="filename" value="meshes/door_r_glass_mat_0.ply"/>
+		<ref id="mat-glass_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-front_w_wheels_mat_0" name="mesh-front_w_wheels_mat_0">
+		<string name="filename" value="meshes/front_w_wheels_mat_0.ply"/>
+		<ref id="mat-wheels_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_005_Material_033_0" name="mesh-Cylinder_005_Material_033_0">
+		<string name="filename" value="meshes/Cylinder_005_Material_033_0.ply"/>
+		<ref id="mat-Material.033" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_005_Material_024_0" name="mesh-Cylinder_005_Material_024_0">
+		<string name="filename" value="meshes/Cylinder_005_Material_024_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_005_Material_028_0" name="mesh-Cylinder_005_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_005_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_005_Material_034_0" name="mesh-Cylinder_005_Material_034_0">
+		<string name="filename" value="meshes/Cylinder_005_Material_034_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Material.034" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_005_Material_011_0" name="mesh-Cylinder_005_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_005_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_010_Material_024_0" name="mesh-Cylinder_010_Material_024_0">
+		<string name="filename" value="meshes/Cylinder_010_Material_024_0.ply"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_010_Material_023_0" name="mesh-Cylinder_010_Material_023_0">
+		<string name="filename" value="meshes/Cylinder_010_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_010_Material_027_0" name="mesh-Cylinder_010_Material_027_0">
+		<string name="filename" value="meshes/Cylinder_010_Material_027_0.ply"/>
+		<ref id="mat-Material.027" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_010_Material_026_0" name="mesh-Cylinder_010_Material_026_0">
+		<string name="filename" value="meshes/Cylinder_010_Material_026_0.ply"/>
+		<ref id="mat-Material.026" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_010_Material_025_0" name="mesh-Cylinder_010_Material_025_0">
+		<string name="filename" value="meshes/Cylinder_010_Material_025_0.ply"/>
+		<ref id="mat-Material.025" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_010_Material_028_0" name="mesh-Cylinder_010_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_010_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_010_Material_011_0" name="mesh-Cylinder_010_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_010_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_013_Material_028_0" name="mesh-Cylinder_013_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_013_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_013_Material_011_0" name="mesh-Cylinder_013_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_013_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_017_Material_023_0" name="mesh-Cube_017_Material_023_0">
+		<string name="filename" value="meshes/Cube_017_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_017_Material_024_0" name="mesh-Cube_017_Material_024_0">
+		<string name="filename" value="meshes/Cube_017_Material_024_0.ply"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_017_Material_011_0" name="mesh-Cube_017_Material_011_0">
+		<string name="filename" value="meshes/Cube_017_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_014_Material_023_0" name="mesh-Cylinder_014_Material_023_0">
+		<string name="filename" value="meshes/Cylinder_014_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_014_Material_024_0" name="mesh-Cylinder_014_Material_024_0">
+		<string name="filename" value="meshes/Cylinder_014_Material_024_0.ply"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_014_Material_025_0" name="mesh-Cylinder_014_Material_025_0">
+		<string name="filename" value="meshes/Cylinder_014_Material_025_0.ply"/>
+		<ref id="mat-Material.025" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_014_Material_011_0" name="mesh-Cylinder_014_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_014_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_016_Material_024_0" name="mesh-Cylinder_016_Material_024_0">
+		<string name="filename" value="meshes/Cylinder_016_Material_024_0.ply"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_016_Material_023_0" name="mesh-Cylinder_016_Material_023_0">
+		<string name="filename" value="meshes/Cylinder_016_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_016_Material_011_0" name="mesh-Cylinder_016_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_016_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_018_Material_024_0" name="mesh-Cylinder_018_Material_024_0">
+		<string name="filename" value="meshes/Cylinder_018_Material_024_0.ply"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_018_Material_023_0" name="mesh-Cylinder_018_Material_023_0">
+		<string name="filename" value="meshes/Cylinder_018_Material_023_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_018_Material_025_0" name="mesh-Cylinder_018_Material_025_0">
+		<string name="filename" value="meshes/Cylinder_018_Material_025_0.ply"/>
+		<ref id="mat-Material.025" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_018_Material_011_0" name="mesh-Cylinder_018_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_018_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_019_Material_027_0" name="mesh-Cylinder_019_Material_027_0">
+		<string name="filename" value="meshes/Cylinder_019_Material_027_0.ply"/>
+		<ref id="mat-Material.027" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_019_Material_011_0" name="mesh-Cylinder_019_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_019_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_020_Material_027_0" name="mesh-Cylinder_020_Material_027_0">
+		<string name="filename" value="meshes/Cylinder_020_Material_027_0.ply"/>
+		<ref id="mat-Material.027" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_020_Material_026_0" name="mesh-Cylinder_020_Material_026_0">
+		<string name="filename" value="meshes/Cylinder_020_Material_026_0.ply"/>
+		<ref id="mat-Material.026" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_020_Material_011_0" name="mesh-Cylinder_020_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_020_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_022_Material_028_0" name="mesh-Cylinder_022_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_022_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_022_Material_011_0" name="mesh-Cylinder_022_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_022_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_023_Material_025_0" name="mesh-Cylinder_023_Material_025_0">
+		<string name="filename" value="meshes/Cylinder_023_Material_025_0.ply"/>
+		<ref id="mat-Material.025" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_023_Material_024_0" name="mesh-Cylinder_023_Material_024_0">
+		<string name="filename" value="meshes/Cylinder_023_Material_024_0.ply"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_023_Material_028_0" name="mesh-Cylinder_023_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_023_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_023_Material_023_0" name="mesh-Cylinder_023_Material_023_0">
+		<string name="filename" value="meshes/Cylinder_023_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_023_Material_011_0" name="mesh-Cylinder_023_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_023_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_026_Material_024_0" name="mesh-Cube_026_Material_024_0">
+		<string name="filename" value="meshes/Cube_026_Material_024_0.ply"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_026_Material_025_0" name="mesh-Cube_026_Material_025_0">
+		<string name="filename" value="meshes/Cube_026_Material_025_0.ply"/>
+		<ref id="mat-Material.025" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_026_Material_028_0" name="mesh-Cube_026_Material_028_0">
+		<string name="filename" value="meshes/Cube_026_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_026_Material_023_0" name="mesh-Cube_026_Material_023_0">
+		<string name="filename" value="meshes/Cube_026_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_026_Material_011_0" name="mesh-Cube_026_Material_011_0">
+		<string name="filename" value="meshes/Cube_026_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_029_Material_027_0" name="mesh-Cube_029_Material_027_0">
+		<string name="filename" value="meshes/Cube_029_Material_027_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Material.027" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_029_Material_026_0" name="mesh-Cube_029_Material_026_0">
+		<string name="filename" value="meshes/Cube_029_Material_026_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Material.026" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_029_Material_011_0" name="mesh-Cube_029_Material_011_0">
+		<string name="filename" value="meshes/Cube_029_Material_011_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_024_Material_028_0" name="mesh-Cylinder_024_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_024_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_024_Material_011_0" name="mesh-Cylinder_024_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_024_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_008_Material_023_0" name="mesh-Cube_008_Material_023_0">
+		<string name="filename" value="meshes/Cube_008_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_008_Material_011_0" name="mesh-Cube_008_Material_011_0">
+		<string name="filename" value="meshes/Cube_008_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_010_Material_023_0" name="mesh-Cube_010_Material_023_0">
+		<string name="filename" value="meshes/Cube_010_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_010_Material_011_0" name="mesh-Cube_010_Material_011_0">
+		<string name="filename" value="meshes/Cube_010_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_014_Material_024_0" name="mesh-Cube_014_Material_024_0">
+		<string name="filename" value="meshes/Cube_014_Material_024_0.ply"/>
+		<ref id="mat-Material.024" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_014_Material_023_0" name="mesh-Cube_014_Material_023_0">
+		<string name="filename" value="meshes/Cube_014_Material_023_0.ply"/>
+		<ref id="mat-Material.023" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_014_Material_028_0" name="mesh-Cube_014_Material_028_0">
+		<string name="filename" value="meshes/Cube_014_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cube_014_Material_011_0" name="mesh-Cube_014_Material_011_0">
+		<string name="filename" value="meshes/Cube_014_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_015_Material_028_0" name="mesh-Cylinder_015_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_015_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_015_Material_011_0" name="mesh-Cylinder_015_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_015_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_017_Material_028_0" name="mesh-Cylinder_017_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_017_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_017_Material_011_0" name="mesh-Cylinder_017_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_017_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_025_Material_028_0" name="mesh-Cylinder_025_Material_028_0">
+		<string name="filename" value="meshes/Cylinder_025_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_025_Material_011_0" name="mesh-Cylinder_025_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_025_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Sphere_Material_028_0" name="mesh-Sphere_Material_028_0">
+		<string name="filename" value="meshes/Sphere_Material_028_0.ply"/>
+		<ref id="mat-Material.028" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Sphere_Material_011_0" name="mesh-Sphere_Material_011_0">
+		<string name="filename" value="meshes/Sphere_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_033_Material_051_0" name="mesh-Cylinder_033_Material_051_0">
+		<string name="filename" value="meshes/Cylinder_033_Material_051_0.ply"/>
+		<ref id="mat-Material.051" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_033_Material_011_0" name="mesh-Cylinder_033_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_033_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������" name="mesh-�������������������">
+		<string name="filename" value="meshes/�������������������.ply"/>
+		<ref id="mat-material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_001" name="mesh-�������������������_001">
+		<string name="filename" value="meshes/�������������������_001.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_035_Material_051_0" name="mesh-Cylinder_035_Material_051_0">
+		<string name="filename" value="meshes/Cylinder_035_Material_051_0.ply"/>
+		<ref id="mat-Material.051" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_035_Material_011_0" name="mesh-Cylinder_035_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_035_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_003" name="mesh-�������������������_003">
+		<string name="filename" value="meshes/�������������������_003.ply"/>
+		<ref id="mat-material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_004" name="mesh-�������������������_004">
+		<string name="filename" value="meshes/�������������������_004.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_037_Material_051_0" name="mesh-Cylinder_037_Material_051_0">
+		<string name="filename" value="meshes/Cylinder_037_Material_051_0.ply"/>
+		<ref id="mat-Material.051" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_037_Material_011_0" name="mesh-Cylinder_037_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_037_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_006" name="mesh-�������������������_006">
+		<string name="filename" value="meshes/�������������������_006.ply"/>
+		<ref id="mat-material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_007" name="mesh-�������������������_007">
+		<string name="filename" value="meshes/�������������������_007.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_039_Material_051_0" name="mesh-Cylinder_039_Material_051_0">
+		<string name="filename" value="meshes/Cylinder_039_Material_051_0.ply"/>
+		<ref id="mat-Material.051" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_039_Material_011_0" name="mesh-Cylinder_039_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_039_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_009" name="mesh-�������������������_009">
+		<string name="filename" value="meshes/�������������������_009.ply"/>
+		<ref id="mat-material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_010" name="mesh-�������������������_010">
+		<string name="filename" value="meshes/�������������������_010.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_040_Material_051_0" name="mesh-Cylinder_040_Material_051_0">
+		<string name="filename" value="meshes/Cylinder_040_Material_051_0.ply"/>
+		<ref id="mat-Material.051" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cylinder_040_Material_011_0" name="mesh-Cylinder_040_Material_011_0">
+		<string name="filename" value="meshes/Cylinder_040_Material_011_0.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_012" name="mesh-�������������������_012">
+		<string name="filename" value="meshes/�������������������_012.ply"/>
+		<ref id="mat-material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-�������������������_013" name="mesh-�������������������_013">
+		<string name="filename" value="meshes/�������������������_013.ply"/>
+		<ref id="mat-Material.011" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_2_001" name="mesh-Object_2_001">
+		<string name="filename" value="meshes/Object_2_001.ply"/>
+		<ref id="mat-lambert1.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Manguera_cuello_01_Robot_plastico_negro_blinn_0" name="mesh-Manguera_cuello_01_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Manguera_cuello_01_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_Cromo_claro_blinn_0" name="mesh-Piston_aro_cilindro_01_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_Cromo_claro_blinn_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_001" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_Cromo_claro_blinn_0_001" name="mesh-Piston_aro_cilindro_01_Cromo_claro_blinn_0_001">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_Cromo_claro_blinn_0_001.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0_001" name="mesh-Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0_001">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0_001.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Manguera_cuello_02_Robot_plastico_negro_blinn_0" name="mesh-Manguera_cuello_02_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Manguera_cuello_02_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_002" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0" name="mesh-Piston_aro_cilindro_01_lambert1_0">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_003" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_003.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_001" name="mesh-Piston_aro_cilindro_01_lambert1_0_001">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_004" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_002" name="mesh-Piston_aro_cilindro_01_lambert1_0_002">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_002.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_005" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_003" name="mesh-Piston_aro_cilindro_01_lambert1_0_003">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_003.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_006" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_006">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_006.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_004" name="mesh-Piston_aro_cilindro_01_lambert1_0_004">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_004.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_007" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_007">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_007.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_005" name="mesh-Piston_aro_cilindro_01_lambert1_0_005">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_005.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_008" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_008">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_008.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_006" name="mesh-Piston_aro_cilindro_01_lambert1_0_006">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_006.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_009" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_009">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_009.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_007" name="mesh-Piston_aro_cilindro_01_lambert1_0_007">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_007.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_010" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_010">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_010.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_008" name="mesh-Piston_aro_cilindro_01_lambert1_0_008">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_008.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_01_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_011" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_011">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_011.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_009" name="mesh-Piston_aro_cilindro_01_lambert1_0_009">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_009.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_012" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_012">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_012.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_010" name="mesh-Piston_aro_cilindro_01_lambert1_0_010">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_010.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_013" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_013">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_013.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_011" name="mesh-Piston_aro_cilindro_01_lambert1_0_011">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_011.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Manguera_Cintura_01_Robot_plastico_negro_blinn_0" name="mesh-Manguera_Cintura_01_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Manguera_Cintura_01_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_014" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_014">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_014.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_012" name="mesh-Piston_aro_cilindro_01_lambert1_0_012">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_012.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_015" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_015">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_015.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_013" name="mesh-Piston_aro_cilindro_01_lambert1_0_013">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_013.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_016" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_016">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_016.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_014" name="mesh-Piston_aro_cilindro_01_lambert1_0_014">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_014.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_017" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_017">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_017.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_015" name="mesh-Piston_aro_cilindro_01_lambert1_0_015">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_015.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_018" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_018">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_018.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_016" name="mesh-Piston_aro_cilindro_01_lambert1_0_016">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_016.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_019" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_019">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_019.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_017" name="mesh-Piston_aro_cilindro_01_lambert1_0_017">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_017.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_020" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_020">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_020.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_018" name="mesh-Piston_aro_cilindro_01_lambert1_0_018">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_018.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_021" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_021">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_021.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_019" name="mesh-Piston_aro_cilindro_01_lambert1_0_019">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_019.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_022" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_022">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_022.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_020" name="mesh-Piston_aro_cilindro_01_lambert1_0_020">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_020.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_023" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_023">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_023.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_021" name="mesh-Piston_aro_cilindro_01_lambert1_0_021">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_021.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_024" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_024">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_024.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_022" name="mesh-Piston_aro_cilindro_01_lambert1_0_022">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_022.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_025" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_025">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_025.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_023" name="mesh-Piston_aro_cilindro_01_lambert1_0_023">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_023.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Manguera_Cintura_02_Robot_plastico_negro_blinn_0" name="mesh-Manguera_Cintura_02_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Manguera_Cintura_02_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-errer2_polySurface8_lambert1_0" name="mesh-errer2_polySurface8_lambert1_0">
+		<string name="filename" value="meshes/errer2_polySurface8_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_026" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_026">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_026.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_Cromo_claro_blinn_0_002" name="mesh-Piston_aro_cilindro_01_Cromo_claro_blinn_0_002">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_Cromo_claro_blinn_0_002.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_027" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_027">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_027.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_024" name="mesh-Piston_aro_cilindro_01_lambert1_0_024">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_024.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface8_lambert1_0" name="mesh-polySurface8_lambert1_0">
+		<string name="filename" value="meshes/polySurface8_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_028" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_028">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_028.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_Cromo_claro_blinn_0_003" name="mesh-Piston_aro_cilindro_01_Cromo_claro_blinn_0_003">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_Cromo_claro_blinn_0_003.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_029" name="mesh-Piston_aro_base_01_Robot_metal_negro_blinn_0_029">
+		<string name="filename" value="meshes/Piston_aro_base_01_Robot_metal_negro_blinn_0_029.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_aro_cilindro_01_lambert1_0_025" name="mesh-Piston_aro_cilindro_01_lambert1_0_025">
+		<string name="filename" value="meshes/Piston_aro_cilindro_01_lambert1_0_025.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_05_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_05_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_05_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_05_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_05_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_05_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_06_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_06_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_06_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_06_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_06_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_06_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0_002" name="mesh-Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0_002">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_01_Robot_plastico_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_01_Robot_metal_color02_blinn_0" name="mesh-Piston_cilindro_exterior_01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_01_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_06_lambert1_0" name="mesh-Piston_cilindro_exterior_06_lambert1_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_06_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_06_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_06_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_06_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_06_Robot_metal_color02_blinn_0" name="mesh-Piston_cilindro_exterior_06_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_06_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_07_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_07_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_07_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_07_Robot_metal_color02_blinn_0" name="mesh-Piston_cilindro_exterior_07_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_07_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_07_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_07_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_07_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_08_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_08_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_08_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_08_Robot_metal_color02_blinn_0" name="mesh-Piston_cilindro_exterior_08_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_08_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_08_lambert1_0" name="mesh-Piston_cilindro_exterior_08_lambert1_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_08_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_07_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_07_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_07_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_07_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_07_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_07_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_08_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_08_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_08_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_08_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_08_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_08_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_09_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_09_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_09_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_09_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_09_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_09_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_09_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_09_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_09_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_09_Robot_metal_color02_blinn_0" name="mesh-Piston_cilindro_exterior_09_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_09_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_09_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_09_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_09_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_010_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_010_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_010_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_010_Robot_metal_color02_blinn_0" name="mesh-Piston_cilindro_exterior_010_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_010_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_010_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_010_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_010_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_010_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_010_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_010_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_010_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_010_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_010_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_011_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_011_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_011_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_011_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_011_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_011_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_012_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_012_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_012_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_012_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_012_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_012_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_013_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_013_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_013_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_013_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_013_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_013_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface10_Cromo_claro_blinn_0" name="mesh-polySurface10_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/polySurface10_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface10_Robot_metal_negro_blinn_0" name="mesh-polySurface10_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/polySurface10_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_012_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_012_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_012_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_012_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_012_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_012_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_013_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_013_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_013_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_013_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_013_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_013_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_014_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_014_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_014_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_014_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_014_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_014_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_014_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_014_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_014_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_014_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_014_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_014_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_015_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_015_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_015_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_015_Robot_metal_color02_blinn_0" name="mesh-Piston_cilindro_exterior_015_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_015_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_015_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_015_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_015_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_016_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_016_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_016_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_016_Robot_metal_color02_blinn_0" name="mesh-Piston_cilindro_exterior_016_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_016_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_016_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_016_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_016_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_015_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_015_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_015_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_015_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_015_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_015_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_016_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_016_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_016_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_016_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_016_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_016_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_018_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_018_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_018_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_018_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_018_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_018_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_018_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_018_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_018_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_018_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_018_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_018_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_01_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_01_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_01_Cromo_claro_blinn_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_01_Robot_metal_negro_blinn_0_001" name="mesh-Piston_cilindro_interior_01_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Piston_cilindro_interior_01_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_019_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_019_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_019_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_019_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_019_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_019_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_019_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_019_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_019_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_019_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_019_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_019_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_020_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_020_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_020_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_020_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_020_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_020_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Casco_arriba_01_Robot_metal_color02_blinn_0" name="mesh-Casco_arriba_01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Casco_arriba_01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Casco_abajo_base_boca_Robot_metal_color02_blinn_0" name="mesh-Casco_abajo_base_boca_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Casco_abajo_base_boca_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Casco_abajo_base_01_Robot_plastico_negro_blinn_0" name="mesh-Casco_abajo_base_01_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Casco_abajo_base_01_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Marco_camaras_Robot_plastico_negro_blinn_0" name="mesh-Marco_camaras_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Marco_camaras_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lente_secundaria_02_lambert1_0" name="mesh-Lente_secundaria_02_lambert1_0">
+		<string name="filename" value="meshes/Lente_secundaria_02_lambert1_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lente_secundaria_03_lambert1_0" name="mesh-Lente_secundaria_03_lambert1_0">
+		<string name="filename" value="meshes/Lente_secundaria_03_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lente_camara_principal_roboter_2_0_Roboter_Glass01_mat_0" name="mesh-Lente_camara_principal_roboter_2_0_Roboter_Glass01_mat_0">
+		<string name="filename" value="meshes/Lente_camara_principal_roboter_2_0_Roboter_Glass01_mat_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-roboter_2_0Roboter_Glass01_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lente_camara_principal1_lente_interior_0" name="mesh-Lente_camara_principal1_lente_interior_0">
+		<string name="filename" value="meshes/Lente_camara_principal1_lente_interior_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-lente_interior" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_oreja_Robot_plastico_negro_blinn_0" name="mesh-Cilindro_oreja_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Cilindro_oreja_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_oreja_Robot_metal_color02_blinn_0" name="mesh-Cilindro_oreja_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Cilindro_oreja_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_trasero_Cromo_claro_blinn_0" name="mesh-Cilindro_trasero_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Cilindro_trasero_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_base_a01_Robot_metal_color02_blinn_0" name="mesh-Lateral_abajo_base_a01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Lateral_abajo_base_a01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_base_a01_Robot_plastico_negro_blinn_0" name="mesh-Lateral_abajo_base_a01_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Lateral_abajo_base_a01_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_base_a01_Default_Material_0" name="mesh-Lateral_abajo_base_a01_Default_Material_0">
+		<string name="filename" value="meshes/Lateral_abajo_base_a01_Default_Material_0.ply"/>
+		<ref id="mat-Default_Material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_cilindro_a03_Robot_plastico_negro_blinn_0" name="mesh-Lateral_abajo_cilindro_a03_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Lateral_abajo_cilindro_a03_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_cilindro_a02_lambert1_0" name="mesh-Lateral_abajo_cilindro_a02_lambert1_0">
+		<string name="filename" value="meshes/Lateral_abajo_cilindro_a02_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_base_a02_Robot_metal_color02_blinn_0" name="mesh-Lateral_abajo_base_a02_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Lateral_abajo_base_a02_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_base_a02_Robot_plastico_negro_blinn_0" name="mesh-Lateral_abajo_base_a02_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Lateral_abajo_base_a02_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_cilindro_a04_Robot_plastico_negro_blinn_0" name="mesh-Lateral_abajo_cilindro_a04_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Lateral_abajo_cilindro_a04_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Lateral_abajo_cilindro_a05_lambert1_0" name="mesh-Lateral_abajo_cilindro_a05_lambert1_0">
+		<string name="filename" value="meshes/Lateral_abajo_cilindro_a05_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tapa_advertencia_Cromo_claro_blinn_0" name="mesh-Tapa_advertencia_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Tapa_advertencia_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tapa_advertencia_base_lambert1_0" name="mesh-Tapa_advertencia_base_lambert1_0">
+		<string name="filename" value="meshes/Tapa_advertencia_base_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tapa_advertencia_lambert1_0" name="mesh-Tapa_advertencia_lambert1_0">
+		<string name="filename" value="meshes/Tapa_advertencia_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tapa_advertencia_base_lambert1_0_001" name="mesh-Tapa_advertencia_base_lambert1_0_001">
+		<string name="filename" value="meshes/Tapa_advertencia_base_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_oreja4_Robot_plastico_negro_blinn_0" name="mesh-Cilindro_oreja4_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Cilindro_oreja4_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Antena_Robot_plastico_negro_blinn_0" name="mesh-Antena_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Antena_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Antena1_Robot_plastico_negro_blinn_0" name="mesh-Antena1_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Antena1_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_02_lambert1_0" name="mesh-Tuerca_02_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_02_lambert1_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_03_lambert1_0" name="mesh-Tuerca_03_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_03_lambert1_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_04_lambert1_0" name="mesh-Tuerca_04_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_04_lambert1_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_05_lambert1_0" name="mesh-Tuerca_05_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_05_lambert1_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_06_lambert1_0" name="mesh-Tuerca_06_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_06_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_07_lambert1_0" name="mesh-Tuerca_07_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_07_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_oreja5_Robot_plastico_negro_blinn_0" name="mesh-Cilindro_oreja5_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Cilindro_oreja5_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_oreja5_Robot_metal_color02_blinn_0" name="mesh-Cilindro_oreja5_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Cilindro_oreja5_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_oreja6_Robot_plastico_negro_blinn_0" name="mesh-Cilindro_oreja6_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Cilindro_oreja6_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cuello_base_arriba_Robot_metal_negro_blinn_0" name="mesh-Cuello_base_arriba_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cuello_base_arriba_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cuello_ciindro_Cromo_claro_blinn_0" name="mesh-cuello_ciindro_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/cuello_ciindro_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Ded_parte_final_06_Robot_plastico_negro_blinn_0" name="mesh-Ded_parte_final_06_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Ded_parte_final_06_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0" name="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/dedo_tuerca3_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0" name="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Articulacion_dedo1_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_07_Robot_metal_color02_blinn_0" name="mesh-DEDO_parte_07_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/DEDO_parte_07_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca_Robot_metal_negro_blinn_0" name="mesh-dedo_tuerca_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/dedo_tuerca_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0" name="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Articulacion_dedo_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0" name="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/dedo_tuerca2_Robot_metal_negro_blinn_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0" name="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/dedo_tuerca1_Robot_metal_negro_blinn_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo3_Robot_metal_negro_blinn_0" name="mesh-Articulacion_dedo3_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Articulacion_dedo3_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_08_Robot_metal_color02_blinn_0" name="mesh-DEDO_parte_08_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/DEDO_parte_08_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Ded_parte_final_03_Robot_plastico_negro_blinn_0" name="mesh-Ded_parte_final_03_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Ded_parte_final_03_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0" name="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Articulacion_dedo2_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0" name="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/dedo_tuerca5_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0" name="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/dedo_tuerca4_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_02_Robot_metal_color02_blinn_0" name="mesh-DEDO_parte_02_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/DEDO_parte_02_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_001" name="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/dedo_tuerca1_Robot_metal_negro_blinn_0_001.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_001" name="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/dedo_tuerca2_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_01_Robot_metal_color02_blinn_0" name="mesh-DEDO_parte_01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/DEDO_parte_01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_001" name="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Articulacion_dedo_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_001" name="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/dedo_tuerca_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_001" name="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/dedo_tuerca3_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_001" name="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Articulacion_dedo1_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Ded_parte_final_04_Robot_plastico_negro_blinn_0" name="mesh-Ded_parte_final_04_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Ded_parte_final_04_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_04_Robot_metal_color02_blinn_0" name="mesh-DEDO_parte_04_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/DEDO_parte_04_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_001" name="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/dedo_tuerca5_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_001" name="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/dedo_tuerca4_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_001" name="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Articulacion_dedo2_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_002" name="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/dedo_tuerca2_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_03_Robot_metal_color02_blinn_0" name="mesh-DEDO_parte_03_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/DEDO_parte_03_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_002" name="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/dedo_tuerca1_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_002" name="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/Articulacion_dedo_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_002" name="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/dedo_tuerca_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_002" name="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/dedo_tuerca3_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_002" name="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/Articulacion_dedo1_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Ded_parte_final_05_Robot_plastico_negro_blinn_0" name="mesh-Ded_parte_final_05_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Ded_parte_final_05_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_06_Robot_metal_color02_blinn_0" name="mesh-DEDO_parte_06_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/DEDO_parte_06_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_002" name="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/dedo_tuerca4_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_002" name="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/Articulacion_dedo2_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_002" name="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_002">
+		<string name="filename" value="meshes/dedo_tuerca5_Robot_metal_negro_blinn_0_002.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_003" name="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/dedo_tuerca3_Robot_metal_negro_blinn_0_003.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_003" name="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/dedo_tuerca_Robot_metal_negro_blinn_0_003.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_05_Robot_metal_color02_blinn_0" name="mesh-DEDO_parte_05_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/DEDO_parte_05_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_003" name="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/Articulacion_dedo1_Robot_metal_negro_blinn_0_003.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_003" name="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/dedo_tuerca2_Robot_metal_negro_blinn_0_003.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_003" name="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/Articulacion_dedo_Robot_metal_negro_blinn_0_003.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca1_lambert1_0" name="mesh-dedo_tuerca1_lambert1_0">
+		<string name="filename" value="meshes/dedo_tuerca1_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Mano_base_Robot_metal_negro_blinn_0" name="mesh-Mano_base_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Mano_base_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-codo_articulaci��n_Robot_metal_color02_blinn_0" name="mesh-codo_articulaci��n_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/codo_articulaci��n_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_012_lambert1_0" name="mesh-Tuerca_brazo_012_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_012_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_antebrazo_a01_Robot_metal_color02_blinn_0" name="mesh-Placa_antebrazo_a01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Placa_antebrazo_a01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_06_lambert1_0" name="mesh-Tuerca_brazo_06_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_06_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_09_lambert1_0" name="mesh-Tuerca_brazo_09_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_09_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_08_lambert1_0" name="mesh-Tuerca_brazo_08_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_08_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_011_lambert1_0" name="mesh-Tuerca_brazo_011_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_011_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_010_lambert1_0" name="mesh-Tuerca_brazo_010_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_010_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_07_lambert1_0" name="mesh-Tuerca_brazo_07_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_07_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_antebrazo_b01_lambert1_0" name="mesh-Placa_antebrazo_b01_lambert1_0">
+		<string name="filename" value="meshes/Placa_antebrazo_b01_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_mano_01_Cromo_claro_blinn_0" name="mesh-Tubo_mano_01_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Tubo_mano_01_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Resorte_mano_lambert1_0" name="mesh-Resorte_mano_lambert1_0">
+		<string name="filename" value="meshes/Resorte_mano_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_articulacion_resorte_Cromo_claro_blinn_0" name="mesh-Cilindro_articulacion_resorte_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Cilindro_articulacion_resorte_Cromo_claro_blinn_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_mano_04_Cromo_claro_blinn_0" name="mesh-Tubo_mano_04_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Tubo_mano_04_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_mano_02_Cromo_claro_blinn_0" name="mesh-Tubo_mano_02_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Tubo_mano_02_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_mano_03_lambert1_0" name="mesh-Tubo_mano_03_lambert1_0">
+		<string name="filename" value="meshes/Tubo_mano_03_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cilindro_articulacion_mano_Robot_metal_negro_blinn_0" name="mesh-cilindro_articulacion_mano_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/cilindro_articulacion_mano_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_03_lambert1_0" name="mesh-Tuerca_brazo_03_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_03_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_02_lambert1_0" name="mesh-Tuerca_brazo_02_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_02_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_brazo_Robot_metal_color02_blinn_0" name="mesh-Placa_brazo_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Placa_brazo_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_piston_01_Robot_metal_negro_blinn_0" name="mesh-Brazo_articulacion_piston_01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_piston_01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_04_lambert1_0" name="mesh-Tuerca_brazo_04_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_04_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_05_lambert1_0" name="mesh-Tuerca_brazo_05_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_brazo_05_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_020_Robot_plastico_negro_blinn_0" name="mesh-Piston_cilindro_exterior_020_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_020_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_exterior_020_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_exterior_020_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_exterior_020_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_017_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_017_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_017_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_017_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_017_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_017_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_brazo_02_Robot_metal_negro_blinn_0" name="mesh-Articulacion_brazo_02_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Articulacion_brazo_02_Robot_metal_negro_blinn_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-placa_hombro_gruesa_base_Robot_metal_color02_blinn_0" name="mesh-placa_hombro_gruesa_base_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/placa_hombro_gruesa_base_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-placa_hombro_gruesa_paneles_Robot_metal_negro_blinn_0" name="mesh-placa_hombro_gruesa_paneles_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/placa_hombro_gruesa_paneles_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_B01_Robot_metal_negro_blinn_0" name="mesh-Brazo_articulacion_hombro_B01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_B01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_bola_Cromo_claro_blinn_0" name="mesh-Brazo_articulacion_hombro_bola_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_bola_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Ded_parte_final_06_Robot_plastico_negro_blinn_0_001" name="mesh-Ded_parte_final_06_Robot_plastico_negro_blinn_0_001">
+		<string name="filename" value="meshes/Ded_parte_final_06_Robot_plastico_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_07_Robot_metal_color02_blinn_0_001" name="mesh-DEDO_parte_07_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/DEDO_parte_07_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_004" name="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/Articulacion_dedo1_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_004" name="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/dedo_tuerca3_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_004" name="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/dedo_tuerca_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_004" name="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/dedo_tuerca2_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_003" name="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/dedo_tuerca1_Robot_metal_negro_blinn_0_003.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_004" name="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/Articulacion_dedo_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo3_Robot_metal_negro_blinn_0_001" name="mesh-Articulacion_dedo3_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Articulacion_dedo3_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_08_Robot_metal_color02_blinn_0_001" name="mesh-DEDO_parte_08_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/DEDO_parte_08_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Ded_parte_final_03_Robot_plastico_negro_blinn_0_001" name="mesh-Ded_parte_final_03_Robot_plastico_negro_blinn_0_001">
+		<string name="filename" value="meshes/Ded_parte_final_03_Robot_plastico_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_02_Robot_metal_color02_blinn_0_001" name="mesh-DEDO_parte_02_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/DEDO_parte_02_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_003" name="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/dedo_tuerca5_Robot_metal_negro_blinn_0_003.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_003" name="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/dedo_tuerca4_Robot_metal_negro_blinn_0_003.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_003" name="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_003">
+		<string name="filename" value="meshes/Articulacion_dedo2_Robot_metal_negro_blinn_0_003.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_005" name="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/Articulacion_dedo_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_004" name="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/dedo_tuerca1_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_01_Robot_metal_color02_blinn_0_001" name="mesh-DEDO_parte_01_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/DEDO_parte_01_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_005" name="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/dedo_tuerca2_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_005" name="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/dedo_tuerca_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_005" name="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/dedo_tuerca3_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_005" name="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/Articulacion_dedo1_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Ded_parte_final_04_Robot_plastico_negro_blinn_0_001" name="mesh-Ded_parte_final_04_Robot_plastico_negro_blinn_0_001">
+		<string name="filename" value="meshes/Ded_parte_final_04_Robot_plastico_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_04_Robot_metal_color02_blinn_0_001" name="mesh-DEDO_parte_04_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/DEDO_parte_04_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_004" name="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/dedo_tuerca5_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_004" name="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/dedo_tuerca4_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_004" name="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_004">
+		<string name="filename" value="meshes/Articulacion_dedo2_Robot_metal_negro_blinn_0_004.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_006" name="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_006">
+		<string name="filename" value="meshes/Articulacion_dedo_Robot_metal_negro_blinn_0_006.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_005" name="mesh-dedo_tuerca1_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/dedo_tuerca1_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_03_Robot_metal_color02_blinn_0_001" name="mesh-DEDO_parte_03_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/DEDO_parte_03_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_006" name="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_006">
+		<string name="filename" value="meshes/dedo_tuerca2_Robot_metal_negro_blinn_0_006.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_006" name="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_006">
+		<string name="filename" value="meshes/dedo_tuerca3_Robot_metal_negro_blinn_0_006.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_006" name="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_006">
+		<string name="filename" value="meshes/Articulacion_dedo1_Robot_metal_negro_blinn_0_006.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_006" name="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_006">
+		<string name="filename" value="meshes/dedo_tuerca_Robot_metal_negro_blinn_0_006.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Ded_parte_final_05_Robot_plastico_negro_blinn_0_001" name="mesh-Ded_parte_final_05_Robot_plastico_negro_blinn_0_001">
+		<string name="filename" value="meshes/Ded_parte_final_05_Robot_plastico_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_06_Robot_metal_color02_blinn_0_001" name="mesh-DEDO_parte_06_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/DEDO_parte_06_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_005" name="mesh-dedo_tuerca4_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/dedo_tuerca4_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_005" name="mesh-dedo_tuerca5_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/dedo_tuerca5_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_005" name="mesh-Articulacion_dedo2_Robot_metal_negro_blinn_0_005">
+		<string name="filename" value="meshes/Articulacion_dedo2_Robot_metal_negro_blinn_0_005.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca1_lambert1_0_001" name="mesh-dedo_tuerca1_lambert1_0_001">
+		<string name="filename" value="meshes/dedo_tuerca1_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_007" name="mesh-dedo_tuerca2_Robot_metal_negro_blinn_0_007">
+		<string name="filename" value="meshes/dedo_tuerca2_Robot_metal_negro_blinn_0_007.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_007" name="mesh-Articulacion_dedo_Robot_metal_negro_blinn_0_007">
+		<string name="filename" value="meshes/Articulacion_dedo_Robot_metal_negro_blinn_0_007.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-DEDO_parte_05_Robot_metal_color02_blinn_0_001" name="mesh-DEDO_parte_05_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/DEDO_parte_05_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_007" name="mesh-dedo_tuerca_Robot_metal_negro_blinn_0_007">
+		<string name="filename" value="meshes/dedo_tuerca_Robot_metal_negro_blinn_0_007.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_007" name="mesh-dedo_tuerca3_Robot_metal_negro_blinn_0_007">
+		<string name="filename" value="meshes/dedo_tuerca3_Robot_metal_negro_blinn_0_007.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_007" name="mesh-Articulacion_dedo1_Robot_metal_negro_blinn_0_007">
+		<string name="filename" value="meshes/Articulacion_dedo1_Robot_metal_negro_blinn_0_007.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_mano_esfera_Default_Material_0" name="mesh-Articulacion_mano_esfera_Default_Material_0">
+		<string name="filename" value="meshes/Articulacion_mano_esfera_Default_Material_0.ply"/>
+		<ref id="mat-Default_Material" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Mano_base_Robot_metal_negro_blinn_0_001" name="mesh-Mano_base_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Mano_base_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-codo_articulaci��n_Robot_metal_color02_blinn_0_001" name="mesh-codo_articulaci��n_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/codo_articulaci��n_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_012_lambert1_0_001" name="mesh-Tuerca_brazo_012_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_012_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_antebrazo_a01_Robot_metal_color02_blinn_0_001" name="mesh-Placa_antebrazo_a01_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Placa_antebrazo_a01_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_06_lambert1_0_001" name="mesh-Tuerca_brazo_06_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_06_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_07_lambert1_0_001" name="mesh-Tuerca_brazo_07_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_07_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_antebrazo_b01_lambert1_0_001" name="mesh-Placa_antebrazo_b01_lambert1_0_001">
+		<string name="filename" value="meshes/Placa_antebrazo_b01_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_010_lambert1_0_001" name="mesh-Tuerca_brazo_010_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_010_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_011_lambert1_0_001" name="mesh-Tuerca_brazo_011_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_011_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_08_lambert1_0_001" name="mesh-Tuerca_brazo_08_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_08_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_09_lambert1_0_001" name="mesh-Tuerca_brazo_09_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_09_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_mano_04_Cromo_claro_blinn_0_001" name="mesh-Tubo_mano_04_Cromo_claro_blinn_0_001">
+		<string name="filename" value="meshes/Tubo_mano_04_Cromo_claro_blinn_0_001.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cilindro_articulacion_resorte_Cromo_claro_blinn_0_001" name="mesh-Cilindro_articulacion_resorte_Cromo_claro_blinn_0_001">
+		<string name="filename" value="meshes/Cilindro_articulacion_resorte_Cromo_claro_blinn_0_001.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Resorte_mano_lambert1_0_001" name="mesh-Resorte_mano_lambert1_0_001">
+		<string name="filename" value="meshes/Resorte_mano_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_mano_01_Cromo_claro_blinn_0_001" name="mesh-Tubo_mano_01_Cromo_claro_blinn_0_001">
+		<string name="filename" value="meshes/Tubo_mano_01_Cromo_claro_blinn_0_001.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_mano_03_lambert1_0_001" name="mesh-Tubo_mano_03_lambert1_0_001">
+		<string name="filename" value="meshes/Tubo_mano_03_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_mano_02_Cromo_claro_blinn_0_001" name="mesh-Tubo_mano_02_Cromo_claro_blinn_0_001">
+		<string name="filename" value="meshes/Tubo_mano_02_Cromo_claro_blinn_0_001.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cilindro_articulacion_mano_Robot_metal_negro_blinn_0_001" name="mesh-cilindro_articulacion_mano_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/cilindro_articulacion_mano_Robot_metal_negro_blinn_0_001.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Articulacion_brazo_02_Robot_metal_negro_blinn_0_001" name="mesh-Articulacion_brazo_02_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Articulacion_brazo_02_Robot_metal_negro_blinn_0_001.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_brazo_Robot_metal_color02_blinn_0_001" name="mesh-Placa_brazo_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Placa_brazo_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_02_lambert1_0_001" name="mesh-Tuerca_brazo_02_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_02_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_03_lambert1_0_001" name="mesh-Tuerca_brazo_03_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_03_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_04_lambert1_0_001" name="mesh-Tuerca_brazo_04_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_04_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_brazo_05_lambert1_0_001" name="mesh-Tuerca_brazo_05_lambert1_0_001">
+		<string name="filename" value="meshes/Tuerca_brazo_05_lambert1_0_001.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface9_Robot_plastico_negro_blinn_0" name="mesh-polySurface9_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/polySurface9_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface9_Robot_metal_negro_blinn_0" name="mesh-polySurface9_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/polySurface9_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_011_Cromo_claro_blinn_0" name="mesh-Piston_cilindro_interior_011_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_011_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Piston_cilindro_interior_011_Robot_metal_negro_blinn_0" name="mesh-Piston_cilindro_interior_011_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Piston_cilindro_interior_011_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-placa_hombro_gruesa_base1_Robot_metal_color02_blinn_0" name="mesh-placa_hombro_gruesa_base1_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/placa_hombro_gruesa_base1_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-placa_hombro_gruesa_paneles1_Robot_metal_negro_blinn_0" name="mesh-placa_hombro_gruesa_paneles1_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/placa_hombro_gruesa_paneles1_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_bola_02_Robot_metal_negro_blinn_0" name="mesh-Brazo_articulacion_hombro_bola_02_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_bola_02_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_bola_02_Cromo_claro_blinn_0" name="mesh-Brazo_articulacion_hombro_bola_02_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_bola_02_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_B02_Robot_metal_negro_blinn_0" name="mesh-Brazo_articulacion_hombro_B02_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_B02_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pecho_exterior_Robot_metal_color02_blinn_0" name="mesh-Pecho_exterior_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pecho_exterior_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cUBO_LUCES_Robot_metal_color02_blinn_0" name="mesh-cUBO_LUCES_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/cUBO_LUCES_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_hang_Robot_metal_color02_blinn_0" name="mesh-Tubo_hang_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Tubo_hang_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_metal_desnuda_base_01_Robot_metal_negro_blinn_0" name="mesh-Placa_metal_desnuda_base_01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_metal_desnuda_base_01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_metal_desnuda_tubo_01_Robot_metal_negro_blinn_0" name="mesh-Placa_metal_desnuda_tubo_01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_metal_desnuda_tubo_01_Robot_metal_negro_blinn_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_metal_desnuda_tubo_02_Robot_metal_negro_blinn_0" name="mesh-Placa_metal_desnuda_tubo_02_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_metal_desnuda_tubo_02_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_metal_desnuda_base_01_Robot_metal_negro_blinn_0_001" name="mesh-Placa_metal_desnuda_base_01_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Placa_metal_desnuda_base_01_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_metal_desnuda_tubo_01_Robot_metal_negro_blinn_0_001" name="mesh-Placa_metal_desnuda_tubo_01_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Placa_metal_desnuda_tubo_01_Robot_metal_negro_blinn_0_001.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_metal_desnuda_tubo_02_Robot_metal_negro_blinn_0_001" name="mesh-Placa_metal_desnuda_tubo_02_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Placa_metal_desnuda_tubo_02_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cuello_collar1_Robot_metal_negro_blinn_0" name="mesh-Cuello_collar1_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cuello_collar1_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_08_lambert1_0" name="mesh-Tuerca_08_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_08_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_09_lambert1_0" name="mesh-Tuerca_09_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_09_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_010_lambert1_0" name="mesh-Tuerca_010_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_010_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_011_lambert1_0" name="mesh-Tuerca_011_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_011_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_012_lambert1_0" name="mesh-Tuerca_012_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_012_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tuerca_013_lambert1_0" name="mesh-Tuerca_013_lambert1_0">
+		<string name="filename" value="meshes/Tuerca_013_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pecho_hexagono_Robot_metal_color02_blinn_0" name="mesh-Pecho_hexagono_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pecho_hexagono_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pecho_rejillas_Robot_metal_negro_blinn_0" name="mesh-Pecho_rejillas_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Pecho_rejillas_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pechi_rejillas_base_Robot_metal_negro_blinn_0" name="mesh-Pechi_rejillas_base_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Pechi_rejillas_base_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cUBO_LUCES1_Robot_metal_color02_blinn_0" name="mesh-cUBO_LUCES1_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/cUBO_LUCES1_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Tubo_hang1_Robot_metal_color02_blinn_0" name="mesh-Tubo_hang1_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Tubo_hang1_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cuello_collar_Robot_metal_color02_blinn_0" name="mesh-Cuello_collar_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Cuello_collar_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cuello_anillo_base_Robot_metal_color02_blinn_0" name="mesh-Cuello_anillo_base_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Cuello_anillo_base_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cuello_base_abajo_Robot_metal_negro_blinn_0" name="mesh-Cuello_base_abajo_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cuello_base_abajo_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_A01_Robot_metal_negro_blinn_0" name="mesh-Brazo_articulacion_hombro_A01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_A01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_A01_Cromo_claro_blinn_0" name="mesh-Brazo_articulacion_hombro_A01_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_A01_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_A02_Robot_metal_negro_blinn_0" name="mesh-Brazo_articulacion_hombro_A02_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_A02_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Brazo_articulacion_hombro_A02_Cromo_claro_blinn_0" name="mesh-Brazo_articulacion_hombro_A02_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Brazo_articulacion_hombro_A02_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cuello_base_arriba1_Robot_metal_negro_blinn_0" name="mesh-Cuello_base_arriba1_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cuello_base_arriba1_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cintura_ancla_arriba_Robot_metal_negro_blinn_0" name="mesh-Cintura_ancla_arriba_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cintura_ancla_arriba_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cintura_rejillas_piezas_lambert1_0" name="mesh-cintura_rejillas_piezas_lambert1_0">
+		<string name="filename" value="meshes/cintura_rejillas_piezas_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cintura_rejillas_Robot_plastico_negro_blinn_0" name="mesh-cintura_rejillas_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/cintura_rejillas_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cintura_rejillas_piezas1_lambert1_0" name="mesh-cintura_rejillas_piezas1_lambert1_0">
+		<string name="filename" value="meshes/cintura_rejillas_piezas1_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-cintura_rejillas2_Robot_plastico_negro_blinn_0" name="mesh-cintura_rejillas2_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/cintura_rejillas2_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cinctura_cilindro_articulacion_chica1_Robot_metal_negro_blinn_0" name="mesh-Cinctura_cilindro_articulacion_chica1_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cinctura_cilindro_articulacion_chica1_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cinctura_cilindro_articulacion_chica_Cromo_claro_blinn_0" name="mesh-Cinctura_cilindro_articulacion_chica_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/Cinctura_cilindro_articulacion_chica_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_026_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_026_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_026_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_025_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_025_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_025_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_abdomen_frente_inrerior1_Robot_plastico_negro_blinn_0" name="mesh-Placa_abdomen_frente_inrerior1_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_abdomen_frente_inrerior1_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pecho_hexagono1_Robot_plastico_negro_blinn_0" name="mesh-Pecho_hexagono1_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Pecho_hexagono1_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_024_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_024_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_024_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_023_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_023_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_023_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_022_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_022_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_022_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_espalda_Robot_metal_negro_blinn_0" name="mesh-Placa_espalda_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_espalda_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-articulacion_dedo_02_lambert1_0" name="mesh-articulacion_dedo_02_lambert1_0">
+		<string name="filename" value="meshes/articulacion_dedo_02_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_02_Robot_plastico_negro_blinn_0" name="mesh-dedo_02_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/dedo_02_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_cobertura_dedo_02_Robot_metal_color02_blinn_0" name="mesh-Pie_cobertura_dedo_02_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pie_cobertura_dedo_02_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-articulacion_dedo_01_lambert1_0" name="mesh-articulacion_dedo_01_lambert1_0">
+		<string name="filename" value="meshes/articulacion_dedo_01_lambert1_0.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_cobertura_dedo_01_Robot_metal_color02_blinn_0" name="mesh-Pie_cobertura_dedo_01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pie_cobertura_dedo_01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_01_Robot_plastico_negro_blinn_0" name="mesh-dedo_01_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/dedo_01_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_tobillo_01_Robot_metal_color02_blinn_0" name="mesh-Pierna_tobillo_01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_tobillo_01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_base_a01_Robot_metal_negro_blinn_0" name="mesh-Pie_base_a01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Pie_base_a01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_cobertura_pie_02_Robot_metal_color02_blinn_0" name="mesh-Pie_cobertura_pie_02_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pie_cobertura_pie_02_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_cobertura_pie_01_Robot_metal_color02_blinn_0" name="mesh-Pie_cobertura_pie_01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pie_cobertura_pie_01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_base_b_01_Robot_metal_negro_blinn_0" name="mesh-Pie_base_b_01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Pie_base_b_01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-rodilla_01_Robot_metal_color02_blinn_0" name="mesh-rodilla_01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/rodilla_01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-codo_articulaci��n1_Robot_metal_color02_blinn_0" name="mesh-codo_articulaci��n1_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/codo_articulaci��n1_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_base_B02_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_base_B02_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_muslo_base_B02_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-pierna_base_gemelos_a01_Robot_metal_negro_blinn_0" name="mesh-pierna_base_gemelos_a01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/pierna_base_gemelos_a01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS2_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_PLACA_ATRAS2_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS2_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS3_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_PLACA_ATRAS3_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS3_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_genemelos_laterakes1_Robot_metal_color02_blinn_0" name="mesh-Pierna_genemelos_laterakes1_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_genemelos_laterakes1_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_base_B01_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_base_B01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_muslo_base_B01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_base_A01_Robot_metal_negro_blinn_0" name="mesh-Pierna_muslo_base_A01_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Pierna_muslo_base_A01_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS1_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_PLACA_ATRAS1_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS1_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_laterakes_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_laterakes_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_muslo_laterakes_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-llat-curved-reflector" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0" name="mesh-Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-errer2_polySurface5_Cromo_claro_blinn_0" name="mesh-errer2_polySurface5_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/errer2_polySurface5_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-errer2_polySurface1_Robot_metal_negro_blinn_0" name="mesh-errer2_polySurface1_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/errer2_polySurface1_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-errer2_polySurface1_Cromo_claro_blinn_0" name="mesh-errer2_polySurface1_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/errer2_polySurface1_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-articulacion_dedo_02_lambert1_0_001" name="mesh-articulacion_dedo_02_lambert1_0_001">
+		<string name="filename" value="meshes/articulacion_dedo_02_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_cobertura_dedo_02_Robot_metal_color02_blinn_0_001" name="mesh-Pie_cobertura_dedo_02_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pie_cobertura_dedo_02_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_02_Robot_plastico_negro_blinn_0_001" name="mesh-dedo_02_Robot_plastico_negro_blinn_0_001">
+		<string name="filename" value="meshes/dedo_02_Robot_plastico_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-articulacion_dedo_01_lambert1_0_001" name="mesh-articulacion_dedo_01_lambert1_0_001">
+		<string name="filename" value="meshes/articulacion_dedo_01_lambert1_0_001.ply"/>
+		<ref id="mat-lambert1" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-dedo_01_Robot_plastico_negro_blinn_0_001" name="mesh-dedo_01_Robot_plastico_negro_blinn_0_001">
+		<string name="filename" value="meshes/dedo_01_Robot_plastico_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_cobertura_dedo_01_Robot_metal_color02_blinn_0_001" name="mesh-Pie_cobertura_dedo_01_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pie_cobertura_dedo_01_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_tobillo_01_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_tobillo_01_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_tobillo_01_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_base_a01_Robot_metal_negro_blinn_0_001" name="mesh-Pie_base_a01_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Pie_base_a01_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_cobertura_pie_02_Robot_metal_color02_blinn_0_001" name="mesh-Pie_cobertura_pie_02_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pie_cobertura_pie_02_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_cobertura_pie_01_Robot_metal_color02_blinn_0_001" name="mesh-Pie_cobertura_pie_01_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pie_cobertura_pie_01_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pie_base_b_01_Robot_metal_negro_blinn_0_001" name="mesh-Pie_base_b_01_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Pie_base_b_01_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-rodilla_01_Robot_metal_color02_blinn_0_001" name="mesh-rodilla_01_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/rodilla_01_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-codo_articulaci��n1_Robot_metal_color02_blinn_0_001" name="mesh-codo_articulaci��n1_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/codo_articulaci��n1_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_base_B02_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_base_B02_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_muslo_base_B02_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-pierna_base_gemelos_a01_Robot_metal_negro_blinn_0_001" name="mesh-pierna_base_gemelos_a01_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/pierna_base_gemelos_a01_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS2_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_PLACA_ATRAS2_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS2_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_genemelos_laterakes1_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_genemelos_laterakes1_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_genemelos_laterakes1_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS3_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_PLACA_ATRAS3_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS3_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface1_Robot_metal_negro_blinn_0" name="mesh-polySurface1_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/polySurface1_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface1_Cromo_claro_blinn_0" name="mesh-polySurface1_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/polySurface1_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_base_B01_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_base_B01_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_muslo_base_B01_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS1_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_PLACA_ATRAS1_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS1_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_base_A01_Robot_metal_negro_blinn_0_001" name="mesh-Pierna_muslo_base_A01_Robot_metal_negro_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_muslo_base_A01_Robot_metal_negro_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_laterakes_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_laterakes_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_muslo_laterakes_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-llat-curved-reflector" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0_001" name="mesh-Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0_001">
+		<string name="filename" value="meshes/Pierna_muslo_PLACA_ATRAS_Robot_metal_color02_blinn_0_001.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface5_Cromo_claro_blinn_0" name="mesh-polySurface5_Cromo_claro_blinn_0">
+		<string name="filename" value="meshes/polySurface5_Cromo_claro_blinn_0.ply"/>
+		<ref id="mat-Cromo_claro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_02_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_02_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_02_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_abdomen_frente_inrerior_Robot_plastico_negro_blinn_0" name="mesh-Placa_abdomen_frente_inrerior_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_abdomen_frente_inrerior_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cinctura_cilindro_articulacion_grande_Robot_metal_negro_blinn_0" name="mesh-Cinctura_cilindro_articulacion_grande_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cinctura_cilindro_articulacion_grande_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cintura_anillo_interior_Robot_metal_negro_blinn_0" name="mesh-Cintura_anillo_interior_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cintura_anillo_interior_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_020_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_020_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_020_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cintura_base_Robot_metal_negro_blinn_0" name="mesh-Cintura_base_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cintura_base_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cintura_ancla_abajo_Robot_metal_negro_blinn_0" name="mesh-Cintura_ancla_abajo_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/Cintura_ancla_abajo_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Cintura_estructura_base_01_Robot_metal_color02_blinn_0" name="mesh-Cintura_estructura_base_01_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Cintura_estructura_base_01_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_base_02_Robot_metal_color02_blinn_0" name="mesh-Placa_cintura_base_02_Robot_metal_color02_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_base_02_Robot_metal_color02_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_color02_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-polySurface7_Robot_metal_negro_blinn_0" name="mesh-polySurface7_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/polySurface7_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-errer2_polySurface7_Robot_metal_negro_blinn_0" name="mesh-errer2_polySurface7_Robot_metal_negro_blinn_0">
+		<string name="filename" value="meshes/errer2_polySurface7_Robot_metal_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_metal_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_021_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_021_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_021_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Placa_cintura_012_Robot_plastico_negro_blinn_0" name="mesh-Placa_cintura_012_Robot_plastico_negro_blinn_0">
+		<string name="filename" value="meshes/Placa_cintura_012_Robot_plastico_negro_blinn_0.ply"/>
+		<ref id="mat-Robot_plastico_negro_blinn" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-back_bottom_door_exterior_details_mat_0" name="mesh-back_bottom_door_exterior_details_mat_0">
+		<string name="filename" value="meshes/back_bottom_door_exterior_details_mat_0.ply"/>
+		<ref id="mat-exterior_details_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-back_bottom_door_body_two_mat_0" name="mesh-back_bottom_door_body_two_mat_0">
+		<string name="filename" value="meshes/back_bottom_door_body_two_mat_0.ply"/>
+		<ref id="mat-body_two_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-back_top_door_body_two_mat_0" name="mesh-back_top_door_body_two_mat_0">
+		<string name="filename" value="meshes/back_top_door_body_two_mat_0.ply"/>
+		<ref id="mat-body_two_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-back_top_door_exterior_details_mat_0" name="mesh-back_top_door_exterior_details_mat_0">
+		<string name="filename" value="meshes/back_top_door_exterior_details_mat_0.ply"/>
+		<ref id="mat-exterior_details_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-back_top_door_glass_mat_0" name="mesh-back_top_door_glass_mat_0">
+		<string name="filename" value="meshes/back_top_door_glass_mat_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-glass_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-back_top_door_interior_mat_0" name="mesh-back_top_door_interior_mat_0">
+		<string name="filename" value="meshes/back_top_door_interior_mat_0.ply"/>
+		<ref id="mat-interior_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-back_wheel_wheels_and_bottom_mat_0" name="mesh-back_wheel_wheels_and_bottom_mat_0">
+		<string name="filename" value="meshes/back_wheel_wheels_and_bottom_mat_0.ply"/>
+		<ref id="mat-wheels_and_bottom_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-front_wheel_wheels_and_bottom_mat_0" name="mesh-front_wheel_wheels_and_bottom_mat_0">
+		<string name="filename" value="meshes/front_wheel_wheels_and_bottom_mat_0.ply"/>
+		<ref id="mat-wheels_and_bottom_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-l_door_body_two_mat_0" name="mesh-l_door_body_two_mat_0">
+		<string name="filename" value="meshes/l_door_body_two_mat_0.ply"/>
+		<ref id="mat-body_two_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-l_door_interior_mat_0" name="mesh-l_door_interior_mat_0">
+		<string name="filename" value="meshes/l_door_interior_mat_0.ply"/>
+		<ref id="mat-interior_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-l_door_exterior_details_mat_0" name="mesh-l_door_exterior_details_mat_0">
+		<string name="filename" value="meshes/l_door_exterior_details_mat_0.ply"/>
+		<ref id="mat-exterior_details_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-l_door_glass_mat_0" name="mesh-l_door_glass_mat_0">
+		<string name="filename" value="meshes/l_door_glass_mat_0.ply"/>
+		<ref id="mat-glass_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-main_details_body_one_mat_0" name="mesh-main_details_body_one_mat_0">
+		<string name="filename" value="meshes/main_details_body_one_mat_0.ply"/>
+		<ref id="mat-body_one_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-main_details_wheels_and_bottom_mat_0" name="mesh-main_details_wheels_and_bottom_mat_0">
+		<string name="filename" value="meshes/main_details_wheels_and_bottom_mat_0.ply"/>
+		<ref id="mat-wheels_and_bottom_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-main_details_interior_mat_0" name="mesh-main_details_interior_mat_0">
+		<string name="filename" value="meshes/main_details_interior_mat_0.ply"/>
+		<ref id="mat-interior_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-main_details_body_two_mat_0" name="mesh-main_details_body_two_mat_0">
+		<string name="filename" value="meshes/main_details_body_two_mat_0.ply"/>
+		<ref id="mat-body_two_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-main_details_exterior_details_mat_0" name="mesh-main_details_exterior_details_mat_0">
+		<string name="filename" value="meshes/main_details_exterior_details_mat_0.ply"/>
+		<ref id="mat-exterior_details_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-main_details_roof_and_floor_mat_0" name="mesh-main_details_roof_and_floor_mat_0">
+		<string name="filename" value="meshes/main_details_roof_and_floor_mat_0.ply"/>
+		<ref id="mat-roof_and_floor_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-main_details_glass_mat_0" name="mesh-main_details_glass_mat_0">
+		<string name="filename" value="meshes/main_details_glass_mat_0.ply"/>
+		<ref id="mat-glass_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-r_door_body_two_mat_0" name="mesh-r_door_body_two_mat_0">
+		<string name="filename" value="meshes/r_door_body_two_mat_0.ply"/>
+		<ref id="mat-body_two_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-r_door_interior_mat_0" name="mesh-r_door_interior_mat_0">
+		<string name="filename" value="meshes/r_door_interior_mat_0.ply"/>
+		<ref id="mat-interior_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-r_door_exterior_details_mat_0" name="mesh-r_door_exterior_details_mat_0">
+		<string name="filename" value="meshes/r_door_exterior_details_mat_0.ply"/>
+		<ref id="mat-exterior_details_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-r_door_glass_mat_0" name="mesh-r_door_glass_mat_0">
+		<string name="filename" value="meshes/r_door_glass_mat_0.ply"/>
+		<ref id="mat-glass_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-side_door_interior_mat_0" name="mesh-side_door_interior_mat_0">
+		<string name="filename" value="meshes/side_door_interior_mat_0.ply"/>
+		<ref id="mat-interior_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-side_door_body_one_mat_0" name="mesh-side_door_body_one_mat_0">
+		<string name="filename" value="meshes/side_door_body_one_mat_0.ply"/>
+		<ref id="mat-body_one_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-side_door_exterior_details_mat_0" name="mesh-side_door_exterior_details_mat_0">
+		<string name="filename" value="meshes/side_door_exterior_details_mat_0.ply"/>
+		<ref id="mat-exterior_details_mat" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-side_door_glass_mat_0" name="mesh-side_door_glass_mat_0">
+		<string name="filename" value="meshes/side_door_glass_mat_0.ply"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-glass_mat.001" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_7" name="mesh-Object_7">
+		<string name="filename" value="meshes/Object_7.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_9" name="mesh-Object_9">
+		<string name="filename" value="meshes/Object_9.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_11" name="mesh-Object_11">
+		<string name="filename" value="meshes/Object_11.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_13" name="mesh-Object_13">
+		<string name="filename" value="meshes/Object_13.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_15" name="mesh-Object_15">
+		<string name="filename" value="meshes/Object_15.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_17" name="mesh-Object_17">
+		<string name="filename" value="meshes/Object_17.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_19" name="mesh-Object_19">
+		<string name="filename" value="meshes/Object_19.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_21" name="mesh-Object_21">
+		<string name="filename" value="meshes/Object_21.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_23" name="mesh-Object_23">
+		<string name="filename" value="meshes/Object_23.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_25" name="mesh-Object_25">
+		<string name="filename" value="meshes/Object_25.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_27" name="mesh-Object_27">
+		<string name="filename" value="meshes/Object_27.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+	<shape type="ply" id="mesh-Object_29" name="mesh-Object_29">
+		<string name="filename" value="meshes/Object_29.ply"/>
+		<ref id="mat-lambert6" name="bsdf"/>
+	</shape>
+
+<!-- Volumes -->
+
+</scene>

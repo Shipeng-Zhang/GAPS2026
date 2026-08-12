@@ -1,0 +1,116 @@
+{
+  "distribution": {
+    "name": "normal",
+    "mean": 0.46,
+    "stddev": 0.24
+  },
+  "realizations": 100000,
+  "smooth_square": [
+    {
+      "inner_samples": 1,
+      "measured_bias": 0.057677417221087934,
+      "equation_21_bias": 0.0576,
+      "absolute_error": 7.741722108793592e-05
+    },
+    {
+      "inner_samples": 2,
+      "measured_bias": 0.02855262321991056,
+      "equation_21_bias": 0.0288,
+      "absolute_error": 0.00024737678008943803
+    },
+    {
+      "inner_samples": 4,
+      "measured_bias": 0.014132949049056182,
+      "equation_21_bias": 0.0144,
+      "absolute_error": 0.00026705095094381806
+    },
+    {
+      "inner_samples": 8,
+      "measured_bias": 0.007078018445864975,
+      "equation_21_bias": 0.0072,
+      "absolute_error": 0.0001219815541350245
+    },
+    {
+      "inner_samples": 16,
+      "measured_bias": 0.0034222363985888515,
+      "equation_21_bias": 0.0036,
+      "absolute_error": 0.00017776360141114837
+    },
+    {
+      "inner_samples": 32,
+      "measured_bias": 0.0019966031072036206,
+      "equation_21_bias": 0.0018,
+      "absolute_error": 0.0001966031072036206
+    },
+    {
+      "inner_samples": 64,
+      "measured_bias": 0.0008678960829072713,
+      "equation_21_bias": 0.0009,
+      "absolute_error": 3.2103917092728704e-05
+    },
+    {
+      "inner_samples": 128,
+      "measured_bias": 0.00042742886784302714,
+      "equation_21_bias": 0.00045,
+      "absolute_error": 2.257113215697285e-05
+    }
+  ],
+  "discontinuous_step": [
+    {
+      "inner_samples": 1,
+      "expected_estimate": 0.43476,
+      "true_value": 0.0,
+      "bias": 0.43476,
+      "equation_21_bias": null
+    },
+    {
+      "inner_samples": 2,
+      "expected_estimate": 0.40622,
+      "true_value": 0.0,
+      "bias": 0.40622,
+      "equation_21_bias": null
+    },
+    {
+      "inner_samples": 4,
+      "expected_estimate": 0.37004,
+      "true_value": 0.0,
+      "bias": 0.37004,
+      "equation_21_bias": null
+    },
+    {
+      "inner_samples": 8,
+      "expected_estimate": 0.31876,
+      "true_value": 0.0,
+      "bias": 0.31876,
+      "equation_21_bias": null
+    },
+    {
+      "inner_samples": 16,
+      "expected_estimate": 0.25125,
+      "true_value": 0.0,
+      "bias": 0.25125,
+      "equation_21_bias": null
+    },
+    {
+      "inner_samples": 32,
+      "expected_estimate": 0.1745,
+      "true_value": 0.0,
+      "bias": 0.1745,
+      "equation_21_bias": null
+    },
+    {
+      "inner_samples": 64,
+      "expected_estimate": 0.09038,
+      "true_value": 0.0,
+      "bias": 0.09038,
+      "equation_21_bias": null
+    },
+    {
+      "inner_samples": 128,
+      "expected_estimate": 0.02953,
+      "true_value": 0.0,
+      "bias": 0.02953,
+      "equation_21_bias": null
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "metadata": {"description": "ACP-equivalent one-sample direct application"},
+  "materials": {
+    "box": {
+      "estimator": "direct",
+      "samples": 1,
+      "function": {"type": "cel", "levels": 4, "max_value": 1.0},
+      "when": {"first_hit": true}
+    }
+  }
+}
+

@@ -1,0 +1,6 @@
+{
+  "metadata": {
+    "description": "Fig.13 geometry/material control without feature lines or tone hatching"
+  },
+  "default": {"estimator": "identity"}
+}

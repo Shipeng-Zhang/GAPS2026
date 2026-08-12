@@ -1,0 +1,84 @@
+<scene version="3.0.0">
+    <default name="spp" value="16"/>
+    <default name="res" value="128"/>
+    <default name="max_depth" value="5"/>
+    <default name="integrator" value="sre"/>
+    <default name="style_config" value="configs/cel_8.json"/>
+
+    <integrator type="$integrator">
+        <integer name="max_depth" value="$max_depth"/>
+        <integer name="rr_depth" value="4"/>
+        <float name="rr_probability" value="0.95"/>
+        <string name="style_config" value="$style_config"/>
+    </integrator>
+
+    <sensor type="perspective">
+        <float name="near_clip" value="10"/>
+        <float name="far_clip" value="2800"/>
+        <float name="fov" value="39.3077"/>
+        <transform name="to_world">
+            <lookat origin="278, 273, -800" target="278, 273, -799" up="0, 1, 0"/>
+        </transform>
+        <sampler type="independent">
+            <integer name="sample_count" value="$spp"/>
+        </sampler>
+        <film type="hdrfilm">
+            <integer name="width" value="$res"/>
+            <integer name="height" value="$res"/>
+            <rfilter type="box"/>
+            <string name="pixel_format" value="rgb"/>
+            <string name="component_format" value="float32"/>
+        </film>
+    </sensor>
+
+    <bsdf type="diffuse" id="box">
+        <rgb name="reflectance" value="0.72, 0.70, 0.66"/>
+    </bsdf>
+    <bsdf type="diffuse" id="white">
+        <rgb name="reflectance" value="0.73, 0.73, 0.68"/>
+    </bsdf>
+    <bsdf type="diffuse" id="red">
+        <rgb name="reflectance" value="0.63, 0.065, 0.05"/>
+    </bsdf>
+    <bsdf type="diffuse" id="green">
+        <rgb name="reflectance" value="0.14, 0.45, 0.091"/>
+    </bsdf>
+    <bsdf type="diffuse" id="light">
+        <rgb name="reflectance" value="0.78"/>
+    </bsdf>
+    <bsdf type="conductor" id="mirror">
+        <string name="material" value="Al"/>
+    </bsdf>
+
+    <shape type="obj" id="luminaire">
+        <string name="filename" value="official_cbox/meshes/cbox_luminaire.obj"/>
+        <transform name="to_world"><translate y="-0.5"/></transform>
+        <ref id="light"/>
+        <emitter type="area"><rgb name="radiance" value="18.4, 11.0, 3.0"/></emitter>
+    </shape>
+    <shape type="obj" id="floor">
+        <string name="filename" value="official_cbox/meshes/cbox_floor.obj"/><ref id="white"/>
+    </shape>
+    <shape type="obj" id="ceiling">
+        <string name="filename" value="official_cbox/meshes/cbox_ceiling.obj"/><ref id="white"/>
+    </shape>
+    <shape type="obj" id="back">
+        <string name="filename" value="official_cbox/meshes/cbox_back.obj"/><ref id="white"/>
+    </shape>
+    <shape type="obj" id="greenwall">
+        <string name="filename" value="official_cbox/meshes/cbox_greenwall.obj"/><ref id="green"/>
+    </shape>
+    <shape type="obj" id="redwall">
+        <string name="filename" value="official_cbox/meshes/cbox_redwall.obj"/><ref id="red"/>
+    </shape>
+    <shape type="obj" id="smallbox">
+        <string name="filename" value="official_cbox/meshes/cbox_smallbox.obj"/><ref id="box"/>
+    </shape>
+    <shape type="obj" id="largebox">
+        <string name="filename" value="official_cbox/meshes/cbox_largebox.obj"/><ref id="box"/>
+    </shape>
+    <shape type="sphere" id="mirror_ball">
+        <transform name="to_world"><scale value="55"/><translate x="420" y="60" z="120"/></transform>
+        <ref id="mirror"/>
+    </shape>
+</scene>

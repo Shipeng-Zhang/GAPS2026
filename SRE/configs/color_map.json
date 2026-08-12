@@ -1,0 +1,17 @@
+{
+  "metadata": {"description": "Paper Section 5.1 color mapping with eight inner samples"},
+  "materials": {
+    "box": {
+      "estimator": "direct",
+      "samples": 8,
+      "function": {
+        "type": "color_map",
+        "colors": [[0.02, 0.03, 0.08], [0.05, 0.55, 0.62], [0.96, 0.8, 0.18]],
+        "positions": [0.0, 0.45, 1.0],
+        "input_range": [0.0, 1.0]
+      },
+      "when": {"first_hit": true}
+    }
+  }
+}
+

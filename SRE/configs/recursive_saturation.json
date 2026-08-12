@@ -1,0 +1,12 @@
+{
+  "metadata": {"description": "Recursive SRE on the box material at up to three occurrences"},
+  "materials": {
+    "box": {
+      "estimator": "direct",
+      "samples": 3,
+      "function": {"type": "saturation", "amount": 1.65},
+      "when": {"max_occurrences": 3}
+    }
+  }
+}
+
