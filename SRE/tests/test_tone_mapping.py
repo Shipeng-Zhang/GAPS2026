@@ -478,6 +478,30 @@ def test_fig13_paper_aligned_tone_uses_two_families_and_geometric_normals() -> N
     assert all(line.measurement == "normal" for line in robot_lines)
 
 
+def test_fig13_tone_separates_dense_torso_sparse_legs_and_clean_floor() -> None:
+    root = Path(__file__).resolve().parents[1]
+    config = load_config(root / "configs" / "f13_tone.json")
+
+    torso = config.shapes["mesh-Cube"].estimator.function
+    ordinary = config.materials["default-bsdf"].estimator.function
+    leg_shapes = ("mesh-Cylinder_011", "mesh-Cylinder_004", "mesh-Cylinder_003")
+    legs = [config.shapes[name].estimator.function for name in leg_shapes]
+    floor = config.materials["mat-Material.001"].estimator.function
+
+    assert torso.spacing < ordinary.spacing < legs[0].spacing
+    assert torso.activation_thresholds[0] < ordinary.activation_thresholds[0]
+    assert all(
+        leg.activation_thresholds[0] > ordinary.activation_thresholds[0]
+        for leg in legs
+    )
+    assert torso.max_coverage > ordinary.max_coverage
+    assert all(leg.max_coverage < ordinary.max_coverage for leg in legs)
+    assert floor.activation_thresholds[0] > ordinary.activation_thresholds[0]
+    assert floor.shadow_strength == 0.0
+
+    assert config.feature_lines.glossy_line_strength >= 0.4
+
+
 def test_fig13_scene_has_portable_paper_aligned_reflectors() -> None:
     root = Path(__file__).resolve().parents[1]
     scene = (root / "scenes" / "fig13.xml").read_text(encoding="utf-8")
@@ -489,7 +513,9 @@ def test_fig13_scene_has_portable_paper_aligned_reflectors() -> None:
     assert '<point name="center" value="4.24385, 7.70337, -18.29073"/>' in scene
     assert '<float name="radius" value="11.5825"/>' in scene
     assert '<float name="fov" value="79.0"/>' in scene
-    assert '<float name="aperture_radius" value="0.0"/>' in scene
+    assert '<float name="focus_distance" value="18.0"/>' in scene
+    assert '<float name="aperture_radius" value="0.10"/>' in scene
+    assert '<float name="alpha" value="0.004"/>' in scene
 
     planar = scene.split('id="mesh-f13-planar-reflector"', 1)[1].split(
         "</shape>", 1

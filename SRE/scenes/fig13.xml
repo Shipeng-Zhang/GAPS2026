@@ -23,13 +23,13 @@
 		<float name="fov" value="79.0"/>
 		<float name="near_clip" value="0.100000"/>
 		<float name="far_clip" value="100.000000"/>
-		<!-- Focus the main robot while allowing the floor pattern and curved
-		     reflection to acquire the gradual distribution blur in Fig. 13. -->
-		<float name="focus_distance" value="15.0"/>
-		<!-- Fig. 13's left half is the purely specular render.  Keep the camera
-		     pinhole here so the flat-mirror reflection remains sharp; the right
-		     curved reflector is still softened by its GGX distribution. -->
-		<float name="aperture_radius" value="0.0"/>
+		<!-- The direct robot lies about 18 scene units from the camera.  Focusing
+		     there preserves the crisp directly visible surface in Fig. 13, while
+		     reflected virtual images at larger optical distance naturally defocus. -->
+		<float name="focus_distance" value="18.0"/>
+		<!-- A modest physical aperture produces the paper's gradual DoF without
+		     applying an image-space blur to the in-focus robot. -->
+		<float name="aperture_radius" value="0.10"/>
 		<transform name="to_world">
 			<rotate x="1" angle="-163.1564579873814"/>
 			<rotate y="1" angle="-49.28376954117144"/>
@@ -51,17 +51,18 @@
 <!-- Materials -->
 
 	<bsdf type="twosided" id="mat-Material.001" name="mat-Material.001">
-		<!-- Paper-white diffuse base plus a restrained polished clear coat.
-		     The 35% GGX branch carries a readable robot reflection, while the
-		     roughness creates the transport-driven softening shown in Fig. 13. -->
+		<!-- Keep the directly seen paper floor clean while assigning enough
+		     energy to a moderately rough GGX branch for the transport-softened
+		     robot reflection in Fig. 13.  The thin lens is focused on the direct
+		     robot, so this blur remains concentrated in reflected paths. -->
 		<bsdf type="blendbsdf">
-			<float name="weight" value="0.35"/>
+			<float name="weight" value="0.52"/>
 			<bsdf type="diffuse">
 				<rgb value="0.80, 0.80, 0.80" name="reflectance"/>
 			</bsdf>
 			<bsdf type="roughconductor">
 				<string name="distribution" value="ggx"/>
-				<float name="alpha" value="0.030"/>
+				<float name="alpha" value="0.042"/>
 				<string name="material" value="none"/>
 				<rgb value="0.90, 0.90, 0.90" name="specular_reflectance"/>
 			</bsdf>
@@ -94,9 +95,10 @@
 			<!-- The source reflector has only 960 triangles.  Smooth normals below
 			     provide the curved macro surface; a small nonzero GGX width retains
 			     the paper's distributional path without erasing the reflected robot. -->
-			<!-- A small but visible GGX spread keeps the robot legible while
-			     naturally softening the stylized reflection on the sphere. -->
-			<float name="alpha" value="0.012"/>
+			<!-- The paper's sphere is optically smooth.  Keep only a very narrow
+			     nonzero GGX lobe so distributional transport remains represented;
+			     visible softening is dominated by optical-path DoF and sampling. -->
+			<float name="alpha" value="0.004"/>
 			<string name="material" value="none"/>
 			<rgb name="specular_reflectance" value="0.97, 0.97, 0.97"/>
 		</bsdf>
