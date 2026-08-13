@@ -474,8 +474,16 @@ def test_fig13_paper_aligned_tone_uses_two_families_and_geometric_normals() -> N
         line for line in config.feature_lines.types
         if line.name.startswith("f13_geometric_normal_")
     ]
-    assert len(robot_lines) == 2
+    assert len(robot_lines) == 4
     assert all(line.measurement == "normal" for line in robot_lines)
+
+    direct_lines = [line for line in robot_lines if line.max_depth == 0]
+    reflected_lines = [line for line in robot_lines if line.min_depth == 1]
+    assert len(direct_lines) == 2
+    assert len(reflected_lines) == 2
+    assert max(line.stencil_radius for line in reflected_lines) < max(
+        line.stencil_radius for line in direct_lines
+    )
 
 
 def test_fig13_tone_separates_dense_torso_sparse_legs_and_clean_floor() -> None:
@@ -499,7 +507,7 @@ def test_fig13_tone_separates_dense_torso_sparse_legs_and_clean_floor() -> None:
     assert floor.activation_thresholds[0] > ordinary.activation_thresholds[0]
     assert floor.shadow_strength == 0.0
 
-    assert config.feature_lines.glossy_line_strength >= 0.4
+    assert config.feature_lines.glossy_line_strength == 0.0
 
 
 def test_fig13_scene_has_portable_paper_aligned_reflectors() -> None:
@@ -514,8 +522,16 @@ def test_fig13_scene_has_portable_paper_aligned_reflectors() -> None:
     assert '<float name="radius" value="11.5825"/>' in scene
     assert '<float name="fov" value="79.0"/>' in scene
     assert '<float name="focus_distance" value="18.0"/>' in scene
-    assert '<float name="aperture_radius" value="0.10"/>' in scene
-    assert '<float name="alpha" value="0.004"/>' in scene
+    assert '<float name="aperture_radius" value="0.0"/>' in scene
+    assert 'id="mat-f13-mirror-frame"' in scene
+    assert scene.count('id="mesh-f13-planar-frame-') == 4
+    assert scene.count('<float name="radius" value="0.075"/>') == 4
+
+    curved = scene.split('id="mat-f13-glossy-mirror"', 1)[1].split(
+        "</bsdf>", 1
+    )[0]
+    assert '<bsdf type="conductor">' in curved
+    assert '<float name="alpha"' not in curved
 
     planar = scene.split('id="mesh-f13-planar-reflector"', 1)[1].split(
         "</shape>", 1

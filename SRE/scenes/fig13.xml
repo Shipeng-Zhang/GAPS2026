@@ -23,13 +23,9 @@
 		<float name="fov" value="79.0"/>
 		<float name="near_clip" value="0.100000"/>
 		<float name="far_clip" value="100.000000"/>
-		<!-- The direct robot lies about 18 scene units from the camera.  Focusing
-		     there preserves the crisp directly visible surface in Fig. 13, while
-		     reflected virtual images at larger optical distance naturally defocus. -->
+		<!-- Fig. 13's left experiment is purely specular and has no camera DoF. -->
 		<float name="focus_distance" value="18.0"/>
-		<!-- A modest physical aperture produces the paper's gradual DoF without
-		     applying an image-space blur to the in-focus robot. -->
-		<float name="aperture_radius" value="0.10"/>
+		<float name="aperture_radius" value="0.0"/>
 		<transform name="to_world">
 			<rotate x="1" angle="-163.1564579873814"/>
 			<rotate y="1" angle="-49.28376954117144"/>
@@ -74,8 +70,7 @@
 	<bsdf type="diffuse" id="mat-Material" name="mat-Material">
 		<rgb value="0.800000 0.800000 0.800000" name="reflectance"/>
 	</bsdf>
-	<!-- Fig. 13: left is a perfect planar mirror; right is the curved GGX
-	     reflector whose distribution should blur tone through transport. -->
+	<!-- Fig. 13 left experiment: both reflectors are perfectly specular. -->
 	<bsdf type="twosided" id="mat-f13-planar-mirror">
 		<!-- Blender exported this thin mirror with the geometric normal facing
 		     away from the camera. A two-sided wrapper preserves the same ideal
@@ -85,22 +80,20 @@
 			<rgb name="specular_reflectance" value="0.99, 0.99, 0.99"/>
 		</bsdf>
 	</bsdf>
+	<!-- A physical dark rim makes the flat reflector readable against the
+	     paper-white environment.  This is scene geometry, not a post-process
+	     stroke, so its occlusion and reflected appearance remain consistent. -->
+	<bsdf type="diffuse" id="mat-f13-mirror-frame">
+		<rgb name="reflectance" value="0.006, 0.006, 0.007"/>
+	</bsdf>
 	<bsdf type="twosided" id="mat-f13-glossy-mirror">
 		<!-- The curved reflector is visible both directly and through the
 		     planar mirror.  Its exported winding exposes opposite sides in
 		     those two views, so a one-sided conductor made the reflected side
 		     an artificial solid-black disk. -->
-		<bsdf type="roughconductor">
-			<string name="distribution" value="ggx"/>
-			<!-- The source reflector has only 960 triangles.  Smooth normals below
-			     provide the curved macro surface; a small nonzero GGX width retains
-			     the paper's distributional path without erasing the reflected robot. -->
-			<!-- The paper's sphere is optically smooth.  Keep only a very narrow
-			     nonzero GGX lobe so distributional transport remains represented;
-			     visible softening is dominated by optical-path DoF and sampling. -->
-			<float name="alpha" value="0.004"/>
+		<bsdf type="conductor">
 			<string name="material" value="none"/>
-			<rgb name="specular_reflectance" value="0.97, 0.97, 0.97"/>
+			<rgb name="specular_reflectance" value="0.99, 0.99, 0.99"/>
 		</bsdf>
 	</bsdf>
 
@@ -320,6 +313,33 @@
 		     oblique view crops the robot to the rear side while retaining the
 		     sphere and the robot image carried by that sphere. -->
 		<ref id="mat-f13-planar-mirror" name="bsdf"/>
+	</shape>
+	<!-- Four thin cylinders follow the source reflector bounds exactly.  They
+	     provide a deterministic one-pixel-scale frame where a stochastic
+	     hit/miss stencil alone can disappear into the white surround. -->
+	<shape type="cylinder" id="mesh-f13-planar-frame-left">
+		<point name="p0" value="-15.20, -3.2134, -7.3953"/>
+		<point name="p1" value="-15.20, -3.2134, 17.5237"/>
+		<float name="radius" value="0.075"/>
+		<ref id="mat-f13-mirror-frame" name="bsdf"/>
+	</shape>
+	<shape type="cylinder" id="mesh-f13-planar-frame-right">
+		<point name="p0" value="-15.20, 18.6294, -7.3953"/>
+		<point name="p1" value="-15.20, 18.6294, 17.5237"/>
+		<float name="radius" value="0.075"/>
+		<ref id="mat-f13-mirror-frame" name="bsdf"/>
+	</shape>
+	<shape type="cylinder" id="mesh-f13-planar-frame-bottom">
+		<point name="p0" value="-15.20, -3.2134, -7.3953"/>
+		<point name="p1" value="-15.20, 18.6294, -7.3953"/>
+		<float name="radius" value="0.075"/>
+		<ref id="mat-f13-mirror-frame" name="bsdf"/>
+	</shape>
+	<shape type="cylinder" id="mesh-f13-planar-frame-top">
+		<point name="p0" value="-15.20, -3.2134, 17.5237"/>
+		<point name="p1" value="-15.20, 18.6294, 17.5237"/>
+		<float name="radius" value="0.075"/>
+		<ref id="mat-f13-mirror-frame" name="bsdf"/>
 	</shape>
 	<shape type="sphere" id="mesh-f13-curved-reflector" name="mesh-f13-curved-reflector">
 		<!-- The 482-vertex export visibly facets the glossy coordinate map.  An
