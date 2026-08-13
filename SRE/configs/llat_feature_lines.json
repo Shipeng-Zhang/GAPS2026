@@ -1,6 +1,7 @@
 {
   "metadata": {
     "description": "Lifting Lines and Tone Fig. 1 Wasteland teaser: geometric-normal feature lines plus canonical MLS tone hatching",
+    "fig1_evidence": "The teaser demonstrates four transport effects from its caption: DoF-blurred lines/tone (yellow), glossy-reflection blur (red), image-space tone structure in curved reflection (blue), and van hatching responding to the sitting robot's physical reflection (green).",
     "paper_parameters": "Section 4 and Supplemental S1: 16 auxiliary paths and 16 extremal finite-difference searches. Section 5 and Supplemental S2: material-independent mirror anchors, incoming-direction chart, compatible-prefix lookup and local linear MLS inverse. Section 6.3: separate brightness-level functions on emission and reflected lighting, with foreground lift and background attenuation.",
     "tone_bands": "ToneHatch thresholds use darkness (1 - luminance): below T1 = clean highlight, T1..T2 = one hatch family, above T2 = two-family cross-hatching.",
     "usage": "CUDA_VISIBLE_DEVICES=0 python ./sre/render.py --scene ./scenes/sre_LLaT.xml --config ./configs/llat_feature_lines.json --width 1920 --height 1080 --spp 32 --spp-per-pass 1 --max-depth 4",
@@ -25,16 +26,16 @@
     "_paper_section": "6.3 combined style: brightness-level controls on emission and reflected lighting; foreground receives more light while background intensity is reduced.",
     "emission": {
       "thresholds": [0.25, 0.80],
-      "gains": [0.95, 0.90, 0.78]
+      "gains": [3.80, 1.00, 0.78]
     },
     "reflected": {
       "thresholds": [0.20, 0.70],
       "gains": [0.72, 0.95, 1.05]
     },
-    "near_distance": 6.0,
-    "far_distance": 14.0,
-    "near_gain": 1.10,
-    "far_gain": 0.86
+    "near_distance": 10.0,
+    "far_distance": 20.0,
+    "near_gain": 1.08,
+    "far_gain": 0.72
   },
   "feature_lines": {
     "enabled": true,
@@ -133,7 +134,7 @@
         "darkness_gamma": 1.0,
         "edge_softness": 0.42,
         "max_value": 1.10,
-        "shadow_strength": 0.08,
+        "shadow_strength": 0.12,
         "ink": [0.001, 0.001, 0.001],
         "paper": [0.995, 0.995, 0.992]
       },
@@ -156,8 +157,54 @@
         "darkness_gamma": 1.0,
         "edge_softness": 0.46,
         "max_value": 1.00,
-        "shadow_strength": 0.08,
+        "shadow_strength": 0.28,
         "ink": [0.001, 0.001, 0.001],
+        "paper": [0.985, 0.985, 0.980]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    },
+    "mat-body_two_mat": {
+      "estimator": "direct",
+      "samples": 16,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 5.2,
+        "angles_degrees": [76.0, -14.0],
+        "activation_thresholds": [0.24, 0.54],
+        "phase_offsets": [0.17, 0.43],
+        "family_widths": [0.70, 0.48],
+        "min_coverage": 0.015,
+        "max_coverage": 0.30,
+        "darkness_gamma": 0.94,
+        "edge_softness": 0.38,
+        "max_value": 0.68,
+        "shadow_strength": 0.34,
+        "ink": [0.000, 0.000, 0.000],
+        "paper": [0.985, 0.985, 0.980]
+      },
+      "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
+    },
+    "mat-body_one_mat": {
+      "estimator": "direct",
+      "samples": 16,
+      "recursive": false,
+      "bias_correction": "none",
+      "function": {
+        "type": "tone_hatch",
+        "spacing": 5.2,
+        "angles_degrees": [76.0, -14.0],
+        "activation_thresholds": [0.24, 0.54],
+        "phase_offsets": [0.17, 0.43],
+        "family_widths": [0.70, 0.48],
+        "min_coverage": 0.015,
+        "max_coverage": 0.30,
+        "darkness_gamma": 0.94,
+        "edge_softness": 0.38,
+        "max_value": 0.68,
+        "shadow_strength": 0.34,
+        "ink": [0.000, 0.000, 0.000],
         "paper": [0.985, 0.985, 0.980]
       },
       "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
@@ -179,7 +226,7 @@
         "darkness_gamma": 0.94,
         "edge_softness": 0.38,
         "max_value": 0.68,
-        "shadow_strength": 0.12,
+        "shadow_strength": 0.34,
         "ink": [0.000, 0.000, 0.000],
         "paper": [0.985, 0.985, 0.980]
       },
@@ -202,7 +249,7 @@
         "darkness_gamma": 0.94,
         "edge_softness": 0.38,
         "max_value": 0.68,
-        "shadow_strength": 0.12,
+        "shadow_strength": 0.34,
         "ink": [0.000, 0.000, 0.000],
         "paper": [0.985, 0.985, 0.980]
       },
@@ -225,7 +272,7 @@
         "darkness_gamma": 0.94,
         "edge_softness": 0.38,
         "max_value": 0.68,
-        "shadow_strength": 0.12,
+        "shadow_strength": 0.34,
         "ink": [0.000, 0.000, 0.000],
         "paper": [0.985, 0.985, 0.980]
       },
@@ -248,7 +295,7 @@
         "darkness_gamma": 1.0,
         "edge_softness": 0.34,
         "max_value": 1.00,
-        "shadow_strength": 0.08,
+        "shadow_strength": 0.24,
         "ink": [0.001, 0.001, 0.001],
         "paper": [0.980, 0.980, 0.975]
       },
@@ -271,7 +318,7 @@
         "darkness_gamma": 1.0,
         "edge_softness": 0.34,
         "max_value": 1.00,
-        "shadow_strength": 0.08,
+        "shadow_strength": 0.24,
         "ink": [0.001, 0.001, 0.001],
         "paper": [0.950, 0.950, 0.944]
       },
@@ -295,7 +342,7 @@
       "darkness_gamma": 0.98,
       "edge_softness": 0.46,
       "max_value": 0.98,
-      "shadow_strength": 0.10,
+      "shadow_strength": 0.32,
       "ink": [0.001, 0.001, 0.001],
       "paper": [0.990, 0.990, 0.985]
     },

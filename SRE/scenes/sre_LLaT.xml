@@ -227,15 +227,18 @@
 <!-- Emitters -->
 
 	<emitter type="directional" id="emit-Light" name="emit-Light">
-		<rgb value="1.350000 1.350000 1.350000" name="irradiance"/>
+		<!-- A strong key plus weak environment fill reproduces the teaser's
+		     bright foreground without erasing the dark lower car/house planes. -->
+		<rgb value="2.500000 2.500000 2.500000" name="irradiance"/>
 		<!-- Camera-aligned key: the horizontal projection follows the camera's
 		     forward vector so cast shadows recede behind the characters. -->
-		<vector name="direction" x="-0.250000" y="-0.936000" z="-0.250000"/>
+		<vector name="direction" x="-0.420000" y="-0.820000" z="-0.390000"/>
 	</emitter>
 	<emitter type="constant" id="emit-paper-environment" name="emit-paper-environment">
-		<!-- Preserve readable fill without washing every surface above the
-		     first tone-hatch threshold. -->
-		<rgb value="0.650000 0.650000 0.650000" name="radiance"/>
+		<!-- Section 6.3 styles directly visible emission separately. Keep the
+		     transport contribution weak here so occluded/downward-facing planes
+		     remain dark; the visible paper-sky level is restored by that style. -->
+		<rgb value="0.200000 0.200000 0.200000" name="radiance"/>
 	</emitter>
 
 <!-- Shapes -->
@@ -243,7 +246,9 @@
 	<shape type="ply" id="mesh-立方体" name="mesh-立方体">
 		<string name="filename" value="meshes/water_puddle.ply"/>
 		<transform name="to_world">
-			<translate x="1.500000" y="0.000000" z="-1.050000"/>
+			<!-- Source vertices are at y=0.205 while the ground is y=0. A 5 mm
+			     separation prevents z-fighting without making the mirror float. -->
+			<translate x="1.500000" y="-0.200000" z="-1.050000"/>
 		</transform>
 		<boolean name="face_normals" value="true"/>
 		<ref id="mat-材质" name="bsdf"/>

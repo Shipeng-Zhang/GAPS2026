@@ -209,8 +209,8 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     assert config.lighting_style.enabled
     assert config.lighting_style.emission.thresholds == (0.25, 0.80)
     assert config.lighting_style.reflected.thresholds == (0.20, 0.70)
-    assert config.lighting_style.primary_distance_gain(6.0) == 1.10
-    assert config.lighting_style.primary_distance_gain(14.0) == 0.86
+    assert config.lighting_style.primary_distance_gain(10.0) == 1.08
+    assert config.lighting_style.primary_distance_gain(20.0) == 0.72
     assert all(
         line.measurement == "normal" for line in config.feature_lines.types
     )
@@ -235,7 +235,7 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     assert len(default_hatch.angles_degrees) == 2
     assert default_hatch.min_coverage == 0.008
     assert default_hatch.max_coverage == 0.26
-    assert default_hatch.shadow_strength == 0.10
+    assert default_hatch.shadow_strength == 0.32
     small_robot = config.materials["mat-lambert6"].estimator.function
     np.testing.assert_allclose(
         small_robot.activation_thresholds, [0.30, 0.60]
@@ -254,6 +254,19 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
         rear_robot_shell.activation_thresholds, [0.42, 0.70]
     )
     assert rear_robot_shell.max_coverage == 0.24
+    for vehicle_material in (
+        "mat-body_two_mat",
+        "mat-body_one_mat",
+        "mat-body_two_mat.001",
+        "mat-body_one_mat.001",
+        "mat-roof_and_floor_mat",
+    ):
+        vehicle_hatch = config.materials[vehicle_material].estimator.function
+        np.testing.assert_allclose(
+            vehicle_hatch.activation_thresholds, [0.24, 0.54]
+        )
+        assert vehicle_hatch.max_value == 0.68
+        assert vehicle_hatch.shadow_strength == 0.34
 
 
 def test_fig1_tone_hatches_use_three_brightness_bands() -> None:
@@ -292,3 +305,34 @@ def test_fig1_robot_thigh_panels_keep_their_original_material() -> None:
     assert 'id="fig1-small-robot-torso"' in scene
     assert scene.count('id="fig1-small-robot-leg-') == 4
     assert '<bsdf type="twosided" id="mat-lambert1.001"' in scene
+
+
+def test_fig1_puddle_is_nearly_coplanar_with_ground() -> None:
+    scene = (
+        Path(__file__).resolve().parents[1]
+        / "scenes"
+        / "sre_LLaT.xml"
+    ).read_text(encoding="utf-8")
+    assert '<translate x="1.500000" y="-0.200000" z="-1.050000"/>' in scene
+    # water_puddle.ply is authored at y=0.205 and Object_72.ply at y=0.
+    # The XML translation leaves only 5 mm separation to avoid z-fighting.
+    assert "4.7100 0.2050 3.9700" in (
+        Path(__file__).resolve().parents[1]
+        / "scenes"
+        / "meshes"
+        / "water_puddle.ply"
+    ).read_text(encoding="ascii")
+
+
+def test_fig1_uses_strong_key_and_weak_environment_fill() -> None:
+    scene = (
+        Path(__file__).resolve().parents[1]
+        / "scenes"
+        / "sre_LLaT.xml"
+    ).read_text(encoding="utf-8")
+    assert '<rgb value="2.500000 2.500000 2.500000" name="irradiance"/>' in scene
+    assert '<rgb value="0.200000 0.200000 0.200000" name="radiance"/>' in scene
+    assert (
+        '<vector name="direction" x="-0.420000" y="-0.820000" '
+        'z="-0.390000"/>'
+    ) in scene
