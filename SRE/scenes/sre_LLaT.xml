@@ -6,7 +6,7 @@
 	<default name="resx" value="1920"/>
 	<default name="resy" value="1080"/>
 	<default name="focus_distance" value="8.65"/>
-	<default name="aperture_radius" value="0.018"/>
+	<default name="aperture_radius" value="0.032"/>
 
 <!-- Camera and Rendering Parameters -->
 

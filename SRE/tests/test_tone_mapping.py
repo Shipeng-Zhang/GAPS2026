@@ -230,30 +230,30 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     )
     default_hatch = config.default.estimator.function
     np.testing.assert_allclose(
-        default_hatch.activation_thresholds, [0.38, 0.66]
+        default_hatch.activation_thresholds, [0.32, 0.58]
     )
     assert len(default_hatch.angles_degrees) == 2
-    assert default_hatch.min_coverage == 0.008
-    assert default_hatch.max_coverage == 0.26
-    assert default_hatch.shadow_strength == 0.32
+    assert default_hatch.min_coverage == 0.010
+    assert default_hatch.max_coverage == 0.35
+    assert default_hatch.shadow_strength == 0.12
     small_robot = config.materials["mat-lambert6"].estimator.function
     np.testing.assert_allclose(
-        small_robot.activation_thresholds, [0.30, 0.60]
+        small_robot.activation_thresholds, [0.26, 0.52]
     )
     np.testing.assert_allclose(small_robot.paper, [0.980, 0.980, 0.975])
     reconstructed_robot = config.materials[
         "mat-fig1-small-robot"
     ].estimator.function
     np.testing.assert_allclose(
-        reconstructed_robot.activation_thresholds, [0.30, 0.60]
+        reconstructed_robot.activation_thresholds, [0.26, 0.52]
     )
     rear_robot_shell = config.materials[
         "mat-lambert1.001"
     ].estimator.function
     np.testing.assert_allclose(
-        rear_robot_shell.activation_thresholds, [0.42, 0.70]
+        rear_robot_shell.activation_thresholds, [0.36, 0.62]
     )
-    assert rear_robot_shell.max_coverage == 0.24
+    assert rear_robot_shell.max_coverage == 0.34
     for vehicle_material in (
         "mat-body_two_mat",
         "mat-body_one_mat",
@@ -263,10 +263,12 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     ):
         vehicle_hatch = config.materials[vehicle_material].estimator.function
         np.testing.assert_allclose(
-            vehicle_hatch.activation_thresholds, [0.24, 0.54]
+            vehicle_hatch.activation_thresholds, [0.22, 0.50]
         )
         assert vehicle_hatch.max_value == 0.68
-        assert vehicle_hatch.shadow_strength == 0.34
+        assert vehicle_hatch.spacing == 5.8
+        assert vehicle_hatch.max_coverage == 0.38
+        assert vehicle_hatch.shadow_strength == 0.12
 
 
 def test_fig1_tone_hatches_use_three_brightness_bands() -> None:
@@ -336,3 +338,29 @@ def test_fig1_uses_strong_key_and_weak_environment_fill() -> None:
         '<vector name="direction" x="-0.420000" y="-0.820000" '
         'z="-0.390000"/>'
     ) in scene
+    # The yellow caption example needs visible optical blur, not a post-filter.
+    assert '<default name="aperture_radius" value="0.032"/>' in scene
+
+
+def test_fig1_hatching_uses_ink_strokes_instead_of_a_heavy_gray_bed() -> None:
+    config = load_config(
+        Path(__file__).resolve().parents[1]
+        / "configs"
+        / "llat_feature_lines.json"
+    )
+    vehicle = config.materials["mat-body_two_mat.001"].estimator.function
+    house = config.default.estimator.function
+
+    # At 1920 px reference width these spacings remain individually legible;
+    # the 4K render scales them to 11.6 and 12.8 physical pixels.
+    assert vehicle.spacing == 5.8
+    assert house.spacing == 6.4
+    # The paper's dark tone is carried mainly by two line families.  A weak
+    # low-frequency bed preserves reflected illumination without washing the
+    # crossings into a continuous gray material.
+    assert vehicle.max_coverage >= 0.38
+    assert house.max_coverage >= 0.35
+    assert vehicle.shadow_strength <= 0.12
+    assert house.shadow_strength <= 0.12
+    assert vehicle.edge_softness <= 0.20
+    assert house.edge_softness <= 0.22
