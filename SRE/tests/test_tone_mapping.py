@@ -234,7 +234,8 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     assert config.lighting_style.emission.thresholds == (0.08, 0.50)
     assert config.lighting_style.reflected.thresholds == (0.20, 0.70)
     assert config.lighting_style.emission.levels == (0.16, 0.78, 0.90)
-    assert config.lighting_style.reflected.levels == (0.18, 0.39, 0.68)
+    assert config.lighting_style.reflected.levels == ()
+    assert config.lighting_style.reflected.gains == (0.72, 0.90, 1.00)
     assert config.lighting_style.emission.brightness_mode == "mean"
     assert config.lighting_style.reflected.brightness_mode == "mean"
     assert config.lighting_style.primary_distance_gain(10.0) == 1.08
@@ -258,30 +259,29 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     )
     default_hatch = config.default.estimator.function
     np.testing.assert_allclose(
-        default_hatch.activation_thresholds, [0.30, 0.62]
+        default_hatch.activation_thresholds, [0.50, 0.82]
     )
     assert len(default_hatch.angles_degrees) == 2
-    assert default_hatch.min_coverage == 0.150
-    assert default_hatch.max_coverage == 0.49
+    assert default_hatch.min_coverage == 0.055
+    assert default_hatch.max_coverage == 0.31
     assert default_hatch.shadow_strength == 0.0
     small_robot = config.materials["mat-lambert6"].estimator.function
     np.testing.assert_allclose(
-        small_robot.activation_thresholds, [0.28, 0.60]
+        small_robot.activation_thresholds, [0.48, 0.80]
     )
     np.testing.assert_allclose(small_robot.paper, [0.980, 0.980, 0.975])
     reconstructed_robot = config.materials[
         "mat-fig1-small-robot"
     ].estimator.function
     np.testing.assert_allclose(
-        reconstructed_robot.activation_thresholds, [0.28, 0.60]
+        reconstructed_robot.activation_thresholds, [0.48, 0.80]
     )
-    rear_robot_shell = config.materials[
+    original_lambert_shell = config.materials[
         "mat-lambert1.001"
     ].estimator.function
     np.testing.assert_allclose(
-        rear_robot_shell.activation_thresholds, [0.30, 0.64]
+        original_lambert_shell.activation_thresholds, [0.50, 0.82]
     )
-    assert rear_robot_shell.max_coverage == 0.50
     for vehicle_material in (
         "mat-body_two_mat",
         "mat-body_one_mat",
@@ -291,12 +291,17 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     ):
         vehicle_hatch = config.materials[vehicle_material].estimator.function
         np.testing.assert_allclose(
-            vehicle_hatch.activation_thresholds, [0.24, 0.52]
+            vehicle_hatch.activation_thresholds, [0.44, 0.72]
         )
         assert vehicle_hatch.max_value == 0.78
-        assert vehicle_hatch.spacing == 5.0
-        assert vehicle_hatch.max_coverage == 0.50
+        assert vehicle_hatch.spacing == 8.0
+        assert vehicle_hatch.max_coverage == 0.32
         assert vehicle_hatch.shadow_strength == 0.0
+    reflective_door = config.materials[
+        "mat-fig1-van-reflective-door"
+    ].estimator
+    assert reflective_door.samples == 24
+    assert reflective_door.function.spacing == 8.0
 
 
 def test_fig1_tone_hatches_use_three_brightness_bands() -> None:
@@ -318,9 +323,10 @@ def test_fig1_tone_hatches_use_three_brightness_bands() -> None:
         assert len(hatch.angles_degrees) == 2
         assert len(hatch.activation_thresholds) == 2
         assert hatch.activation_thresholds[0] < hatch.activation_thresholds[1]
-        assert tuple(hatch.brightness_thresholds) == (0.20, 0.70)
-        assert tuple(hatch.brightness_levels) == (0.18, 0.39, 0.68)
-        assert hatch.brightness_mode == "mean"
+        # The family count is discrete, but the expected radiance remains
+        # continuous so bright subregions can stay genuinely paper-white.
+        assert tuple(hatch.brightness_thresholds) == ()
+        assert tuple(hatch.brightness_levels) == ()
 
 
 def test_fig1_robot_thigh_panels_keep_their_original_material() -> None:
@@ -338,6 +344,46 @@ def test_fig1_robot_thigh_panels_keep_their_original_material() -> None:
     assert 'id="fig1-small-robot-torso"' in scene
     assert scene.count('id="fig1-small-robot-leg-') == 4
     assert '<bsdf type="twosided" id="mat-lambert1.001"' in scene
+
+
+def test_fig1_multileg_robot_is_white_and_van_door_preserves_reflection() -> None:
+    root = Path(__file__).resolve().parents[1]
+    config = load_config(root / "configs" / "llat_feature_lines.json")
+    scene = (root / "scenes" / "sre_LLaT.xml").read_text(encoding="utf-8")
+
+    contour = next(
+        line for line in config.feature_lines.types
+        if line.name == "white_multileg_robot_shape_contour"
+    )
+    assert contour.measurement == "normal"
+    white_component_shapes = {
+        shape_id for shape_id, binding in config.shapes.items()
+        if binding.estimator.__class__.__name__ == "ConstantEstimator"
+    }
+    assert len(white_component_shapes) == 21
+    assert "mesh-Cylinder_005_Material_011_0" in white_component_shapes
+    assert "mesh-Cube_014_Material_011_0" in white_component_shapes
+    assert "mesh-Object_4" not in white_component_shapes
+    for shape_id in white_component_shapes:
+        np.testing.assert_allclose(
+            config.shapes[shape_id].estimator.value,
+            [0.985, 0.985, 0.980],
+        )
+        assert contour.applies_to_shape(shape_id)
+    assert 'id="mat-fig1-van-reflective-door"' in scene
+    assert '<float name="alpha" value="0.025"/>' in scene
+    assert scene.count('<ref id="mat-fig1-van-reflective-door" name="bsdf"/>') == 1
+    assert (
+        '<shape type="ply" id="mesh-main_details_body_two_mat_0"'
+        in scene
+    )
+    assert (
+        config.materials["mat-fig1-van-reflective-door"].estimator.samples
+        == 24
+    )
+    assert config.shapes[
+        "mesh-main_details_body_two_mat_0"
+    ].estimator.samples == 24
 
 
 def test_fig1_puddle_is_nearly_coplanar_with_ground() -> None:
@@ -382,15 +428,16 @@ def test_fig1_hatching_uses_ink_strokes_instead_of_a_heavy_gray_bed() -> None:
     vehicle = config.materials["mat-body_two_mat.001"].estimator.function
     house = config.default.estimator.function
 
-    # Reference-space spacing scales to 10.0/10.8 physical pixels at 4K.  A
-    # non-trivial minimum coverage makes the newly activated middle band at
-    # least 1.5 px wide, rather than the sub-pixel 0.01 coverage used before.
-    assert vehicle.spacing == 5.0
-    assert house.spacing == 5.4
-    assert vehicle.min_coverage >= 0.15
-    assert house.min_coverage >= 0.15
-    assert vehicle.max_coverage >= 0.49
-    assert house.max_coverage >= 0.49
+    # Narrow strokes separated by substantial paper-white gaps avoid the
+    # uniform diagonal-filter appearance of the former 2.5x family widths.
+    assert vehicle.spacing == 8.0
+    assert house.spacing == 8.5
+    assert vehicle.min_coverage <= 0.06
+    assert house.min_coverage <= 0.06
+    assert vehicle.max_coverage <= 0.32
+    assert house.max_coverage <= 0.32
+    assert max(vehicle.family_widths) < 1.0
+    assert max(house.family_widths) < 1.0
     # Supplemental S5.6 specifies paper outside strokes; no gray shadow bed.
     assert vehicle.shadow_strength == 0.0
     assert house.shadow_strength == 0.0

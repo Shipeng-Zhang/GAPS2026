@@ -54,6 +54,10 @@ def test_windows_replacement_character_assets_use_temporary_ascii_aliases():
 
 def test_shape_filtered_feature_lines_disable_xml_mesh_merging():
     assert _feature_lines_require_shape_identity({
+        "shapes": {"mesh-specific-part": {"estimator": "constant"}},
+        "feature_lines": {"types": []},
+    })
+    assert _feature_lines_require_shape_identity({
         "feature_lines": {
             "types": [{
                 "measurement": "normal",

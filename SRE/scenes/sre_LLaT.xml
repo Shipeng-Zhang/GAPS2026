@@ -189,6 +189,15 @@
 		<float name="int_ior" value="1.90"/>
 		<rgb name="diffuse_reflectance" value="0.12"/>
 	</bsdf>
+	<!-- Fig. 1 green-caption evidence: the broad visible van panel reflects the
+	     seated robot.  The source export shared its rough body paint (alpha 0.11),
+	     which erased that silhouette before the tone style could respond. -->
+	<bsdf type="roughplastic" id="mat-fig1-van-reflective-door" name="mat-fig1-van-reflective-door">
+		<string name="distribution" value="ggx"/>
+		<float name="alpha" value="0.025"/>
+		<float name="int_ior" value="1.90"/>
+		<rgb name="diffuse_reflectance" value="0.10"/>
+	</bsdf>
 	<bsdf type="roughplastic" id="mat-glass_mat.001" name="mat-glass_mat.001">
 		<string name="distribution" value="ggx"/>
 		<float name="alpha" value="0.045"/>
@@ -2766,7 +2775,7 @@
 	</shape>
 	<shape type="ply" id="mesh-main_details_body_two_mat_0" name="mesh-main_details_body_two_mat_0">
 		<string name="filename" value="meshes/main_details_body_two_mat_0.ply"/>
-		<ref id="mat-body_two_mat.001" name="bsdf"/>
+		<ref id="mat-fig1-van-reflective-door" name="bsdf"/>
 	</shape>
 	<shape type="ply" id="mesh-main_details_exterior_details_mat_0" name="mesh-main_details_exterior_details_mat_0">
 		<string name="filename" value="meshes/main_details_exterior_details_mat_0.ply"/>

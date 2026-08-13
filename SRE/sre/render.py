@@ -65,6 +65,13 @@ def _sample_passes(
 
 def _feature_lines_require_shape_identity(config_data: Mapping[str, Any]) -> bool:
     """Return whether XML optimization would invalidate line dictionaries."""
+    # Shape-specific style bindings are looked up from SurfaceInteraction
+    # shape IDs just like shape-filtered feature lines.  Optimizing the XML in
+    # this case can merge geometrically separate meshes and silently bypass
+    # the requested binding.
+    shape_bindings = config_data.get("shapes", {})
+    if isinstance(shape_bindings, Mapping) and bool(shape_bindings):
+        return True
     feature_lines = config_data.get("feature_lines", {})
     if not isinstance(feature_lines, Mapping):
         return False
