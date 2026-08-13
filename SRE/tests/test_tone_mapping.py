@@ -486,6 +486,12 @@ def test_fig13_scene_has_portable_paper_aligned_reflectors() -> None:
     assert (root / "scenes/fig13_meshes/meshes/planar_reflector.ply").is_file()
     assert 'id="mesh-f13-planar-reflector"' in scene
     assert 'id="mesh-f13-curved-reflector"' in scene
+    assert '<point name="center" value="4.24385, 7.70337, -18.29073"/>' in scene
+    assert '<float name="radius" value="11.5825"/>' in scene
     assert '<float name="fov" value="79.0"/>' in scene
     assert '<float name="aperture_radius" value="0.0"/>' in scene
-    assert '<rotate z="1" angle="-4.0"/>' in scene
+
+    planar = scene.split('id="mesh-f13-planar-reflector"', 1)[1].split(
+        "</shape>", 1
+    )[0]
+    assert '<transform name="to_world">' not in planar

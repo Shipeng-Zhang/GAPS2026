@@ -314,23 +314,20 @@
 		     whose filesystem codec cannot open the original Chinese filename. -->
 		<string name="filename" value="fig13_meshes/meshes/planar_reflector.ply"/>
 		<boolean name="face_normals" value="true"/>
-		<!-- The reflector and camera were exported in one world coordinate
-		     system, but the published arrangement moves the reflector forward
-		     and scales its visible rectangle.  Translation along its normal is
-		     calibrated so the reflected robot occupies the far-left third rather
-		     than overlapping the directly viewed robot. -->
-		<transform name="to_world">
-			<scale x="1.0" y="0.65" z="0.65"/>
-			<rotate z="1" angle="-4.0"/>
-			<translate value="6.5, 0.0, 0.0"/>
-		</transform>
+		<!-- Keep the reflector in the paper asset's world coordinates.  Its
+		     oblique view crops the robot to the rear side while retaining the
+		     sphere and the robot image carried by that sphere. -->
 		<ref id="mat-f13-planar-mirror" name="bsdf"/>
 	</shape>
 	<shape type="sphere" id="mesh-f13-curved-reflector" name="mesh-f13-curved-reflector">
 		<!-- The 482-vertex export visibly facets the glossy coordinate map.  An
 		     analytic sphere with the source radius preserves the intended smooth
 		     macro geometry and the paper's right-side arc placement. -->
-		<point name="center" value="12.3156, 13.7874, -2.5335"/>
+		<!-- Preserve the source asset's sphere fit.  Its nearest surface stays
+		     behind the robot, so the curved reflector records the robot's back
+		     instead of cutting across the foreground.  The same placement puts
+		     the sphere immediately behind the legs in the planar-mirror view. -->
+		<point name="center" value="4.24385, 7.70337, -18.29073"/>
 		<float name="radius" value="11.5825"/>
 		<ref id="mat-f13-glossy-mirror" name="bsdf"/>
 	</shape>
