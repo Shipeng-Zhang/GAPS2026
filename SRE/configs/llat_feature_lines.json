@@ -1,7 +1,7 @@
 {
   "metadata": {
     "description": "Lifting Lines and Tone Fig. 1 Wasteland teaser: geometric-normal feature lines plus canonical MLS tone hatching",
-    "paper_parameters": "Section 4 and Supplemental S1: 16 auxiliary paths and 16 extremal finite-difference searches. Section 5 and Supplemental S2: material-independent mirror anchors, incoming-direction chart, compatible-prefix lookup and local linear MLS inverse.",
+    "paper_parameters": "Section 4 and Supplemental S1: 16 auxiliary paths and 16 extremal finite-difference searches. Section 5 and Supplemental S2: material-independent mirror anchors, incoming-direction chart, compatible-prefix lookup and local linear MLS inverse. Section 6.3: separate brightness-level functions on emission and reflected lighting, with foreground lift and background attenuation.",
     "tone_bands": "ToneHatch thresholds use darkness (1 - luminance): below T1 = clean highlight, T1..T2 = one hatch family, above T2 = two-family cross-hatching.",
     "usage": "CUDA_VISIBLE_DEVICES=0 python ./sre/render.py --scene ./scenes/sre_LLaT.xml --config ./configs/llat_feature_lines.json --width 1920 --height 1080 --spp 32 --spp-per-pass 1 --max-depth 4",
     "cuda_max_wavefront_size": 4096
@@ -20,14 +20,30 @@
     "condition_epsilon": 1e-6,
     "cuda_anchor_batch_size": 4
   },
+  "lighting_style": {
+    "enabled": true,
+    "_paper_section": "6.3 combined style: brightness-level controls on emission and reflected lighting; foreground receives more light while background intensity is reduced.",
+    "emission": {
+      "thresholds": [0.25, 0.80],
+      "gains": [0.95, 0.90, 0.78]
+    },
+    "reflected": {
+      "thresholds": [0.20, 0.70],
+      "gains": [0.72, 0.95, 1.05]
+    },
+    "near_distance": 6.0,
+    "far_distance": 14.0,
+    "near_gain": 1.10,
+    "far_gain": 0.86
+  },
   "feature_lines": {
     "enabled": true,
     "auxiliary_samples": 16,
     "cuda_auxiliary_batch_size": 4,
     "cuda_line_eval_interval": 3,
     "max_normal_angle_degrees": 80.0,
-    "glossy_line_strength": 0.10,
-    "glossy_line_color": [0.10, 0.10, 0.105],
+    "glossy_line_strength": 0.08,
+    "glossy_line_color": [0.040, 0.040, 0.043],
     "types": [
       {
         "name": "small_robot_material_contour",
@@ -38,7 +54,7 @@
         "stencil": "disk",
         "stencil_radius": 1.85,
         "comparisons": 16,
-        "color": [0.006, 0.006, 0.007],
+        "color": [0.003, 0.003, 0.003],
         "include_silhouette": true,
         "include_materials": ["mat-lambert6", "mat-fig1-small-robot"],
         "min_depth": 0,
@@ -53,7 +69,7 @@
         "stencil": "disk",
         "stencil_radius": 2.20,
         "comparisons": 16,
-        "color": [0.006, 0.006, 0.007],
+        "color": [0.003, 0.003, 0.003],
         "include_silhouette": true,
         "min_depth": 0,
         "max_depth": 3
@@ -67,7 +83,7 @@
         "stencil": "disk",
         "stencil_radius": 1.25,
         "comparisons": 16,
-        "color": [0.010, 0.010, 0.011],
+        "color": [0.005, 0.005, 0.005],
         "include_silhouette": false,
         "exclude_materials": ["mat-lambert1.001"],
         "min_depth": 0,
@@ -82,7 +98,7 @@
         "stencil": "disk",
         "stencil_radius": 0.72,
         "comparisons": 16,
-        "color": [0.014, 0.014, 0.015],
+        "color": [0.008, 0.008, 0.008],
         "include_silhouette": false,
         "exclude_materials": ["mat-lambert1.001"],
         "min_depth": 0,
@@ -112,12 +128,13 @@
         "activation_thresholds": [0.55, 0.78],
         "phase_offsets": [0.17, 0.43],
         "family_widths": [0.72, 0.46],
-        "min_coverage": 0.0,
-        "max_coverage": 0.26,
+        "min_coverage": 0.005,
+        "max_coverage": 0.24,
         "darkness_gamma": 1.0,
         "edge_softness": 0.42,
         "max_value": 1.10,
-        "ink": [0.010, 0.010, 0.011],
+        "shadow_strength": 0.08,
+        "ink": [0.001, 0.001, 0.001],
         "paper": [0.995, 0.995, 0.992]
       },
       "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
@@ -133,14 +150,15 @@
         "angles_degrees": [76.0, -14.0],
         "activation_thresholds": [0.42, 0.70],
         "phase_offsets": [0.17, 0.43],
-        "family_widths": [0.76, 0.48],
-        "min_coverage": 0.0,
+        "family_widths": [0.68, 0.46],
+        "min_coverage": 0.005,
         "max_coverage": 0.24,
         "darkness_gamma": 1.0,
         "edge_softness": 0.46,
-        "max_value": 1.0,
-        "ink": [0.008, 0.008, 0.009],
-        "paper": [0.970, 0.970, 0.965]
+        "max_value": 1.00,
+        "shadow_strength": 0.08,
+        "ink": [0.001, 0.001, 0.001],
+        "paper": [0.985, 0.985, 0.980]
       },
       "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
     },
@@ -153,16 +171,17 @@
         "type": "tone_hatch",
         "spacing": 5.2,
         "angles_degrees": [76.0, -14.0],
-        "activation_thresholds": [0.22, 0.52],
+        "activation_thresholds": [0.24, 0.54],
         "phase_offsets": [0.17, 0.43],
-        "family_widths": [0.88, 0.58],
-        "min_coverage": 0.0,
-        "max_coverage": 0.50,
-        "darkness_gamma": 0.90,
+        "family_widths": [0.70, 0.48],
+        "min_coverage": 0.015,
+        "max_coverage": 0.30,
+        "darkness_gamma": 0.94,
         "edge_softness": 0.38,
-        "max_value": 0.48,
-        "ink": [0.006, 0.006, 0.007],
-        "paper": [0.990, 0.990, 0.986]
+        "max_value": 0.68,
+        "shadow_strength": 0.12,
+        "ink": [0.000, 0.000, 0.000],
+        "paper": [0.985, 0.985, 0.980]
       },
       "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
     },
@@ -175,16 +194,17 @@
         "type": "tone_hatch",
         "spacing": 5.2,
         "angles_degrees": [76.0, -14.0],
-        "activation_thresholds": [0.22, 0.52],
+        "activation_thresholds": [0.24, 0.54],
         "phase_offsets": [0.17, 0.43],
-        "family_widths": [0.88, 0.58],
-        "min_coverage": 0.0,
-        "max_coverage": 0.50,
-        "darkness_gamma": 0.90,
+        "family_widths": [0.70, 0.48],
+        "min_coverage": 0.015,
+        "max_coverage": 0.30,
+        "darkness_gamma": 0.94,
         "edge_softness": 0.38,
-        "max_value": 0.48,
-        "ink": [0.006, 0.006, 0.007],
-        "paper": [0.990, 0.990, 0.986]
+        "max_value": 0.68,
+        "shadow_strength": 0.12,
+        "ink": [0.000, 0.000, 0.000],
+        "paper": [0.985, 0.985, 0.980]
       },
       "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
     },
@@ -197,16 +217,17 @@
         "type": "tone_hatch",
         "spacing": 5.2,
         "angles_degrees": [76.0, -14.0],
-        "activation_thresholds": [0.22, 0.52],
+        "activation_thresholds": [0.24, 0.54],
         "phase_offsets": [0.17, 0.43],
-        "family_widths": [0.88, 0.58],
-        "min_coverage": 0.0,
-        "max_coverage": 0.50,
-        "darkness_gamma": 0.90,
+        "family_widths": [0.70, 0.48],
+        "min_coverage": 0.015,
+        "max_coverage": 0.30,
+        "darkness_gamma": 0.94,
         "edge_softness": 0.38,
-        "max_value": 0.48,
-        "ink": [0.006, 0.006, 0.007],
-        "paper": [0.990, 0.990, 0.986]
+        "max_value": 0.68,
+        "shadow_strength": 0.12,
+        "ink": [0.000, 0.000, 0.000],
+        "paper": [0.985, 0.985, 0.980]
       },
       "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
     },
@@ -221,14 +242,15 @@
         "angles_degrees": [76.0, -14.0],
         "activation_thresholds": [0.30, 0.60],
         "phase_offsets": [0.17, 0.43],
-        "family_widths": [0.78, 0.46],
-        "min_coverage": 0.0,
-        "max_coverage": 0.34,
+        "family_widths": [0.70, 0.46],
+        "min_coverage": 0.008,
+        "max_coverage": 0.28,
         "darkness_gamma": 1.0,
         "edge_softness": 0.34,
-        "max_value": 1.0,
-        "ink": [0.006, 0.006, 0.007],
-        "paper": [0.940, 0.940, 0.936]
+        "max_value": 1.00,
+        "shadow_strength": 0.08,
+        "ink": [0.001, 0.001, 0.001],
+        "paper": [0.980, 0.980, 0.975]
       },
       "when": {"max_depth": 2, "first_hit": true, "max_occurrences": 1}
     },
@@ -243,14 +265,15 @@
         "angles_degrees": [76.0, -14.0],
         "activation_thresholds": [0.30, 0.60],
         "phase_offsets": [0.17, 0.43],
-        "family_widths": [0.72, 0.42],
-        "min_coverage": 0.0,
-        "max_coverage": 0.32,
+        "family_widths": [0.68, 0.44],
+        "min_coverage": 0.008,
+        "max_coverage": 0.27,
         "darkness_gamma": 1.0,
         "edge_softness": 0.34,
-        "max_value": 1.0,
-        "ink": [0.006, 0.006, 0.007],
-        "paper": [0.900, 0.900, 0.894]
+        "max_value": 1.00,
+        "shadow_strength": 0.08,
+        "ink": [0.001, 0.001, 0.001],
+        "paper": [0.950, 0.950, 0.944]
       },
       "when": {"max_depth": 2, "first_hit": true, "max_occurrences": 1}
     }
@@ -264,16 +287,17 @@
       "type": "tone_hatch",
       "spacing": 7.0,
       "angles_degrees": [76.0, -14.0],
-      "activation_thresholds": [0.32, 0.60],
+      "activation_thresholds": [0.38, 0.66],
       "phase_offsets": [0.17, 0.43],
-      "family_widths": [0.82, 0.54],
-      "min_coverage": 0.0,
-      "max_coverage": 0.30,
-      "darkness_gamma": 0.96,
+      "family_widths": [0.70, 0.48],
+      "min_coverage": 0.008,
+      "max_coverage": 0.26,
+      "darkness_gamma": 0.98,
       "edge_softness": 0.46,
-      "max_value": 0.95,
-      "ink": [0.008, 0.008, 0.009],
-      "paper": [0.992, 0.992, 0.988]
+      "max_value": 0.98,
+      "shadow_strength": 0.10,
+      "ink": [0.001, 0.001, 0.001],
+      "paper": [0.990, 0.990, 0.985]
     },
     "when": {"max_depth": 3, "first_hit": true, "max_occurrences": 1}
   }

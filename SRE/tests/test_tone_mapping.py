@@ -206,6 +206,11 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     assert config.tone_mapping.anchor_samples == 16
     assert config.tone_mapping.search_radius == 512.0
     assert config.tone_mapping.max_depth == 4
+    assert config.lighting_style.enabled
+    assert config.lighting_style.emission.thresholds == (0.25, 0.80)
+    assert config.lighting_style.reflected.thresholds == (0.20, 0.70)
+    assert config.lighting_style.primary_distance_gain(6.0) == 1.10
+    assert config.lighting_style.primary_distance_gain(14.0) == 0.86
     assert all(
         line.measurement == "normal" for line in config.feature_lines.types
     )
@@ -225,16 +230,17 @@ def test_fig1_combines_geometric_normal_lines_and_mls_tone_mapping() -> None:
     )
     default_hatch = config.default.estimator.function
     np.testing.assert_allclose(
-        default_hatch.activation_thresholds, [0.32, 0.60]
+        default_hatch.activation_thresholds, [0.38, 0.66]
     )
     assert len(default_hatch.angles_degrees) == 2
-    assert default_hatch.min_coverage == 0.0
-    assert default_hatch.max_coverage == 0.30
+    assert default_hatch.min_coverage == 0.008
+    assert default_hatch.max_coverage == 0.26
+    assert default_hatch.shadow_strength == 0.10
     small_robot = config.materials["mat-lambert6"].estimator.function
     np.testing.assert_allclose(
         small_robot.activation_thresholds, [0.30, 0.60]
     )
-    np.testing.assert_allclose(small_robot.paper, [0.940, 0.940, 0.936])
+    np.testing.assert_allclose(small_robot.paper, [0.980, 0.980, 0.975])
     reconstructed_robot = config.materials[
         "mat-fig1-small-robot"
     ].estimator.function

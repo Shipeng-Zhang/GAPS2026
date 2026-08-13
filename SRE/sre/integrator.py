@@ -132,6 +132,24 @@ def register_sre_integrator():
                 return np.zeros(3)
             return SREIntegrator._rgb(emitter.eval(si))
 
+        def _lighting_result(self, emission, reflected, depth, distance):
+            """Apply Section 6.3 emission/reflection controls before tone."""
+            style = self.config.lighting_style
+            # These are image-layer controls, so applying them below the
+            # camera vertex would compound the gain along a path.
+            if not style.enabled or depth != 0:
+                return emission + reflected
+            emission = as_rgb(emission)
+            reflected = as_rgb(reflected)
+            weights = np.array([0.2126, 0.7152, 0.0722])
+            result = (
+                emission * style.emission.gain(float(np.dot(emission, weights)))
+                + reflected * style.reflected.gain(float(np.dot(reflected, weights)))
+            )
+            if depth == 0:
+                result *= style.primary_distance_gain(distance)
+            return result
+
         @staticmethod
         def _concentric_disk(first: float, second: float) -> np.ndarray:
             x = 2.0 * first - 1.0
@@ -583,7 +601,9 @@ def register_sre_integrator():
             trace_stats.tree_nodes += 1
             si = scene.ray_intersect(ray)
             if not bool(si.is_valid()): # 没有相交物体
-                return self._emission(scene, si)
+                return self._lighting_result(
+                    self._emission(scene, si), np.zeros(3), depth, float("inf")
+                )
 
             use_feature_lines = self.feature_line_config.can_apply_from(depth)
             if use_feature_lines:
@@ -638,9 +658,13 @@ def register_sre_integrator():
             def sample_integrand():
                 nonlocal tone_child_frame
                 if depth + 1 >= self.max_depth:
-                    return emission.copy()
+                    return self._lighting_result(
+                        emission, np.zeros(3), depth, float(si.t)
+                    )
                 if depth >= self.rr_depth and rng.random() >= self.rr_probability:
-                    return emission.copy()
+                    return self._lighting_result(
+                        emission, np.zeros(3), depth, float(si.t)
+                    )
                 ctx = mi.BSDFContext()
                 has_smooth = bool(int(bsdf.flags()) & int(mi.BSDFFlags.Smooth))
                 use_emitter_mixture = has_smooth and len(scene.emitters()) > 0
@@ -654,7 +678,9 @@ def register_sre_integrator():
                     )
                     emitter_weight_rgb = self._rgb(emitter_weight)
                     if float(ds.pdf) <= 0.0 or np.max(np.abs(emitter_weight_rgb)) == 0.0:
-                        return emission.copy()
+                        return self._lighting_result(
+                            emission, np.zeros(3), depth, float(si.t)
+                        )
                     direction = ds.d
                     f_cos, bsdf_pdf = bsdf.eval_pdf(ctx, si, si.to_local(direction))
                     mixture_pdf = (
@@ -665,7 +691,9 @@ def register_sre_integrator():
                         )
                     )
                     if mixture_pdf <= 0.0:
-                        return emission.copy()
+                        return self._lighting_result(
+                            emission, np.zeros(3), depth, float(si.t)
+                        )
                     # A point/directional emitter has no surface that a ray
                     # can intersect. ``emitter_weight`` already contains its
                     # radiance divided by the emitter PDF, so finish this
@@ -678,7 +706,9 @@ def register_sre_integrator():
                     )
                     if depth >= self.rr_depth:
                         transport /= self.rr_probability
-                    return emission + transport
+                    return self._lighting_result(
+                        emission, transport, depth, float(si.t)
+                    )
                 # 采样BSDF反射方向
                 else:
                     bs, weight = bsdf.sample(
@@ -688,7 +718,9 @@ def register_sre_integrator():
                     weight_rgb = self._rgb(weight)
                     if bsdf_pdf <= 0.0 or not np.all(np.isfinite(weight_rgb)) \
                             or np.max(np.abs(weight_rgb)) == 0.0:
-                        return emission.copy()
+                        return self._lighting_result(
+                            emission, np.zeros(3), depth, float(si.t)
+                        )
                     direction = si.to_world(bs.wo)
                     emitter_pdf = 0.0
                     if use_emitter_mixture:
@@ -703,7 +735,9 @@ def register_sre_integrator():
                     numerator = weight_rgb * bsdf_pdf
 
                 if mixture_pdf <= 0.0:
-                    return emission.copy()
+                    return self._lighting_result(
+                        emission, np.zeros(3), depth, float(si.t)
+                    )
 
                 # 递归追踪与通量计算
                 next_ray = si.spawn_ray(direction)
@@ -743,7 +777,9 @@ def register_sre_integrator():
                 transport = numerator * incoming / mixture_pdf
                 if depth >= self.rr_depth:
                     transport /= self.rr_probability
-                return emission + transport
+                return self._lighting_result(
+                    emission, transport, depth, float(si.t)
+                )
 
             result = estimator.estimate(sample_integrand, rng, context, local_stats) # 估计器求值与统计数据回写
             trace_stats.style_evaluations += local_stats.style_evaluations

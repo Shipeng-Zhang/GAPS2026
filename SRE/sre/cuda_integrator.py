@@ -167,6 +167,43 @@ def register_cuda_integrator():
         def _emission(scene, si, active):
             return si.emitter(scene).eval(si, active)
 
+        @staticmethod
+        def _luminance(value):
+            return 0.2126 * value[0] + 0.7152 * value[1] + 0.0722 * value[2]
+
+        def _brightness_gain(self, control, value):
+            gain = mi.Float(float(control.gains[0]))
+            luminance = self._luminance(value)
+            for index, threshold in enumerate(control.thresholds):
+                gain = dr.select(
+                    luminance >= float(threshold),
+                    float(control.gains[index + 1]),
+                    gain,
+                )
+            return gain
+
+        def _lighting_result(self, emission, reflected, depth, distance):
+            """Apply Section 6.3 controls before the tone style sees radiance."""
+            style = self.config.lighting_style
+            # These are image-layer controls, so applying them below the
+            # camera vertex would compound the gain along a path.
+            if not style.enabled or depth != 0:
+                return emission + reflected
+            result = (
+                emission * self._brightness_gain(style.emission, emission)
+                + reflected * self._brightness_gain(style.reflected, reflected)
+            )
+            if depth == 0 and style.far_distance > style.near_distance:
+                weight = dr.clamp(
+                    (distance - style.near_distance)
+                    / (style.far_distance - style.near_distance),
+                    0.0,
+                    1.0,
+                )
+                weight = weight * weight * (3.0 - 2.0 * weight)
+                result *= dr.lerp(style.near_gain, style.far_gain, weight)
+            return result
+
         @classmethod
         def _estimator_uses_tone(cls, estimator):
             """Whether an estimator consumes the lifted image coordinate.
@@ -383,6 +420,7 @@ def register_cuda_integrator():
             )
             if (
                 not use_feature_lines
+                and (not self.config.lighting_style.enabled or depth > 0)
                 and not self._has_future_styles(visits, depth)
             ):
                 return self._plain_radiance(
@@ -401,7 +439,12 @@ def register_cuda_integrator():
             miss_active = active & (si.is_valid() == False)
             result = dr.select(
                 miss_active,
-                self._emission(scene, si, miss_active),
+                self._lighting_result(
+                    self._emission(scene, si, miss_active),
+                    mi.Color3f(0.0),
+                    depth,
+                    mi.Float(float("inf")),
+                ),
                 mi.Color3f(0.0),
             )
             if use_feature_lines:
@@ -596,14 +639,24 @@ def register_cuda_integrator():
                 if depth >= self.rr_depth:
                     transport /= self.rr_probability
                 return dr.select(
-                    draw_active, emission + direct + transport, 0.0
+                    draw_active,
+                    self._lighting_result(
+                        emission, direct + transport, depth, si.t
+                    ),
+                    0.0,
                 )
 
             def sample_integrand(draw_active, next_visits):
                 nonlocal tone_child_frame
                 draw_active = mi.Bool(draw_active) & surface_active
                 if depth + 1 >= self.max_depth:
-                    return dr.select(draw_active, emission, 0.0)
+                    return dr.select(
+                        draw_active,
+                        self._lighting_result(
+                            emission, mi.Color3f(0.0), depth, si.t
+                        ),
+                        0.0,
+                    )
                 child = prepare_child(draw_active)
                 (
                     child_ray, numerator, mixture_pdf, child_active, _, _,
@@ -1151,7 +1204,12 @@ def register_cuda_integrator():
                         getattr(stats, name)
                         + dr.block_sum(value, sample_count),
                     )
-                result = packed_emission + direct + transport
+                result = self._lighting_result(
+                    packed_emission,
+                    direct + transport,
+                    depth,
+                    packed_si.t,
+                )
                 return dr.select(packed_draw_active, result, 0.0)
 
             def make_packed_draw(next_visits, recursive=True):

@@ -10,11 +10,13 @@ from typing import Any, Mapping
 try:
     from .estimators import Estimator, IdentityEstimator, build_estimator
     from .feature_lines import FeatureLineConfig, build_feature_lines
+    from .lighting_style import LightingStyleConfig, build_lighting_style
     from .styles import StyleContext
     from .tone_mapping import ToneMappingConfig, build_tone_mapping
 except ImportError:
     from estimators import Estimator, IdentityEstimator, build_estimator
     from feature_lines import FeatureLineConfig, build_feature_lines
+    from lighting_style import LightingStyleConfig, build_lighting_style
     from styles import StyleContext
     from tone_mapping import ToneMappingConfig, build_tone_mapping
 
@@ -71,6 +73,7 @@ class SREConfig:
     )
     feature_lines: FeatureLineConfig = field(default_factory=FeatureLineConfig)
     tone_mapping: ToneMappingConfig = field(default_factory=ToneMappingConfig)
+    lighting_style: LightingStyleConfig = field(default_factory=LightingStyleConfig)
 
     def resolve(self, material_id: str, shape_id: str, context: StyleContext) -> Estimator:
         binding = self.shapes.get(shape_id, self.materials.get(material_id, self.default))
@@ -97,7 +100,7 @@ def load_config(source: str | Path | Mapping[str, Any] | None) -> SREConfig:
             data = json.load(handle)
     unknown = set(data) - {
         "default", "materials", "shapes", "metadata", "feature_lines",
-        "tone_mapping",
+        "tone_mapping", "lighting_style",
     }
     if unknown:
         raise ValueError(f"Unknown SRE config fields: {sorted(unknown)}")
@@ -107,4 +110,5 @@ def load_config(source: str | Path | Mapping[str, Any] | None) -> SREConfig:
         shapes={key: _binding(value) for key, value in data.get("shapes", {}).items()},
         feature_lines=build_feature_lines(data.get("feature_lines")),
         tone_mapping=build_tone_mapping(data.get("tone_mapping")),
+        lighting_style=build_lighting_style(data.get("lighting_style")),
     )
