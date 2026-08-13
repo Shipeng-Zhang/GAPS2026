@@ -16,15 +16,29 @@ import numpy as np
 
 @dataclass(frozen=True)
 class BrightnessLevelControl:
-    """Piecewise-constant gain indexed by luminance level."""
+    """Piecewise brightness mapping for a transport component.
+
+    ``levels`` implements the brightness-level style used by SRE: compute a
+    scalar brightness ``u``, select a target ``u'``, and preserve chroma by
+    returning ``RGB * u' / u``.  ``gains`` remains as a compatibility mode for
+    older configuration files.
+    """
 
     thresholds: tuple[float, ...] = ()
     gains: tuple[float, ...] = (1.0,)
+    levels: tuple[float, ...] = ()
+    brightness_mode: str = "luminance"
 
     def __post_init__(self) -> None:
         thresholds = tuple(float(value) for value in self.thresholds)
         gains = tuple(float(value) for value in self.gains)
-        if len(gains) != len(thresholds) + 1:
+        levels = tuple(float(value) for value in self.levels)
+        brightness_mode = str(self.brightness_mode).lower()
+        if levels and len(levels) != len(thresholds) + 1:
+            raise ValueError(
+                "lighting brightness levels need one more value than thresholds"
+            )
+        if not levels and len(gains) != len(thresholds) + 1:
             raise ValueError(
                 "lighting brightness gains need one more value than thresholds"
             )
@@ -38,13 +52,31 @@ class BrightnessLevelControl:
             )
         if any(not np.isfinite(value) or value < 0.0 for value in gains):
             raise ValueError("lighting brightness gains must be finite and non-negative")
+        if any(not np.isfinite(value) or value < 0.0 for value in levels):
+            raise ValueError("lighting brightness levels must be finite and non-negative")
+        if brightness_mode not in {"luminance", "mean"}:
+            raise ValueError("lighting brightness_mode must be 'luminance' or 'mean'")
         object.__setattr__(self, "thresholds", thresholds)
         object.__setattr__(self, "gains", gains)
+        object.__setattr__(self, "levels", levels)
+        object.__setattr__(self, "brightness_mode", brightness_mode)
+
+    @property
+    def uses_target_levels(self) -> bool:
+        return bool(self.levels)
+
+    def brightness(self, value: np.ndarray) -> float:
+        rgb = np.asarray(value, dtype=np.float64).reshape(3)
+        if self.brightness_mode == "mean":
+            return float(np.mean(rgb))
+        return float(np.dot(rgb, (0.2126, 0.7152, 0.0722)))
 
     def gain(self, luminance: float) -> float:
-        """Select the configured gain for a brightness band."""
+        """Return the scale needed for the selected brightness band."""
         value = max(float(luminance), 0.0)
         index = int(np.searchsorted(self.thresholds, value, side="right"))
+        if self.levels:
+            return self.levels[index] / max(value, 1e-8) if value > 1e-8 else 0.0
         return self.gains[index]
 
 
@@ -89,6 +121,7 @@ def _control(spec: Mapping[str, object] | None) -> BrightnessLevelControl:
     values = dict(spec or {})
     values["thresholds"] = tuple(values.get("thresholds", ()))
     values["gains"] = tuple(values.get("gains", (1.0,)))
+    values["levels"] = tuple(values.get("levels", ()))
     return BrightnessLevelControl(**values)
 
 

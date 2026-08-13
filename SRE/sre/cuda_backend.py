@@ -373,6 +373,24 @@ def evaluate_style(function, value, context):
         coverage *= ink_strength
         return dr.lerp(color(function.paper), color(function.ink), coverage)
     if isinstance(function, ToneHatch):
+        if function.brightness_levels.size:
+            current = (
+                (value[0] + value[1] + value[2]) / 3.0
+                if function.brightness_mode == "mean"
+                else luminance(value)
+            )
+            target = mi.Float(float(function.brightness_levels[0]))
+            for index, threshold in enumerate(function.brightness_thresholds):
+                target = dr.select(
+                    current >= float(threshold),
+                    float(function.brightness_levels[index + 1]),
+                    target,
+                )
+            value *= dr.select(
+                current > 1e-8,
+                target / dr.maximum(current, 1e-8),
+                0.0,
+            )
         normalized = dr.clamp(
             luminance(value) / function.max_value, 0.0, 1.0
         )

@@ -141,10 +141,13 @@ def register_sre_integrator():
                 return emission + reflected
             emission = as_rgb(emission)
             reflected = as_rgb(reflected)
-            weights = np.array([0.2126, 0.7152, 0.0722])
             result = (
-                emission * style.emission.gain(float(np.dot(emission, weights)))
-                + reflected * style.reflected.gain(float(np.dot(reflected, weights)))
+                emission * style.emission.gain(style.emission.brightness(emission))
+                + reflected * (
+                    1.0
+                    if style.reflected.uses_target_levels
+                    else style.reflected.gain(style.reflected.brightness(reflected))
+                )
             )
             if depth == 0:
                 result *= style.primary_distance_gain(distance)

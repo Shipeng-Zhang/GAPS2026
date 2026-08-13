@@ -171,16 +171,28 @@ def register_cuda_integrator():
         def _luminance(value):
             return 0.2126 * value[0] + 0.7152 * value[1] + 0.0722 * value[2]
 
-        def _brightness_gain(self, control, value):
-            gain = mi.Float(float(control.gains[0]))
-            luminance = self._luminance(value)
+        def _brightness_adjust(self, control, value):
+            brightness = (
+                (value[0] + value[1] + value[2]) / 3.0
+                if control.brightness_mode == "mean"
+                else self._luminance(value)
+            )
+            values = control.levels if control.uses_target_levels else control.gains
+            selected = mi.Float(float(values[0]))
             for index, threshold in enumerate(control.thresholds):
-                gain = dr.select(
-                    luminance >= float(threshold),
-                    float(control.gains[index + 1]),
-                    gain,
+                selected = dr.select(
+                    brightness >= float(threshold),
+                    float(values[index + 1]),
+                    selected,
                 )
-            return gain
+            if control.uses_target_levels:
+                scale = dr.select(
+                    brightness > 1e-8,
+                    selected / dr.maximum(brightness, 1e-8),
+                    0.0,
+                )
+                return value * scale
+            return value * selected
 
         def _lighting_result(self, emission, reflected, depth, distance):
             """Apply Section 6.3 controls before the tone style sees radiance."""
@@ -190,8 +202,12 @@ def register_cuda_integrator():
             if not style.enabled or depth != 0:
                 return emission + reflected
             result = (
-                emission * self._brightness_gain(style.emission, emission)
-                + reflected * self._brightness_gain(style.reflected, reflected)
+                self._brightness_adjust(style.emission, emission)
+                + (
+                    reflected
+                    if style.reflected.uses_target_levels
+                    else self._brightness_adjust(style.reflected, reflected)
+                )
             )
             if depth == 0 and style.far_distance > style.near_distance:
                 weight = dr.clamp(

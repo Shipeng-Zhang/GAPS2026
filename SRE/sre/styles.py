@@ -513,6 +513,9 @@ class ToneHatch:
         darkness_gamma: float = 0.85,
         edge_softness: float = 0.65,
         max_value: float = 1.0,
+        brightness_thresholds: tuple[float, ...] = (),
+        brightness_levels: tuple[float, ...] = (),
+        brightness_mode: str = "mean",
         shadow_strength: float = 0.0,
         ink: tuple[float, float, float] = (0.018, 0.019, 0.021),
         paper: tuple[float, float, float] = (0.965, 0.958, 0.925),
@@ -532,6 +535,13 @@ class ToneHatch:
         self.darkness_gamma = float(darkness_gamma)
         self.edge_softness = float(edge_softness)
         self.max_value = float(max_value)
+        self.brightness_thresholds = np.asarray(
+            brightness_thresholds, dtype=np.float64
+        )
+        self.brightness_levels = np.asarray(
+            brightness_levels, dtype=np.float64
+        )
+        self.brightness_mode = str(brightness_mode).lower()
         # Optional soft shadow bed used by glossy floors. It is deliberately
         # gated by the first line threshold, so ordinary bright paper remains
         # white while the low-frequency reflected/shadow contribution can be
@@ -570,6 +580,30 @@ class ToneHatch:
             raise ValueError(
                 "tone hatch darkness_gamma must be positive and softness non-negative"
             )
+        if self.brightness_levels.size:
+            if self.brightness_levels.shape != (
+                len(self.brightness_thresholds) + 1,
+            ):
+                raise ValueError(
+                    "tone hatch brightness_levels needs one more value than thresholds"
+                )
+            if (
+                np.any(~np.isfinite(self.brightness_thresholds))
+                or np.any(self.brightness_thresholds < 0.0)
+                or np.any(np.diff(self.brightness_thresholds) <= 0.0)
+            ):
+                raise ValueError(
+                    "tone hatch brightness thresholds must be finite, non-negative, "
+                    "and strictly increasing"
+                )
+            if np.any(~np.isfinite(self.brightness_levels)) or np.any(
+                self.brightness_levels < 0.0
+            ):
+                raise ValueError(
+                    "tone hatch brightness levels must be finite and non-negative"
+                )
+        if self.brightness_mode not in {"mean", "luminance"}:
+            raise ValueError("tone hatch brightness_mode must be 'mean' or 'luminance'")
         if not 0.0 <= self.shadow_strength <= 1.0:
             raise ValueError("tone hatch shadow_strength must lie in [0, 1]")
         if np.any((self.activation_thresholds < 0.0) | (self.activation_thresholds > 1.0)):
@@ -592,6 +626,18 @@ class ToneHatch:
 
     def __call__(self, value: RGB, context: StyleContext) -> RGB:
         coordinate = np.asarray(context.tone_coordinate, dtype=np.float64).reshape(2)
+        value = as_rgb(value)
+        if self.brightness_levels.size:
+            current = (
+                float(np.mean(value))
+                if self.brightness_mode == "mean"
+                else luminance(value)
+            )
+            index = int(
+                np.searchsorted(self.brightness_thresholds, current, side="right")
+            )
+            target = float(self.brightness_levels[index])
+            value = value * (target / max(current, 1e-8))
         darkness = np.clip(1.0 - luminance(value) / self.max_value, 0.0, 1.0)
         darkness = darkness ** self.darkness_gamma
         coverage = 0.0
