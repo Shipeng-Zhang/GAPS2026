@@ -1,0 +1,761 @@
+Lifting Lines and Tone: Image-space Stylization in Path-space
+(Supplemental)
+REX WEST, Aoyama Gakuin University, Japan
+SAYAN MUKHERJEE, The University of Tokyo, Japan
+YONGHAO YUE, Aoyama Gakuin University, Japan
+ACM Reference Format:                                                                      Fixed-tilt constraint. Under a microfacet model, conditioning on
+Rex West, Sayan Mukherjee, and Yonghao Yue. 2026. Lifting Lines and Tone:               a facet selection fixes the cosine tilt
+Image-space Stylization in Path-space (Supplemental). ACM Trans. Graph.
+45, 4, Article 138 (July 2026), 11 pages. https://doi.org/10.1145/3811359                                            𝑐 := h·n ∈ [−1, 1].                                (S3)
+                                                                                        Accordingly, admissible half-vectors at a surface point with normal
+This supplemental document accompanies Lifting Lines and Tone:                          n lie on the circle
+Image-space Stylization in Path-space. It collects proofs, implemen-
+                                                                                                              F (n, 𝑐) := {h ∈ S2 | h·n = 𝑐}.                           (S4)
+tation details, and extended comparisons. Section S1 contains discus-
+sion about our feature line method, and Section S2 describes details                    Along the curve 𝛾, we require
+about the tone rendering method developed in the main paper.                                                   h(𝑠) ∈ F (n(𝑠), 𝑐)        for all 𝑠,                     (S5)
+S1     FEATURE-LINE SUPPLEMENTAL DETAILS                                                i.e. the selected microfacet tilt is preserved.
+This section provides further details on the feature-line construc-                       Parallel transport of half-vectors. Write the half-vector as
+tion in Section 4 of the main paper. We begin with the continuous                                                  √︁
+derivation behind the parallel-transport operator used for condition-                      h = 𝑐 n + 𝑠 u,     𝑠 := 1 − 𝑐 2,      u ∈ 𝑇𝛾 (𝑠 ) 𝑆, ∥u∥ = 1.                (S6)
+ally specular paths, then collect the lower-bound and convergence                       Parallel transport of h along 𝛾 is defined by requiring that its tan-
+arguments behind the finite-difference search, then provide imple-                      gential component u is parallel under the Levi–Civita connection:
+mentation details and finally close with a few practical discussion
+                                                                                                                           ∇𝛾¤ u = 0.                                   (S7)
+points for implementation.
+                                                                                        This condition preserves both ∥h∥ = 1 and the tilt constraint (S5).
+S1.1     Parallel transport of half-vectors along conditionally                           Using the Gauss–Weingarten relation dn          ¤ where S is the
+                                                                                                                                  d𝑠 = −S(𝛾),
+         specular paths                                                                 shape operator, (S7) is equivalent to the ambient-space ODE
+Given a conditionally specular light path defined by a sequence                                                dh     dn      dn 
+                                                                                                                  =𝑐      −      ·h n.                  (S8)
+of microfacet half-vectors, our goal is to show that neighboring                                               d𝑠     d𝑠      d𝑠
+image-space samples induce a unique parallel path obtained by                           This equation uniquely defines the transported half-vector along 𝛾.
+transporting each half-vector along the (possibly curved) surface
+and reapplying specular reflection. This construction provides a well-                    Induced transport of reflected directions. Given the transported
+defined correspondence between nearby image-space coordinates                           half-vector h(𝑠), we define the reflected direction by
+                                                                                                                              
+even under non-specular (microfacet) scattering.                                                          d(𝑠) := 2 h(𝑠) ·v(𝑠) h(𝑠) − v(𝑠).            (S9)
+   Setup. Let 𝑆 ⊂ R3 be a smooth surface with unit normal field                         Differentiating yields
+n(𝑥) and induced Levi–Civita connection. Let 𝛾 : [0, 1] → 𝑆 be a                                    dd      dh         dv             dh dv
+                                                                                                        =2      ·v + h·      h + 2 h·v      − ,                       (S10)
+𝐶 1 curve with 𝛾 (0) = 𝑥 and 𝛾 (1) = 𝑥 ′ , and denote 𝛾¤ = d𝑠 .
+                                                           d𝛾
+                                                                                                    d𝑠       d𝑠          d𝑠              d𝑠    d𝑠
+                          3
+   Fix a viewpoint E ∈ R and define the (unit) view direction                           where
+                                         E − 𝛾 (𝑠)                                                     dv        Π ⊥ 𝛾¤
+                             v(𝑠) :=                .                           (S1)                       =− v          ,     Πv⊥ = I − vv⊤ .                        (S11)
+                                        ∥E − 𝛾 (𝑠)∥                                                     d𝑠      ∥E − 𝛾 ∥
+At each 𝑠, a microfacet interaction is represented by a unit half-                      Substituting (S8) gives a closed evolution for d driven by surface
+vector h(𝑠) ∈ S2 , which induces a reflected direction                                  geometry and camera motion.
+                                      
+                  d(𝑠) := 2 h(𝑠) ·v(𝑠) h(𝑠) − v(𝑠) .          (S2)                         Consequence for path correspondence. Conditioned on a sequence
+                                                                                        of microfacet half-vectors {h𝑖 }, a light path is purely specular. For a
+Authors’ addresses: Rex West, Aoyama Gakuin University, Japan; Sayan Mukherjee,         neighboring image-space coordinate, parallel transport of each h𝑖
+The University of Tokyo, Japan; Yonghao Yue, Aoyama Gakuin University, Japan.
+                                                                                        according to (S8), followed by reflection via (S9), produces a unique
+                                                                                        auxiliary path. This construction preserves image-space parallelism
+Please use nonacm option or ACM Engage class to enable CC licenses                      at each bounce and defines a consistent correspondence between
+This work is licensed under a Creative Commons Attribution 4.0 International License.   nearby samples under glossy reflection and refraction.
+© 2026 Copyright held by the owner/author(s).
+ACM 0730-0301/2026/7-ART138                                                                Importantly, the transport rule depends only on local surface
+https://doi.org/10.1145/3811359                                                         geometry and does not require global smoothness. In practice, we
+
+                                                                                                 ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:2   • Rex West, Sayan Mukherjee, and Yonghao Yue
+
+
+apply the same construction across chart boundaries and discrete                          Setup for exhaustive search. To make the smooth-case consistency
+surface representations, treating (S8) as a local update rule for half-                statement mathematically precise, let us now assume that 𝑆 ⊂ R2 is
+vectors along the path.                                                                convex with nonempty interior and that 𝑓𝜉 is continuously differen-
+                                                                                       tiable on an open set 𝑈 containing the closure 𝑆. Define the global
+S1.2     Finite differences and Lipschitz constants                                    Lipschitz constant of 𝑓𝜉 over 𝑆 by
+This subsection supports the lower-bound and convergence claims
+made in Section 4.5 of the main paper. Fix a conditioning realization                                                                |𝑓𝜉 (𝑣) − 𝑓𝜉 (𝑢)|
+𝜉 and write 𝑓𝜉 (𝑠) := 𝑓 (𝑠, 𝜉). We noted in the main text that the                                          L𝑆 (𝑓𝜉 ) := sup                              .
+                                                                                                                           𝑢,𝑣 ∈𝑆        ∥𝑣 − 𝑢 ∥
+finite differences used by the line detector are not just heuristic                                                         𝑢≠𝑣
+approximations to a gradient. Each sampled two-point slope gives us
+                                                                                       By definition, L𝑆 (𝑓𝜉 ) is the smallest 𝐿 ∈ [0, ∞] such that |𝑓𝜉 (𝑣) −
+a lower bound on the maximal gradient somewhere in the sampled
+                                                                                       𝑓𝜉 (𝑢)| ≤ 𝐿∥𝑣 − 𝑢 ∥ for all 𝑢, 𝑣 ∈ 𝑆.
+region, and exhaustive search over such pairs is consistent under
+mild regularity assumptions.
+                                                                                         Theorem S1.1. If 𝑆 is convex and 𝑓𝜉 ∈ 𝐶 1 (𝑈 ) for an open 𝑈 ⊃ 𝑆,
+   Finite differences yield valid lower bounds. Let 𝑆 ⊂ R2 be a bounded                then
+region of image-space and let 𝑓𝜉 : 𝑆 → R be locally Lipschitz, hence
+differentiable almost everywhere. For distinct points 𝑢, 𝑣 ∈ 𝑆 with                                             L𝑆 (𝑓𝜉 ) = sup ∥∇𝑠 𝑓 (𝑦, 𝜉)∥.                    (S18)
+                                                                                                                              𝑦 ∈𝑆
+the segment [𝑢, 𝑣] ⊂ 𝑆, define the two-point finite difference
+                                              𝑓𝜉 (𝑣) − 𝑓𝜉 (𝑢)
+                                𝐷 (𝑢, 𝑣) :=                     .              (S12)      Proof. Let 𝑀 := sup𝑦 ∈𝑆 ∥∇𝑠 𝑓 (𝑦, 𝜉)∥.
+                                                  ∥𝑣 − 𝑢 ∥                                For the upper bound, pick any distinct 𝑢, 𝑣 ∈ 𝑆 and consider the
+Write 𝛾 (𝑡) = 𝑢 + 𝑡 (𝑣 − 𝑢) for 𝑡 ∈ [0, 1] and let 𝑔(𝑡) = 𝑓𝜉 (𝛾 (𝑡)). Since            line segment 𝛾 : [0, 1] → 𝑆 given by 𝛾 (𝑡) = 𝑢 + 𝑡 (𝑣 − 𝑢). Convexity
+𝑓𝜉 is locally Lipschitz, so is 𝑔. By the classical mean value theorem in               of 𝑆 ensures 𝛾 (𝑡) ∈ 𝑆 for all 𝑡 ∈ [0, 1]. By the fundamental theorem
+the smooth case, and by the generalized Clarke mean value theorem                      of calculus,
+in the locally Lipschitz case, there exists 𝑡 ∗ ∈ (0, 1) such that                                         ∫ 1                    ∫ 1
+                                                                                                               𝑑
+                                 𝑔′ (𝑡 ∗ ) = 𝑓𝜉 (𝑣) − 𝑓𝜉 (𝑢).                  (S13)     𝑓𝜉 (𝑣) − 𝑓𝜉 (𝑢) =        𝑓𝜉 (𝛾 (𝑡)) 𝑑𝑡 =     ∇𝑠 𝑓𝜉 (𝛾 (𝑡)) · (𝑣 − 𝑢) 𝑑𝑡 .
+                                                                                                            0 𝑑𝑡                   0
+Setting 𝑠 ∗ = 𝛾 (𝑡 ∗ ) and dividing by ∥𝑣 − 𝑢 ∥ gives
+                                                                                       Taking absolute values and applying Cauchy–Schwarz yields
+                           (𝑠 )                 |𝑓𝜉 (𝑣) − 𝑓𝜉 (𝑢)|
+                         𝐷 u→v 𝑓𝜉 (𝑠 ∗ ) =                          .          (S14)
+                                                     ∥𝑣 − 𝑢 ∥                                                    ∫ 1
+                                                                                           |𝑓𝜉 (𝑣) − 𝑓𝜉 (𝑢)| ≤           ∥∇𝑠 𝑓𝜉 (𝛾 (𝑡))∥ ∥𝑣 − 𝑢 ∥ 𝑑𝑡 ≤ 𝑀 ∥𝑣 − 𝑢 ∥.
+At points of differentiability,                                                                                   0
+                         (𝑠 )                                 𝑣 −𝑢
+                       𝐷 u→v 𝑓𝜉 (𝑠 ∗ ) = ∇𝑠 𝑓𝜉 (𝑠 ∗ ) ·               ,        (S15)   Dividing by ∥𝑣 − 𝑢 ∥ and taking the supremum over 𝑢 ≠ 𝑣 gives
+                                                             ∥𝑣 − 𝑢 ∥
+                                                                                       L𝑆 (𝑓𝜉 ) ≤ 𝑀.
+and Cauchy–Schwarz therefore yields                                                      For the lower bound, fix any point 𝑦 in the interior 𝑆 ◦ of 𝑆 and
+             |𝑓𝜉 (𝑣) − 𝑓𝜉 (𝑢)|                                                         any unit direction 𝑤 ∈ S1 . Define 𝑣 𝜀 := 𝑦 + 𝜀𝑤. For sufficiently small
+                                     ≤ ∥∇𝑠 𝑓𝜉 (𝑠 ∗ )∥ ≤ sup ∥∇𝑠 𝑓𝜉 (𝑦)∥.       (S16)
+                 ∥𝑣 − 𝑢 ∥                                    𝑦 ∈𝑆                      𝜀 > 0, we have 𝑣 𝜀 ∈ 𝑆 since 𝑦 is interior. Then
+
+  Corner cases. If 𝑓𝜉 is continuous but not differentiable everywhere,                                |𝑓𝜉 (𝑣 𝜀 ) − 𝑓𝜉 (𝑦)|          𝑓𝜉 (𝑦 + 𝜀𝑤) − 𝑓𝜉 (𝑦)
+the same conclusion still holds in the generalized-gradient sense                                                             =                              .
+                                                                                                            ∥𝑣 𝜀 − 𝑦 ∥                        𝜀
+described above. If 𝑓𝜉 has a jump discontinuity, then the local Lips-
+chitz constant is infinite in every neighborhood that contains the                     Taking 𝜀 → 0+ and using differentiability gives
+jump, and finite differences across the discontinuity grow without
+bound as the sample spacing shrinks. In our application, this is the                                        |𝑓𝜉 (𝑦 + 𝜀𝑤) − 𝑓𝜉 (𝑦)|
+                                                                                                     lim+                                  = |∇𝑠 𝑓𝜉 (𝑦) · 𝑤 |.
+desired behavior: silhouettes and other transport discontinuities                                   𝜀→0                   𝜀
+should act like gradients of arbitrarily large magnitude rather than
+                                                                                       Therefore, for each such 𝑦,
+exceptions to the detector.
+   Consequence for stochastic search. Each sampled finite difference                                L𝑆 (𝑓𝜉 ) ≥ sup |∇𝑠 𝑓𝜉 (𝑦) · 𝑤 | = ∥∇𝑠 𝑓𝜉 (𝑦)∥.
+is therefore a valid lower bound on the gradient magnitude at some                                               ∥𝑤 ∥=1
+point along the sampled segment. For any collection of sample pairs
+                                                                                       Taking the supremum over 𝑦 ∈ 𝑆 ◦ yields L𝑆 (𝑓𝜉 ) ≥ sup𝑦 ∈𝑆 ◦ ∥∇𝑠 𝑓𝜉 (𝑦) ∥.
+(𝑢𝑖 , 𝑣𝑖 ),
+                                                                                       Since 𝑓𝜉 ∈ 𝐶 1 (𝑈 ), ∥∇𝑠 𝑓𝜉 ∥ is continuous, and therefore
+                          |𝑓𝜉 (𝑣𝑖 ) − 𝑓𝜉 (𝑢𝑖 )|
+                 max                               ≤ sup ∥∇𝑠 𝑓𝜉 (𝑦)∥.          (S17)
+                   𝑖             ∥𝑣𝑖 − 𝑢𝑖 ∥          𝑦 ∈𝑆                                              sup ∥∇𝑠 𝑓𝜉 (𝑦)∥ = sup ∥∇𝑠 𝑓𝜉 (𝑦)∥ = 𝑀.
+                                                                                                       𝑦 ∈𝑆 ◦                     𝑦 ∈𝑆
+The line search used in the main paper can fail to find the maximal
+gradient, but it cannot overestimate it.                                               Hence L𝑆 (𝑓𝜉 ) ≥ 𝑀, completing the proof.                                     □
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                            Lifting Lines and Tone: Image-space Stylization in Path-space (Supplemental) •     138:3
+
+
+   Consequence for an ideal line detector. In the 𝐶 1 setting above, the          In finite-difference lower-bound search, we instead draw pairs
+supremum of finite differences over 𝑆 coincides with the supremum                                                  | 𝑓 (𝑣) −𝑓 (𝑢 ) |
+                                                                               (𝑢, 𝑣) and evaluate the slope 𝜉 ∥𝑣−𝑢𝜉∥      . The exact success proba-
+of gradient magnitudes:                                                        bility now depends on the sampling distribution of segments and
+                |𝑓𝜉 (𝑣) − 𝑓𝜉 (𝑢)|                                              on how they align with the high-gradient region, but crucially it
+        sup                         = sup ∥∇𝑠 𝑓𝜉 (𝑦)∥ = L𝑆 (𝑓𝜉 ).   (S19)      is controlled by the chance that a sampled segment intersects a
+       𝑢,𝑣 ∈𝑆       ∥𝑣 − 𝑢 ∥          𝑦 ∈𝑆
+        𝑢≠𝑣                                                                    high-gradient neighborhood, rather than by the area of 𝐴𝑡 alone.
+Therefore, if we define an ideal line detector over a neighborhood             When 𝐴𝑡 is thin, sparse, or concentrated near lower-dimensional
+𝑆 as the threshold test sup𝑦 ∈𝑆 ∥∇𝑠 𝑓𝜉 (𝑦)∥ ≥ 𝑡, then under the 𝐶 1            structures, this event has a much higher chance of occuring.
+assumptions this is equivalent to testing whether there exists a                  In the worst case, 𝐴𝑡 may have arbitrarily small or even zero area,
+                                      | 𝑓 (𝑣) −𝑓 (𝑢 ) |                        so 𝑞 can vanish, while the probability that a random segment probes
+pair (𝑢, 𝑣) ∈ 𝑆 × 𝑆 such that 𝜉 ∥𝑣−𝑢𝜉∥       ≥ 𝑡. Consequently, as             a region around 𝐴𝑡 remains substantially larger. Consequently, the
+we sample more and more pairs (𝑢, 𝑣) from a distribution with full             expected number of samples required for detection behaves like
+support, our stochastic detector converges to this ideal detector (up
+to the measure-zero boundary case 𝑡 = L𝑆 (𝑓𝜉 )).                                                                  1                             1
+                                                                                                E[𝑁 search ] ∼      ,       E[𝑁 estimate ] ∼      ,           (S22)
+                                                                                                                  𝑝                             𝑞
+   Beyond 𝐶 1 : what “exactness” means for 𝐶 0 or discontinuous signals.
+When 𝑓𝜉 is not 𝐶 1 , the right-hand side sup𝑦 ∈𝑆 ∥∇𝑠 𝑓𝜉 (𝑦)∥ may be            with 𝑝 ≫ 𝑞 in precisely the rare-event regimes that matter for line
+undefined, so the equality in Eq. (S19) cannot be interpreted literally.       detection. This is why the search formulation in the main paper
+However, the left-hand side remains well defined and characterizes             converges more reliably than directly estimating gradient magni-
+the maximum slope in a generalized sense: it defines the (possibly             tudes at random points. See the exposition in Section S1.4 for further
+infinite) Lipschitz constant L𝑆 (𝑓𝜉 ).                                         details about performance.
+   If 𝑓𝜉 is Lipschitz but not everywhere differentiable (e.g. piecewise
+smooth with kinks), then 𝑓𝜉 is differentiable almost everywhere                S1.4     Implementation details
+by Rademacher’s theorem [Rademacher 1919; Evans and Gariepy                       Sampling auxiliary paths. For each base path we want to detect
+2025], and L𝑆 (𝑓𝜉 ) coincides with the essential supremum of ∥∇𝑠 𝑓𝜉 ∥.         lines for, our feature-line estimator relies on finite differences eval-
+In this regime, the finite-difference search remains consistent with           uated between a base path and a set of image-space-offset auxiliary
+the intuitive “largest local slope” criterion even though classical            paths. A direct implementation of the mathematical construction
+gradients fail on a measure-zero set.                                          would generate a full set of auxiliary paths from scratch at every
+   If 𝑓𝜉 has jump discontinuities on 𝑆 (as can occur at visibility             stylization evaluation, which quickly becomes prohibitive as style
+boundaries, silhouettes, or other topological changes in path geom-            functions are evaluated at many vertices along a path. Instead, we
+etry), then L𝑆 (𝑓𝜉 ) = ∞, and finite differences can become arbitrarily        construct and reuse auxiliary edges incrementally inside the same
+large for point pairs straddling the jump. Accordingly, for any finite         depth-first recursion used to sample the SRE path tree (see Fig. 1).
+threshold 𝑡 the detector becomes exact in the limit as well: it will           This technically can violate the independence requirement of sam-
+almost surely, under dense sampling, succeed in finding pairs whose            ples used to estimate the weight terms in Eq. (34), however we
+finite difference exceeds 𝑡. This matches our practical interpreta-            observed the effect is minor, and further masked by the early-exit
+tion that discontinuities correspond to “arbitrarily large” gradients          algorithm discussed below, where it is very rare for samples to be
+and should robustly trigger line responses, even though classical              shared across more than a few weight term estimates.
+derivatives do not exist there.                                                   At the first camera edge, we draw a fixed number 𝑁 aux of auxiliary
+                                                                               image-space coordinates 𝑠 ′ in a line stencil (e.g. disk or other radially
+S1.3    Finite difference search convergence
+                                                                               symmetric shape) around the base pixel 𝑠 (we use stratified sampling
+The problem in Section 4.5 of the main paper is an extremal decision           for variance reduction). Each auxiliary pixel 𝑠 ′ spawns an auxiliary
+problem rather than an integration problem: we want to determine               camera ray that shares the same camera-side conditional event as the
+whether there exists a point in 𝑆 at which the gradient magnitude              base ray (e.g., the same thin-lens aperture sample when depth of field
+exceeds a threshold 𝑡. Let                                                     is enabled), differing only in its image coordinate. We intersect these
+       𝐺 (𝑦) := ∥∇𝑠 𝑓𝜉 (𝑦)∥,          𝐴𝑡 := {𝑦 ∈ 𝑆 : 𝐺 (𝑦) > 𝑡 }.   (S20)      auxiliary rays once to obtain a set of auxiliary first-hit vertices. The
+                                                                               resulting set of pairs (x0, x1′ ) is stored as an AuxiliaryPathFrame.
+  In pointwise gradient estimation [West 2021], i.i.d. points 𝑦𝑖 ∼
+Uniform(𝑆) are drawn and 𝐺 (𝑦𝑖 ) is estimated by some local pro-                  Amortized sampling cost via auxiliary edge reuse. As the base
+cedure. The probability of detection in a single trial is therefore            path is extended by BSDF sampling or next-event estimation, we
+governed by the ratio of the measures of 𝐴𝑡 and 𝑆:                             extend the auxiliary set one edge at a time: for each new base edge
+                                                 𝜇 (𝐴𝑡 )                       (x𝑖 , x𝑖+1 ), we generate 𝑁 aux corresponding auxiliary continuation
+                         𝑞 := P(𝑦 ∈ 𝐴𝑡 ) =               .          (S21)                     ′ ) and store them in a new AuxiliaryPathFrame
+                                                                               edges (x𝑖′, x𝑖+1
+                                                  𝜇 (𝑆)
+                                                                               pushed on a stack. Since we sample paths depth-first, pushing/pop-
+After 𝑁 samples, the detection probability is 1 − (1 − 𝑞) 𝑁 . Thus,            ping these frames naturally matches recursion: auxiliary edges for a
+convergence is controlled directly by the area of the high-gradient            prefix are reused by all subpaths of that prefix, and memory remains
+set.                                                                           𝑂 (𝑁 aux · depth).
+
+                                                                                         ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:4    • Rex West, Sayan Mukherjee, and Yonghao Yue
+
+
+   Preserving conditional events via random-number replay. A key               useful default is front-to-back ordering so nearer occluding lines
+requirement of our formulation is that finite differences correspond           override farther ones.
+to a partial variation in image-space at fixed conditional realization.           Different line types may require different stencil sizes. In the
+In the implementation, this is enforced by reusing the same random             current implementation we draw a single auxiliary set from a disk
+variables 𝜉 that produced each scattering event on the base path               whose radius is the maximum stencil radius across the active line
+when generating the auxiliary continuation edges. In addition to               types (and any additional line-width constraints). This guarantees
+lens sample and half-vector copy, we record the sampler position               that every line type can reuse the same auxiliary samples, and each
+immediately before sampling the base event, and for each auxiliary             line type simply ignores auxiliary pixels that fall outside its own
+edge we rewind the sampler to that position, sample the auxiliary              stencil. While this “bounding disk” strategy can waste samples when
+event, and then restore the sampler. This “replay” strategy keeps              stencils differ greatly, it keeps the estimator simple and amortizes
+camera and BSDF-side conditional variables fixed while allowing                auxiliary tracing across all line types. More specialized stencil-aware
+image-space coordinates to change.                                             densities (e.g., mixtures over stencils) are compatible with the same
+                                                                               framework and can be added as an importance-sampling refinement.
+   Constructing auxiliary continuation edges. Given a base vertex                 Each line type uses the same core estimator: draw 𝑛 many finite-
+x𝑖 with incoming direction 𝜔𝑖 and sampled outgoing direction 𝜔𝑜 ,              difference comparisons over all the samples available in the current
+we generate the auxiliary outgoing direction at the corresponding              AuxiliaryPathFrame (plus the base edge), and early-exit as soon
+auxiliary vertex x𝑖′ by preserving the realized scattering event as            as any comparison exceeds threshold (since a single “hit” makes
+follows:                                                                       the product estimator zero). Dictionary evaluation therefore short-
+        • Microfacet / conditionally specular events. For glossy               circuits quickly in the common case where strong line-producing
+          events treated as conditionally specular, the base scattering        gradients exist, and the dominant overhead becomes the cost of
+          is represented by a microfacet half-vector h derived from            tracing 𝑁 aux auxiliary edges per base edge—comparable in spirit
+          (𝜔𝑖 , 𝜔𝑜 ). We express h in an incoming-direction–oriented lo-       to cone/beam-based auxiliary sampling, but here generated by an
+          cal basis at x𝑖 and reconstruct it in the corresponding basis at     event-preserving, curvature-aware transport rule. Our overall per-
+          x𝑖′ (with the auxiliary incoming direction and auxiliary shad-       formance overhead is similar to West [2021], with one exception:
+          ing normal). This preserves the tilt 𝑐 = h·n and canonically         [West 2021] compare the base path with each auxiliary path, while
+          identifies the azimuthal degree by transporting the tangential       we compare every pair of paths within the stencil. This allows our
+          component through the change of local frame. The auxil-              line detection to maximize the benefit of treating line rendering as a
+          iary outgoing direction then follows from specular reflection        lower bound-search, but comes at increased cost for line detection.
+          about the transported half-vector.
+        • Delta-specular events. For perfectly specular materials, we             Cone sampling of West [2021]. Since our method generalizes prior
+          sample the auxiliary event using the same random variables as        ray-based methods, we can easily implement West [2021] under
+          the base event (via replay), so the reflection/refraction branch     our framework. The only missing part is the cone sampling of West
+          and any additional discrete choices match by construction.           [2021], which we can do using the same AuxiliaryPathFrame / tree-
+        • Non-microfacet / diffuse-like events. For diffuse-like cases         sampling algorithm above. For a given base edge, we can compute
+          (where a conditional-specular interpretation is not available),      the summed edge length back to the camera, and place the apex of a
+          we use a geometric fallback that transports the outgoing             virtual cone at that distance behind the base edge. To sample a next
+          direction by the minimal rotation aligning base and auxiliary        set of auxiliary edges, we can copy the end vertex of each previous
+          shading normals. This does not impose a physical microfacet          auxiliary edge as the start vertex of the new auxiliary edges, and
+          event, but yields a stable correspondence for finite differences     ray cast from these new start vertices outward in the direction of
+          in practice.                                                         the cone apex towards the new edge start vertices to find the new
+                                                                               auxiliary edge end vertices.
+   For robustness, we terminate auxiliary continuations when the
+correspondence becomes unreliable (e.g., if an auxiliary ray hits a            S1.5    Discussion
+different object than the base ray at that depth, or if shading normals
+differ beyond a threshold), and simply exclude those auxiliary edges              Anisotropic microfacet models. For simplicity, the parallel trans-
+from subsequent finite-difference tests.                                       port of half-vectors discussed in the main paper assumes an isotropic
+                                                                               microfacet, for which the normal distribution function is invariant
+   Computing line styles. In our renderer, line rendering is imple-            under rotations in the tangent plane. For anisotropic microfacet
+mented as an ordinary SRE style function that can be applied in                models, the distribution is instead defined relative to a local tangent
+addition to any per-surface, per-material, or global stylization. We           frame (t∗1 , t∗2 ) ∈ 𝑇x𝑆, and conditioning on a microfacet realization im-
+support multiple line types through a dictionary-style composi-                plicitly fixes both the tilt of the half-vector and its azimuth relative
+tion: each line type specifies its own metric function, stencil/region         to this frame.
+in image-space, and line appearance parameters. During evalua-                    In this case, parallel transport must be applied to the full tangent
+tion, we apply (i) the material’s local style function (including any          frame rather than a single tangential direction. Concretely, at a base
+material-bound line styles), followed by (ii) an optional global “fea-         vertex x𝑖 we condition on a half-vector expressed as,
+ture line dictionary” that decides whether any line type triggers for
+the current edge. Priority between line types is artist-controlled; a                          h𝑖 = 𝑐𝑖 n𝑖 + 𝑠𝑖 (cos 𝛼𝑖 t∗1,𝑖 + sin 𝛼𝑖 t∗2,𝑖 ),     (S23)
+
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+        Dra 1: Ready                                       Lines - Aux Paths on a Tree Sample
+                                                                                Lifting Lines and Tone: Image-space Stylization in Path-space (Supplemental) •     138:5
+
+
+                                                                                   this approximation lacks a strict physical interpretation, it main-
+                                                                                   tains stable finite-difference comparisons in practice. Exploration
+                                                                                   into theoretically-grounded support for materials that do not have
+                                                                                   a conditionally-specular interpretation is left to future work.
+                                                                                       Computing 𝑛𝜃 for target blend weights 𝑤𝜃 . Directly controlling
+                                                                                   line opaqueness through the sample count 𝑛𝜃 can be unintuitive.
+                                                                                   A more artist-intuitive approach is to pick a target blend weight
+                                                                                   ∫ 𝜃 , approximate the failure rate for a single finite difference 𝑀𝜃 =
+                                                                                   𝑤
+                                                                                    𝑆 2 𝑚𝜃 (𝑢, 𝑣)𝑝𝜃 (𝑢, 𝑣) d𝑢d𝑣, and solve for 𝑛𝜃 = log𝑀𝜃 (𝑤𝜃 ). Non-natural
+                                                                                     𝜃
+                                                                                   number sample counts 𝑛𝜃 can then be estimated via a power-series
+                                                                                   estimator or, as a rough but monotonic approximation, stochastically
+                                    ′′ ′ ′
+
+
+
+
+                                                                ′
+                                                                                   rounded at each evaluation.
+                                                                                      Line stencils. Our gradient search-based line detection leveraged
+                                                  ′
+
+                                                                                   symmetry in the line stencil region 𝑆 to produce line renderings
+                                                                                   without actually ever knowing where the discontinuities are in the
+Fig. 1. As we traverse an SRE path-tree sample (gray), we follow one geomet-       image-plane. This lets us use any radially symmetric region 𝑆 as a
+ric path (blue) and construct its image-space–offset auxiliary counterparts        line stencil. (e.g. in the second robot from the left in Fig. 11 we use
+(orange, dotted) geometrically, edge-by-edge, in lockstep with the base path.      a square line stencil for sharper corners). An interesting avenue of
+A fixed set of auxiliary image-space offsets is spawned at the camera and          future work would be how to incorporate non-radially symmetric
+then extended whenever the base path advances, so auxiliary prefixes are
+                                                                                   stencils.
+shared by all descendant subpaths in the depth-first recursion—amortizing
+auxiliary tracing and keeping memory proportional to the number of auxil-             Line metric function. The metric function determines where lines
+iary samples and the path depth.                                                   should appear and can be any function that evaluates to 0 at edges
+                                                                                   and 1 elsewhere. In practice, the essential point is that it can be
+                                                                                   used to compute where lines should be drawn (and can be used to
+and transport both basis vectors t∗1,𝑖 and t∗2,𝑖 via Levi–Civita parallel          compute an expectation of “failure”). For example, we can use a
+transport to the auxiliary vertex x𝑖′ . The transported half-vector h𝑖′            metric that also considers a minimum threshold on the primal value
+is then reconstructed using the same coefficients (𝑐𝑖 , 𝑠𝑖 , 𝛼𝑖 ) in the           to prevent fine details from producing lines.
+transported frame.
+                                                                                     Line color. The line color 𝑐𝜃 (y, z) need not be constant, and is fully
+   The specular case. Purely specular paths require no special han-                parameterized by 𝜃 and operates over the edge (y, z). For example,
+dling: specular reflection has no azimuthal degree of freedom, and                 we can modulate the brightness of line proportional to the exitant
+the operator T𝛿𝑠 reduces to classical image-space parallelism in the               radiance, or produce lines that act like emitters [West 2021] (see
+specular limit. Our formulation therefore recovers prior ray-based                 Fig. 11).
+line rendering behavior as a special case.
+                                                                                      Line detection deeper in a path. It can be desirable to test for
+   Relation to half-vector copy. Under a fixed conditional-specular                lines only at a certain path depth. In this situation we can filter out
+parametrization and infinitesimal image-space perturbations, paral-                auxiliary paths that would have produced a line when compared to
+lel transport of microfacet half-vectors is equivalent to half-vector              the base path at earlier edges. The resulting set of auxiliary paths are
+copy between local charts [Jakob and Marschner 2012; Kettunen                      generally strongly correlated and often traverse exactly the same
+et al. 2015]. Outside of this regime (e.g., non-view-oriented charts,              seqeunce of smooth (or near-smooth) manifolds. We leverage this
+or varying parametrizations) the two constructions differ. Framing                 when drawing lines in reflections to reduce spurious artifacts from
+the construction as a designed operator T𝛿𝑠 clarifies its geometric                de-correlated paths.
+meaning and ensures consistent correspondence beyond a particular
+chart choice or infinitesimal regime.                                                 Integration with NL-NRC. As our line and tone rendering methods
+                                                                                   are ordinary style functions they are (mostly) compatible with NL-
+   Non-microfacet materials. Our formulation is principled for scat-               NRC [Tong and Hachisuka 2025] out-of-the-box.
+tering models whose randomness can be parameterized by condi-                         Required changes would be adding the auxiliary path sampling
+tional variables that admit a conditional-specular interpretation,                 (line rendering) and the anchor mapping and local inversion (tone
+including microfacet BSDFs and thin-lens cameras. For materials                    rendering), and providing the auxiliary path data and inverted image-
+such as Lambertian diffuse reflection, there is no such conditional-               space coordinate to the style function’s parametrization.
+specular parameterization that can be preserved by T𝛿𝑠 in the same                    However, training for line rendering may be slow. The parametriza-
+sense. In such cases, we adopt a pragmatic approximation: for glossy-              tion S (in [Tong and Hachisuka 2025] notation) is unique to the
+like materials we copy the half-vector as if they were based on an                 vertex (e.g. 𝑣.S in Listing 3). For our line and tone rendering, the
+NDF, and for diffuse-like materials we transport the outgoing direc-               parametrization is unique to the path taken up to v, and the result-
+tion between the local charts of the base and auxiliary paths. While               ing stylization is sensitive to even small changes in that path. As a
+
+                                                                                             ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:6   • Rex West, Sayan Mukherjee, and Yonghao Yue
+
+
+result, training can take longer than style functions that are only            build 𝑆 max ; this produces a unique holomorphic map ℎ : 𝑆 ′ → 𝑆 max
+dependent on e.g. position and path depth.                                     with 𝜓 = 𝜙e ◦ ℎ.
+                                                                                  By construction we continued along every path in 𝑀 starting at
+S2      TONE FOUNDATIONS AND IMPLEMENTATION                                    𝜙 (𝑝 0 ). The image 𝜙e(𝑆 max ) is therefore the connected component of
+        DETAILS                                                                𝑀 containing 𝜙 (𝑆); since 𝑀 is connected and 𝜙 (𝑆) ≠ ∅, the map 𝜙e
+This section supports the tone construction in Section 5 of the main           is onto.
+paper. We begin with the analytic continuation theorem cited from                 Finally, 𝜙e is a covering map, and uniqueness up to deck transfor-
+the main text, then turn to the local approximation machinery used             mations follows from the usual uniqueness of coverings with the
+in practice, followed by specific remarks on Möbius extrapolation,             same germ on 𝑆.                                                     □
+Linear MLS, and the implementation of the tone pipeline.
+                                                                                  Uniformization and special cases for 𝑆 max . By the Uniformization
+S2.1     Analytic continuation for holomorphic mappings                        theorem, there is a universal covering 𝜋 : 𝑀     e → 𝑀, where the
+         from image-space to path-space                                        universal cover 𝑀 is conformally equivalent to either the Riemann
+                                                                                                   e
+This subsection provides the formal theorem for the existence and              sphere S2 , complex plane C or the open unit disk D. Since 𝜙e :
+uniqueness of an extension map 𝜙˜𝑘 referenced in Section 5 of the              𝑆 max → 𝑀 is a covering, there exists a covering 𝜋e : 𝑀e → 𝑆 max with
+main paper.                                                                    𝜙e ◦ 𝜋e = 𝜋. Equivalently, 𝑆 max  𝑀/Γe for some subgroup Γ of the
+                                                                               deck group of 𝜋.
+   Theorem S2.1. Let 𝑀 be a connected oriented Riemann surface,
+                                                                                  In the context of geometry processing and mapping, we can
+which is a subspace of the surface manifold M, and let 𝑆 ⊆ C be
+                                                                               view 𝑆 max as a maximally “unwrapped” parameterization domain.
+a connected region. Let 𝜙 : 𝑆 → 𝑀 be a holomorphic, orientation-
+                                                                               If the monodromy subgroup Γ is trivial (i.e., there are no periodic
+preserving conformal map. Write 𝜙 (𝑆) ⊆ 𝑀 for its image. Then there
+                                                                               boundary conditions or gluing at the borders), then 𝑆 max  𝑀       e
+exists a connected oriented Riemann surface 𝑆 max and a holomorphic
+                                                                               itself. Intuitively, this means that the maximal continuation domain
+embedding 𝜄 : 𝑆 ↩→ 𝑆 max , together with a holomorphic map 𝜙e :                flattens out naturally to cover the entire ambient space (S2 , C or D)
+𝑆 max → 𝑀 such that                                                            without overlapping with itself.
+     • 𝜙e ◦ 𝜄 = 𝜙 on 𝑆;
+     • if 𝜓 : 𝑆 ′ → 𝑀 is any holomorphic map extending 𝜙, then there              Real analytic metric instead of holomorphic. While Theorem S2.1
+       is a unique holomorphic ℎ : 𝑆 ′ → 𝑆 max with 𝜓 = 𝜙e ◦ ℎ;                relies on the complex analytic formulation of holomorphic func-
+     • 𝜙e : 𝑆 max → 𝑀 is onto;                                                 tions, in practice, tone mapping operates on real-valued domains.
+                                                                               Fortunately, our framework can be directly exended to real spaces:
+     • 𝜙e is unique up to deck transformations.
+                                                                               if our initial 𝜙 is a local isometry for a real-analytic metric, the ar-
+   Proof. Choose a holomorphic atlas {(𝑈𝛼 , 𝑧𝛼 )}𝛼 ∈𝐼 on 𝑀, so the             gument goes through word-by-word with “holomorphic” replaced
+transitions 𝑧 𝛽 ◦ 𝑧𝛼−1 are holomorphic for intersecting 𝑈𝛼 and 𝑈 𝛽 .           by “local isometry.” By using unique continuation for real-analytic
+Since 𝜙 is conformal and orientation-preserving, for each chart we             elliptic systems, one again obtains a maximal extension that is a
+set                                                                            covering map unique up to deck transformations. Intuitively, this
+                                                                               guarantees that our tone mapping extensions remain consistent
+                 𝑓𝛼 := 𝑧𝛼 ◦ 𝜙 : 𝜙 −1 (𝑈𝛼 ) ∩ 𝑆 −→ C.
+                                                                               even when operating entirely within real-valued spaces.
+Note that each 𝑓𝛼 is holomorphic and has non-vanishing derivative.
+   Now let us fix a 𝑝 0 ∈ 𝑆. For any point 𝑥 ∈ 𝑀, take a piecewise             S2.2    Local approximations of analytic continuity
+analytic curve 𝛾 : [0, 1] → 𝑀 with 𝛾 (0) = 𝜙 (𝑝 0 ) and 𝛾 (1) = 𝑥.
+                                                                               We discussed in Section 5.2 of our main paper that an analytic con-
+Cover 𝛾 by chart domains 𝑈𝛼 1 , 𝑈𝛼 2 , · · · . By one-variable analytic
+                                                                               tinuation of the mirror reflection 𝜙˜𝑘 theoretically exists. Directly
+continuation applied to the 𝑓𝛼 𝑗 and the holomorphic transition maps
+                                                                               computing it, however, is impractical. Extending 𝜙𝑘 explicitly fol-
+𝑧𝛼 𝑗 +1 ◦ 𝑧𝛼−1𝑗 , the germ of 𝑓𝛼 1 uniquely extends along 𝛾 as long as 𝑓𝛼 𝑗
+                                                                               lowing the steps of Theorem S2.1 would require repeatedly solving
+has nonzero derivative. The identity theorem implies that for any              the Cauchy–Riemann equations over small steps, carefully man-
+other curve 𝛾¯ with 𝛾¯ (0) = 𝑝 0 and 𝛾¯ (1) = 𝑥, the extensions along 𝛾        aging step sizes, boundary conditions, and numerical stability. Er-
+and 𝛾¯ match up to deck transformations.                                       rors accumulate rapidly with distance from the known domain,
+   Next, we glue all such germs of the analytic continuations of 𝜙 to          making the resulting mapping unreliable and computationally ex-
+construct a connected Riemann surface 𝑆 max together with a natural            pensive. For these reasons, we do not pursue exact analytic con-
+projection                                                                     tinuation, but instead develop a local, sampling-based approxima-
+                               𝜙e : 𝑆 max −→ 𝑀,                                tion that captures its essential behavior while remaining practi-
+sending a germ to its endpoint in 𝑀. By construction 𝜙e is holomor-            cal for Monte Carlo rendering. Fortunately, this problem is simply
+phic with non-vanishing derivative, hence a local biholomorphism.              an interpolation/extrapolation problem which we can write pre-
+The original map 𝜙 identifies 𝑆 with an open subset of 𝑆 max , provid-         cisely as follows: Given a path vertex x with no known 𝜙𝑘−1 (x),
+ing the embedding 𝜄 and the extension property 𝜙e ◦ 𝜄 = 𝜙.                     and “close-by” vertices x1, . . . , xℓ ∈ 𝑀 with known pre-images
+   Now, if 𝜓 : 𝑆 ′ → 𝑀 were to be another holomorphic extension                𝜙𝑘−1 (x1 ), . . . , 𝜙𝑘−1 (xℓ ) ∈ R2 , find a consistent extension 𝜙˜𝑘 and an
+of 𝜙, then 𝜓 agrees germ-by-germ with the continuations used to                image-space coordinate 𝜙˜ −1 (x) ∈ R2 .
+                                                                                                            𝑘
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                                                                         Column 2
+
+
+   Dra 1: Ready                                                           Lifting Lines and Methods
+                                                      Tone - Comparison of Extrapolation     Tone: Image-space Stylization in Path-space (Supplemental) • 138:7
+
+
+                      Reference                          Barycentric        Mobius              MVC                MLS (L)              MLS (Q)            MLS (M)
+
+
+
+
+                                                MSE         0.675            0.731              0.719                 0.675               0.695              0.681
+
+
+Fig. 2. Comparison of different interpolation/extrapolation methods introduced in Section S2.2.1. Samples used in tone interpolation/extrapolation are only
+generated for the left side of the image-space, such that the further right on the image-space, the farther the extrapolation distance. The reference scene
+shows a geometrically complex object and a hatching pattern on the image-space that lives on the object. This object is placed on a spherical mirror, with
+more curved mirrors in the background so that reflected hatching patterns should be successively curved. First row of the right half shows three regions in
+blue, yellow and red, corresponding to regions where the method interpolates from nearby samples, extrapolates from nearby samples, or fails to do either due
+to local degeneracy. Second row shows the interpolated/extrapolated tones, and third row the error heatmaps. All methods except Möbius work comparably
+well on the interpolation region, whereas Möbius is unable to get a consistent extension mapping due to the complex geometry of the manifold. Barycentric,
+while simple, shows warping in the extrapolation region when the choice of samples are ambiguous. Möbius and MVC both fail to provide good extrapolations
+due to degeneracy to sample singularities at farther distances. The MLS methods visually give the most appealing results, although incur more error at farther
+distances due to non-conformality. While all the MLS methods and Barycentric have similar MSE, we note that MLS (L) gives the most visually consistent and
+appealing tone extension.
+
+
+   Many works in computer graphics have adapted different tech-                      to 𝜋 (x1 ), 𝜋 (x2 ), 𝜋 (x3 ) respectively. This map is invertible and angle-
+niques to attack this problem. Here we describe these techniques,                    preserving by definition. More details about first order and second
+and also suggest a conformal extension technique which we call                       order Möbius extrapolation is provided in Section S2.4.
+the Möbius extrapolation. In the rest of this exposition, we assume
+ℓ is large enough for executing each of the methods (for example,                      Mean Value Coordinates. A similar technique to barycentric co-
+ℓ ≥ 3 for Barycentric). When fewer than the required number of                       ordinates, known as Mean Value Coordinates was introduced in
+samples are available, our implementation gracefully falls back to                   computer graphics by Floater [2003], where Eq. (S24) is simply gen-
+an alternative with smaller sample requirement. When interpola-                      eralized to ℓ vertices:
+tion or extrapolation is impossible due to local degeneracy (i.e. no                                        x = 𝑐 1 𝜋 (x1 ) + · · · + 𝑐 ℓ 𝜋 (xℓ ),                   (S25)
+suitable nearby samples or methods requiring inversion of degener-
+ate matrices), our implementation falls back and returns the path’s                  and the coefficients 𝑐𝑖 are now derived from the mean value theorem
+originating image-space coordinate.                                                  for harmonic functions.
+S2.2.1 Practical Interpolation/Extrapolation Methods. We now go                          Linear Moving Least Squares (MLS (L)). Linear MLS constructs
+over the different extrapolation techniques used in this work.                       𝜙˜𝑘−1 (x) by fitting, in a local neighborhood of x, a low-degree poly-
+  Barycentric extrapolation. Perhaps the simplest way to find a                      nomial that approximates the known image-space coordinates in
+image-space coordinate corresponding to a path vertex x is to take                   a weighted least-squares sense [Lancaster and Salkauskas 1981;
+the three “nearest” points x1, x2, x3 , project them onto the plane                  Levin 1998]. Let p𝑖 = 𝜋 (x𝑖 ) ∈ R2 denote the projected positions,
+through x normal to the ray entering x, and if 𝜋 is this projection                  𝑠𝑖 = 𝜙𝑘−1 (x𝑖 ) ∈ R2 the corresponding image-space samples, and
+satisfying                                                                           p = 𝜋 (x) the projection of the query point. In linear MLS, we fit an
+                x = 𝑐 1 𝜋 (x1 ) + 𝑐 2 𝜋 (x2 ) + 𝑐 3 𝜋 (x3 ),    (S24)                affine map u(p) ≈ Ap + b by minimizing
+                 ˜ −1            −1                −1        −1
+and then define 𝜙𝑘 (x) := 𝑐 1𝜙𝑘 (x1 ) + 𝑐 2𝜙𝑘 (x2 ) + 𝑐 3𝜙𝑘 (x3 ).                                               𝑘
+                                                                                                                ∑︁                                   2
+   Möbius extrapolation. Since the Barycentric extrapolation is not                                       min         𝑤𝑖 (x) A p𝑖 + b − u𝑖 ,                         (S26)
+                                                                                                          A,b
+                                                                                                                𝑖=1
+conformal, one can instead try to take the three closest points
+x1, x2, x3 and construct the unique Möbius map (complex mapping of                   where 𝑤𝑖 (x) are spatial weights that decay with ∥p−p𝑖 ∥. We provide
+the form 𝑓 (𝑧) = 𝑎𝑧+𝑏                       −1        −1        −1
+                  𝑐𝑧+𝑑 ) that takes points 𝜙𝑘 (x1 ), 𝜙𝑘 (x2 ), 𝜙𝑘 (𝑥 3 )             the details of our exact Linear MLS implementation in Section S2.5.
+
+                                                                                              ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                                                                           Column 2
+
+138:8   Rex
+      • 1:
+   Dra     West, Sayan Mukherjee, and Yonghao YueTone - Comparison of Sorting/Orientation Methods
+           Ready
+
+                         Reference                               Angular / v   Angular / n        Min. Dist. / v   Min. Dist. / n     Plane Dist. / v   Plane Dist. / n
+
+
+
+
+                                                        MSE         0.675         0.662               0.674            0.663              0.674             0.662
+
+
+Fig. 3. Comparison of the three sorting methods and two plane orientation choices described in Section S2.2.1. All combinations are robust in interpolation
+tasks, and have similar errors in this inset, but the most visually accurate render is obtained by using the combination of angular distance 𝑑 ∠ and local chart
+oriented along the incoming view direction 𝑣.
+
+
+     Quadratic Moving Least Squares (MLS (Q)). Quadratic MLS ex-                          nearest ℓ samples to provide as inputs to these extrapolation algo-
+tends this construction by computing a fit over a quadratic (instead                      rithms. Given a path vertex x with no known 𝜙𝑘−1 (x), we can have
+of linear) polynomial basis in p (including terms such as 𝑝𝑥2 , 𝑝𝑥 𝑝 𝑦 ,                  several other specular paths with the same prefix in the scene, say
+𝑝 𝑦2 ), yielding higher-order accuracy at the cost of a slightly larger                   {ȳ (𝑖 ) }𝑖=1
+                                                                                                    𝑁 which carry image-space coordinates down to depth 𝑘,
+
+linear system [Joldes et al. 2015].                                                       and lie within a bounded search radius. Moreover, since Linear MLS
+                                                                                          fits a local geometric chart around the query vertex x and builds an
+   Mixed Moving Least Squares (MLS (M)). Since quadratic MLS ex-                          approximate 𝜙𝑘−1 to the image-space, in practice one needs to fix
+trapolation leads to geodesic artifacts and is generally unstable in                      not only a local chart around x, but also a metric to compare x and
+extrapolation at large distances, one can also weight linear MLS and                      the other 𝑁 candidate vertices. In this subsection, we evaluate the
+quadratic MLS according to the distance from the query point x to                         performance of combinations of choices of local charts and metrics
+devise a weighted linear-quadratic MLS extrapolation.                                     to select the nearest ℓ samples, which are then fed into our Linear
+   Fig. 2 compares the performances of each of these local intrap-                        MLS pipeline to produce visuals in Fig. 3.
+olation/extrapolation techniques on a scene with a geometrically                             There are two ways we can select a local chart around x: one is the
+complex object placed on a specular curved surface, with several                          incoming direction 𝑣 at x given by the 𝑘’th edge of the path (normal
+curved mirrors in the background so that reflected hatching patterns                      direction 𝑣), and another by simply considering the tangent plane
+should be curved conformally in the reflections. While its form is                        to the manifold at x (normal direction n). This choice alone is not
+simple, Barycentric does not preserve angles, and moreover, warp                          enough for Linear MLS since 𝑁 can technically be a large number.
+artifacts appear near boundaries where the choice of the “nearest                         Therefore, we compare three simple ways to compute distances
+three” out of all nearby samples becomes ambiguous. Möbius ex-                            between the query point x and any other candidate vertex y𝑘 (see
+trapolation and MVC, while theoretically appealing, bring far away                        Fig. 4).
+points to one of the three vertices of the triangle (Möbius), or ℓ ver-
+                                                                                             (1) Angular distance: Let x′ denote the (𝑘 − 1)’th vertex on the
+tices of the polygon (MVC). This is why these methods effectively
+                                                                                                 path leading to x. Then, the angular distance is defined as
+put all their weight on a single vertex, and therefore are unsuitable
+                                                                                                 𝑑 ∠ (x, y𝑘 ) = ∠(x, x′, y𝑘 ).
+for extrapolation. The family of MLS extrapolators seem to perform
+                                                                                             (2) Minimum distance: The minimum distance 𝑑𝑚 (x, y𝑘 ) is
+the best in practice. Linear MLS is highly performant, and while it
+                                                                                                 given by the orthogonal distance between the point x and
+is not conformal, leading to an increase in rotational error for more
+                                                                                                 ray y𝑘 −1 y𝑘 .
+distant extrapolation, the visuals produced are stable and visually
+                                                                                             (3) Plane distance: For a fixed plane 𝑃 through x (in our case,
+indistinguishable. Quadratic MLS introduces geodesic warping arti-
+                                                                                                 𝑃 either has 𝑣 or n as its normal), we compute the plane
+facts, which are mitigated by MLS (M). This is why in practice, we
+                                                                                                 distance 𝑑𝑃 (x, y𝑘 ) by first intersecting the ray y𝑘 −1 y𝑘 with
+use Linear MLS in all our renders.
+                                                                                                 𝑃, and then computing the Euclidean distance between x and
+                                                                                                 the intersection point.
+S2.2.2 Choosing adequate nearby samples. Now that we have seen
+different ways one can locally approximate the analytic continu-                            Fig. 3 compares the performance of the 6 different combinations of
+ation map, we turn our attention to the problem of selecting the                          metrics and local charts. Although the numerical errors incurred by
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                             Lifting Lines and Tone: Image-space Stylization in Path-space (Supplemental) •     138:9
+
+
+           𝐲𝑘−1            𝐲𝑘−1                   𝐲𝑘−1            𝐲𝑘−1             Tangent-plane framing and weights. We found that the choice of
+ 𝐱′                                  𝐱′                  𝐱′
+                                                              𝐧                 local chart strongly affects stability under reflection/refraction and
+                                          𝑣                                     near grazing configurations. Rather than using the surface normal
+       𝐱               𝐱                      𝐱               𝐱
+             𝐲𝑘              𝐲𝑘                     𝐲𝑘              𝐲𝑘          to define the tangent plane, we frame the chart using the incoming
+                                                                                direction of the geometric path at x. This produces a smoothly vary-
+                                                                                ing chart along transport and avoids chart discontinuities caused
+                                                                                by normal variation (including shading normals) that are unrelated
+Fig. 4. Different ways of measuring the distance between a query point x        to the anchor mapping. For MLS weights in Eq. (S26) we use an
+and a candidate vertex y𝑘 . Here x′ and y𝑘 −1 denote the (𝑘 − 1)’th vertex
+                                                                                isotropic Gaussian 𝑤𝑖 (x) = exp − ∥𝜋 (x) − 𝜋 (x𝑖 )∥ 2 /𝜎 2 in the local
+on the path leading to x and y𝑘 , respectively.
+                                                                                chart, with 𝜎 set adaptively to the mean distance of the selected can-
+                                                                                didates. For 𝜋 (x𝑖 ) we use the position of the candidates on the local
+                                                                                tangent plane. This provides continuous scale-adaptive smoothing
+each of these methods are similar, the angular distance 𝑑 ∠ and plane
+                                                                                without requiring hand-tuning per scene.
+orientation 𝑣 gives the most visually accurate results. Intuitively,
+since the mapping is effectively evolving through the scene in a view-             Fallback hierarchy for sparse or degenerate neighborhoods. The
+dependent manner, the highly view-correlated angular distance                   number and configuration of available candidates is stochastic and
+measure and view-oriented plane 𝑣 is stable over this evolution.                can become sparse near occlusion boundaries, silhouette regions,
+Thus, we use this particular combination in our renders.                        or under limited projection coverage. However, in order to compute
+                                                                                the tone at a query point, it is necessary to specify an image-space
+S2.3       Implementation details for Tone Rendering                            coordinate via an approximate local inverse 𝜙 −1 . We therefore em-
+Our tone pipeline requires evaluating an approximation of 𝜙 −1                  ploy a hierarchy of fallbacks: directly viewed objects and specular
+at arbitrary path vertices. Because 𝜙 is defined implicitly by path             paths from the camera are inverted in closed form; when enough
+tracing from the camera outwards and is generally partial, we im-               well-conditioned samples are available, we use linear MLS; when
+plement 𝜙 −1 through a cache of mirror-anchor samples and a local,              samples are insufficient for a stable fit or there critical mathematical
+numerically stable continuation scheme.                                         failures (e.g. the matrix in MLS is singular), we fall back to sim-
+                                                                                pler local rules (affine/barycentric extrapolation for minimal sample
+   Prepass: caching mirror-anchor samples. We begin with a prepass              sets, and nearest-neighbor assignment in degenerate cases). If no
+that traces one (or a small number of) mirror-reflection projection             compatible candidates are found, we fall back to a conservative
+path(s) per pixel. Each projection path is generated by treating all            image-coordinate estimate (e.g., the first-edge projection), ensur-
+interactions as perfectly specular yielding samples of the anchor               ing that tone evaluation remains continuous and well-defined even
+map 𝜙. If the original material supports transmission in addition to            when 𝜙 −1 cannot be reliably inferred. However, the first-edge fall-
+reflection we generate samples for both branches. For each visited              back and produce undesirable clear image-space structure in very
+vertex x along a projection path, we store a correspondence pair                rough reflections (see Fig. 5 for the performance and failure modes
+(x, 𝑠) where 𝑠 is the originating image coordinate.                             of our fallback hierarchy). Finding a more robust fallback regime
+   In practice we organize these samples by the path prefix (the                would be a compelling avenue of future work.
+sequence of intersected surfaces) and build a hybrid auxiliary spatial
+acceleration structure of a tree and spatial hashes at each node                   The computed image-space coordinate. The computed image-space
+for fast candidate lookup. Specular path samples are stored vertex              coordinate is then made available to style functions as a part of the
+by vertex into a tree structure that separates each next level by               parameters 𝜃 . This means that not just tone, but any style function
+approximately connected manifolds (we found separating by surface               has access to a anchor mapping image-space coordinate (e.g. effects
+ID or submesh ID tends to work well without the need to compute                 like adjusting cel shading cutoffs based on image-space coordinates
+connectivity). Tree nodes that exceed a certain number of stored                is now possible).
+vertices populate a spatial hash for the edges to reduce lookup
+overhead. Slightly counter-intuitively, we found using a 2D spatial             S2.4     Möbius extrapolation
+hash based on image-space coordinate tended to work better than a               A Möbius transform is the simplest class of conformal map from C
+3D spatial hash based on vertex positions.                                      to C, which is a rational map of the form 𝑧 ↦→ 𝑎𝑧+𝑏𝑐𝑧+𝑑 . We propose a
+                                                                                way to approximate the analytic continuation of 𝜙𝑘 with a Möbius
+   Query-time inversion via local continuation. When rendering a
+                                                                                extrapolation as follows.
+general path and encountering a vertex x, we query the cache for
+                                                                                   First, given the query vertex x, we select three other path ver-
+candidate samples that (i) share a compatible prefix (i.e. follows the                  (1)   (2)    (3)
+same traversal though the tree cache) and (ii) lie within a bounded             tices y𝑘 , y𝑘 , y𝑘 on the scene manifold. Let 𝑃 be the plane
+search radius of x. In practice we found a maximum search radius                perpendicular to the view direction at x, and compute the ray-plane
+                                                                                                       (𝑖 ) (𝑖 )
+of 512 pixels for 1920x1080 renders tends to work well for all but              intersections z𝑖 = y𝑘 −1𝑦𝑘 ∩ 𝑃. Then, we think of {𝑧𝑖 } lie on 𝑃 as
+extremely rough reflections on manifold boundaries. Each retrieved              three points on the complex plane, and their preimages {𝜙𝑘−1 (z𝑖 )}
+candidate then provides a nearby pair (x𝑖 , 𝑠𝑖 ). We then approximate           as another three points on another copy of the complex plane. By a
+𝜙 −1 locally by fitting an affine map from a local geometric chart              shift of origin, we can assume that they both have centroids at the
+around x to image-space via moving least squares (MLS).                         origin (i.e. z1 + z2 + z3 = 0 and 𝜙𝑘−1 (z1 ) + 𝜙𝑘−1 (𝑧 2 ) + 𝜙𝑘−1 (𝑧 3 ) = 0.
+
+                                                                                          ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:10                   • Rex West, Sayan Mukherjee, and Yonghao Yue         Tone - Extending the mapping
+             Dra 1: in-progress
+                                  δ = 0.0001                            δ = 0.001                            δ = 0.01                               δ = 0.1
+Render
+Inversion Method
+Extrapolation Heat Map
+
+
+
+
+Fig. 5. As we increase roughness 𝛼 in a Trowbridge-Reitz microfacet distribution the likelihood of selecting a fallback inversion strategy, as well as sample
+extrapolation, increases. In the top row we show the rendered result using our tone rendering method. In the far right column we see the tone pattern is
+(incorrectly) clearly visible in the rough reflection due to inversion failure. This failure is visualized as a color map in the second row, where among the analytic
+inversion (green) and approximate MLS inversion (blue), we see a clear band of red corresponding to inversion failure. In the bottom row, we see that the
+likelihood of a path sample inverted via MLS using interpolation (blue) goes down and extrapolation (red) goes up. Note that inversion failure is counted as
+“interpolation” so we see a blue band at the region of inversion failure.
+
+
+Algorithm 1 then computes the unique Möbius transformation that                               fashion similar in flavor to quadratic MLS. Implementation and
+maps z𝑖 to 𝜙𝑘−1 (z𝑖 ).                                                                        analysis of quadratic and higher order Möbius approximations, and
+                                                                                              how they affect the scene is left as future work.
+          Algorithm 1: Compute Möbius maps 𝑓 and 𝑓 −1                                            Lemma S2.1 (Local qadratic approximation). Fix a x ∈ 𝑀
+           Input :𝑥 1, 𝑥 2, 𝑥 3 ∈ C with 𝑥 1 + 𝑥 2 + 𝑥 3 = 0 and                              for a surface 𝑀. Let 𝑊 = {𝑤 1, 𝑤 2 } be a basis of the tangent space
+                    𝑧 1, 𝑧 2, 𝑧 3 ∈ C with 𝑧 1 + 𝑧 2 + 𝑧 3 = 0                                                    ⟨𝑤 1, 𝑤 1 ⟩ ⟨𝑤 1, 𝑤 2 ⟩
+                                                                                              𝑇x 𝑀, and 𝐺 =                                 be the first fundamental form
+           Output : Möbius map 𝑓 with 𝑓 (𝑥𝑖 ) = 𝑧𝑖 , and its inverse 𝑓 −1                                         ⟨𝑤 1, 𝑤 2 ⟩ ⟨𝑤 2, 𝑤 2 ⟩
+                                                                                              in 𝑊 -basis. Let 𝐺 = 𝑈 ⊤ Λ𝑈 be the spectral decomposition of 𝐺 with
+ 1 Set 𝑎 1 ← (𝑥 2 − 𝑥 3 ), 𝑏 1 ← −(𝑥 2 − 𝑥 3 )𝑥 1 ;                                                                                                 −1/2 −1/2
+                                                                                              Λ = diag(𝜆1, 𝜆2 ). Let 𝐺 −1/2 := 𝑈 ⊤ diag(𝜆1 , 𝜆2 )𝑈 . Then the
+ 2 Set 𝑐 1 ← (𝑥 2 − 𝑥 1 ), 𝑑 1 ← −(𝑥 2 − 𝑥 1 )𝑥 3 ;
+                                                                                              vectors 𝑒ˆ𝑖 := 𝑗 ∈ {1,2} (𝐺 −1/2 )𝑖 𝑗 𝑤 𝑗 form an orthonormal basis of
+                                                                                                                 Í
+ 3 Set 𝑎 2 ← 𝑧 1 (𝑧 2 − 𝑧 3 ), 𝑏 2 ← −𝑧 2 (𝑧 1 − 𝑧 3 );
+                                                                                              𝑇x 𝑀.
+ 4 Set 𝑐 2 ← (𝑧 2 − 𝑧 3 ), 𝑑 2 ← −(𝑧 1 − 𝑧 3 );
+                                                                                               Suppose  the second fundamental form is given by the matrix 𝐻 =
+                                     
+         𝑎 𝑏         𝑎      𝑏2 𝑎1 𝑏1
+ 5 Set          = 2                         ;                                                   𝐿 𝑀
+         𝑐 𝑑         𝑐 2 𝑑2 𝑐 1 𝑑1                                                                         in the {𝑒ˆ1, 𝑒ˆ2 }-basis. Suppose 𝑛ˆ is the unit normal chosen so
+                                                                                                𝑀 𝑁
+                  𝑎𝑥 + 𝑏                       𝑑𝑤 − 𝑏
+ 6 Set 𝑓 (𝑥) ←             and 𝑓 −1 (𝑤) ←               ;                                     that {𝑒ˆ1, 𝑒ˆ2, 𝑛}
+                                                                                                              ˆ is positively oriented. Then, locally,
+                  𝑐𝑥 + 𝑑                       −𝑐𝑤 + 𝑎
+ 7 return Maps 𝑓 , 𝑓
+                        −1                                                                                                             1
+                                                                                                      𝜓 (𝑢, 𝑣) ≈ 𝑦 + 𝑢𝑒ˆ1 + 𝑣 𝑒ˆ2 + (𝐿𝑢 2 + 2𝑀𝑢𝑣 + 𝑁 𝑣 2 )𝑛ˆ           (S27)
+                                                                                                                                       2
+                                                                                              gives a map 𝜓 : R2 → R3 which is locally invertible. The inverse of 𝜓
+   Quadratic approximation. Since the Möbius extension technically                            is given around x by the map 𝜓 −1 (𝑧) ≈ (⟨𝑧 − x, 𝑒ˆ1 ⟩, ⟨𝑧 − x, 𝑒ˆ2 ⟩).
+fits a local plane around the point x, it does not account for the
+curvature of the scene manifold 𝑀 at x. In general, the closest                               S2.5    Linear Moving Least Squares for 𝜙˜𝑘−1
+                           (1) (2) (3)
+cached manifold vertices y𝑘 , y𝑘 , y𝑘 are not coplanar in general                             Given a set of sample correspondences
+due to curvature of the manifold, which is why we had to perform                                                       ℓ
+                                                                                                           {(x𝑖 , s𝑖 )}𝑖=1 ,   x𝑖 ∈ R3,   s𝑖 = (𝑢𝑖 , 𝑣𝑖 ) ∈ R2,
+a ray-plane intersection to compute the coordinates z𝑖 in the usual
+Möbius approximation.                                                                         where each x𝑖 is a 3D point and s𝑖 = 𝜙˜𝑘−1 (x𝑖 ) is its associated image-
+   Lemma S2.1 describes how using local curvature information, we                             space coordinate, we seek to estimate the image-space coordinate
+can theoretically approximate the scene manifold 𝑀 in a quadratic                             corresponding to a query point y ∈ R3 .
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                                          Lifting Lines and Tone: Image-space Stylization in Path-space (Supplemental) •     138:11
+
+
+  Local reference plane. A local plane is defined through y with                              with
+                                                                                                                                 ℓ
+normal                                                                                                                          ∑︁
+                                   d                                                                                      M=          𝑤𝑖 𝝓 (p𝑖 )𝝓 (p𝑖 ) ⊤,
+                            n=−       ,                                                                                         𝑖=1
+                                  ∥d∥
+                                                                                                                   ℓ                                  ℓ
+where d is the incoming direction at the query point.
+                                                                                                                  ∑︁                                 ∑︁
+                                                                                                           b𝑥 =         𝑤𝑖 𝑢𝑖 𝝓 (p𝑖 ),        b𝑦 =         𝑤𝑖 𝑣𝑖 𝝓 (p𝑖 ).
+  Let the centroid of the sample points be                                                                        𝑖=1                                𝑖=1
+                                                 ℓ                                              Evaluation at the query point. Finally, the estimated image-space
+                                            1 ∑︁
+                               z𝑐 =               x𝑖 .                                        coordinate of the query point is
+                                            ℓ 𝑖=1
+                                                                                                                  𝑢𝑞 = 𝝓 (p𝑞 ) ⊤ a,          𝑣𝑞 = 𝝓 (p𝑞 ) ⊤ b.
+  PCA-based local parameterization. Define centered sample offsets
+                               d𝑖 = x𝑖 − z𝑐 .                                                 REFERENCES
+                                                                                              Lawrence C. Evans and Ronald F. Gariepy. 2025. Measure Theory and Fine Properties of
+  The covariance matrix is                                                                       Functions (2nd ed.). CRC Press. https://doi.org/10.1201/9781003583004
+                                             ℓ                                                Michael S. Floater. 2003. Mean Value Coordinates. Computer Aided Geometric Design
+                                        1 ∑︁                                                     20, 1 (2003), 19–27. https://doi.org/10.1016/S0167-8396(03)00002-5
+                             C=               d𝑖 d𝑖⊤ .                                        Wenzel Jakob and Steve Marschner. 2012. Manifold Exploration: A Markov Chain
+                                        ℓ 𝑖=1                                                    Monte Carlo Technique for Rendering Scenes with Difficult Specular Transport.
+                                                                                                 ACM Trans. Graph. 31, 4 (Proc. SIGGRAPH 2012), Article 58 (July 2012), 13 pages.
+  Let t1 be the eigenvector of C corresponding to the largest eigen-                             https://doi.org/10.1145/2185520.2185554
+value. A tangent basis for the plane is constructed as                                        Grand Roman Joldes, Habibullah Amin Chowdhury, Adam Wittek, Barry Doyle, and
+                                                                                                 Karol Miller. 2015. Modified Moving Least Squares with Polynomial Bases for
+                        t1 − (t1 · n)n                                                           Scattered Data Approximation. Appl. Math. Comput. 266 (2015), 893–902. https:
+                e1 =                    ,                   e2 = n × e1 .                        //doi.org/10.1016/j.amc.2015.05.150
+                       ∥t1 − (t1 · n)n∥                                                       Markus Kettunen, Marco Manzi, Miika Aittala, Jaakko Lehtinen, Frédo Durand, and
+   Projection to plane coordinates. Each sample point is projected                               Matthias Zwicker. 2015. Gradient-Domain Path Tracing. ACM Trans. Graph. 34, 4
+                                                                                                 (Proc. SIGGRAPH 2015), Article 123 (July 2015), 13 pages. https://doi.org/10.1145/
+into local 2D plane coordinates:                                                                 2766997
+                                                                                          Peter Lancaster and Kes Salkauskas. 1981. Surfaces Generated by Moving Least Squares
+                          𝑥      (x𝑖 − z𝑐 ) · e1                                                 Methods. Mathematics of computation 37, 155 (1981), 141–158. https://doi.org/10.
+                    p𝑖 = 𝑖 =                       .
+                          𝑦𝑖     (x𝑖 − z𝑐 ) · e2                                                 1090/S0025-5718-1981-0616367-1
+                                                                                              David Levin. 1998. The Approximation Power of Moving Least-Squares. Math. Comput.
+  The query point is similarly projected:                                                        67, 224 (Oct. 1998), 1517–1531. https://doi.org/10.1090/S0025-5718-98-00974-0
+                                                                                          Hans Rademacher. 1919. Über partielle und totale Differenzierbarkeit von Funktionen
+                         𝑥       (y − z𝑐 ) · e1                                                  mehrerer Variabeln und über die Transformation der Doppelintegrale. Math. Ann.
+                  p𝑞 = 𝑞 =                        .                                              79, 4 (1919), 340–359. https://doi.org/10.1007/BF01498415
+                         𝑦𝑞      (y − z𝑐 ) · e2                                               Xiaochun Tong and Toshiya Hachisuka. 2025. Practical Stylized Nonlinear Monte
+                                                                                                 Carlo Rendering. In SIGGRAPH 2025 Conference Papers. Article 84, 11 pages. https:
+  Linear MLS approximation. We approximate the image-space map-                                  //doi.org/10.1145/3721238.3730686
+ping locally using an affine function                                                         Rex West. 2021. Physically-based Feature Line Rendering. ACM Trans. Graph. 40, 6
+                                                                                             (Proc. SIGGRAPH Asia 2021), Article 246 (Dec. 2021), 11 pages. https://doi.org/10.
+                         𝑢 (p)     𝑎 + 𝑎 1𝑥 + 𝑎 2𝑦                                               1145/3478513.3480550
+                𝑓 (p) =          = 0                   .
+                          𝑣 (p)    𝑏 0 + 𝑏 1𝑥 + 𝑏 2𝑦
+  Define the polynomial basis
+                                        1
+                                         
+                               𝝓 (p) = 𝑥  .
+                                        𝑦 
+                                         
+  Weighting kernel. Each sample is weighted according to its dis-
+tance from the query point:
+                                            !
+                               ∥p𝑖 − p𝑞 ∥ 2
+                    𝑤𝑖 = exp −                ,
+                                   𝜎2
+where 𝜎 is chosen proportional to the average distance of the sam-
+ples from p𝑞 .
+  Weighted normal equations. The MLS coefficients are obtained by
+minimizing the weighted least-squares energies
+        ℓ
+       ∑︁                                             ℓ
+                                                     ∑︁
+             𝑤𝑖 𝝓 (p𝑖 ) ⊤ a − 𝑢𝑖                           𝑤𝑖 𝝓 (p𝑖 ) ⊤ b − 𝑣𝑖
+                                   2                                            2
+                                        ,                                             .
+       𝑖=1                                           𝑖=1
+  This yields the normal equations
+                         Ma = b𝑥 ,                   Mb = b𝑦 ,
+
+                                                                                                        ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+

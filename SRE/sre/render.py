@@ -1129,9 +1129,9 @@ def _render_multi_gpu(
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--scene", type=Path, default=Path("./scenes/sre_LLaT.xml"))
-    parser.add_argument("--config", type=Path, default=Path("./configs/llat_feature_lines.json"))
-    parser.add_argument("--output", type=Path, default=Path("./outputs/fig1.png"))
+    parser.add_argument("--scene", type=Path, default=Path("./scenes/fig13.xml"))
+    parser.add_argument("--config", type=Path, default=Path("./configs/f13_tone.json"))
+    parser.add_argument("--output", type=Path, default=Path("./outputs/fig13_change.png"))
     parser.add_argument("--spp", type=int, default=32)
     parser.add_argument(
         "--spp-per-pass", type=int, default=16,
@@ -1141,8 +1141,8 @@ def _parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument("--resolution", type=int, default=256)
-    parser.add_argument("--width", type=int, default=3840)
-    parser.add_argument("--height", type=int, default=2160)
+    parser.add_argument("--width", type=int, default=1080)
+    parser.add_argument("--height", type=int, default=786)
     # Fig. 13 contains camera -> planar mirror -> curved reflector -> scene
     # paths. A depth of two terminates at the curved reflector, producing the
     # solid black disk and removing shaded robot reflections even at high SPP.

@@ -443,3 +443,49 @@ def test_fig1_hatching_uses_ink_strokes_instead_of_a_heavy_gray_bed() -> None:
     assert house.shadow_strength == 0.0
     assert vehicle.edge_softness <= 0.18
     assert house.edge_softness <= 0.18
+
+
+def test_fig13_paper_aligned_tone_uses_two_families_and_geometric_normals() -> None:
+    root = Path(__file__).resolve().parents[1]
+    config = load_config(root / "configs" / "f13_tone.json")
+
+    assert config.tone_mapping.enabled
+    assert config.tone_mapping.anchor_samples == 16
+    assert config.tone_mapping.search_radius == 256.0
+
+    robot_functions = [
+        config.materials["default-bsdf"].estimator.function,
+        config.materials["mat-Material"].estimator.function,
+        config.shapes["mesh-Cube"].estimator.function,
+    ]
+    for hatch in robot_functions:
+        assert len(hatch.angles_degrees) == 2
+        assert len(hatch.activation_thresholds) == 2
+        assert 0.0 < hatch.activation_thresholds[0] < hatch.activation_thresholds[1] < 1.0
+        assert hatch.shadow_strength == 0.0
+
+    floor = config.materials["mat-Material.001"].estimator.function
+    assert len(floor.angles_degrees) == 2
+    assert floor.region_center is None
+    assert floor.region_radius is None
+    assert floor.shadow_strength == 0.0
+
+    robot_lines = [
+        line for line in config.feature_lines.types
+        if line.name.startswith("f13_geometric_normal_")
+    ]
+    assert len(robot_lines) == 2
+    assert all(line.measurement == "normal" for line in robot_lines)
+
+
+def test_fig13_scene_has_portable_paper_aligned_reflectors() -> None:
+    root = Path(__file__).resolve().parents[1]
+    scene = (root / "scenes" / "fig13.xml").read_text(encoding="utf-8")
+
+    assert 'value="fig13_meshes/meshes/planar_reflector.ply"' in scene
+    assert (root / "scenes/fig13_meshes/meshes/planar_reflector.ply").is_file()
+    assert 'id="mesh-f13-planar-reflector"' in scene
+    assert 'id="mesh-f13-curved-reflector"' in scene
+    assert '<float name="fov" value="79.0"/>' in scene
+    assert '<float name="aperture_radius" value="0.0"/>' in scene
+    assert '<rotate z="1" angle="-4.0"/>' in scene

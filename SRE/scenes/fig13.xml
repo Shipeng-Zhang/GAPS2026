@@ -18,13 +18,18 @@
 	</integrator>
 	<sensor type="thinlens" id="Camera" name="Camera">
 		<string name="fov_axis" value="x"/>
-		<float name="fov" value="83.267082"/>
+		<!-- The paper main views are 1920x1080.  A slightly tighter horizontal
+		     crop matches the published robot occupancy in that 16:9 frame. -->
+		<float name="fov" value="79.0"/>
 		<float name="near_clip" value="0.100000"/>
 		<float name="far_clip" value="100.000000"/>
 		<!-- Focus the main robot while allowing the floor pattern and curved
 		     reflection to acquire the gradual distribution blur in Fig. 13. -->
 		<float name="focus_distance" value="15.0"/>
-		<float name="aperture_radius" value="0.03"/>
+		<!-- Fig. 13's left half is the purely specular render.  Keep the camera
+		     pinhole here so the flat-mirror reflection remains sharp; the right
+		     curved reflector is still softened by its GGX distribution. -->
+		<float name="aperture_radius" value="0.0"/>
 		<transform name="to_world">
 			<rotate x="1" angle="-163.1564579873814"/>
 			<rotate y="1" angle="-49.28376954117144"/>
@@ -304,25 +309,27 @@
 		<boolean name="face_normals" value="false"/>
 		<ref id="mat-Material" name="bsdf"/>
 	</shape>
-	<shape type="ply" id="mesh-立方体" name="mesh-立方体">
-		<string name="filename" value="fig13_meshes/meshes/立方体.ply"/>
+	<shape type="ply" id="mesh-f13-planar-reflector" name="mesh-f13-planar-reflector">
+		<!-- ASCII alias keeps the paper asset portable across Mitsuba builds
+		     whose filesystem codec cannot open the original Chinese filename. -->
+		<string name="filename" value="fig13_meshes/meshes/planar_reflector.ply"/>
 		<boolean name="face_normals" value="true"/>
-		<!-- The Blender export placed the mirror at x=-15.5, which sends the
-		     reflected robots outside this camera frustum. Move it to the
-		     paper-like near-background position without changing its tilt. -->
+		<!-- The reflector and camera were exported in one world coordinate
+		     system, but the published arrangement moves the reflector forward
+		     and scales its visible rectangle.  Translation along its normal is
+		     calibrated so the reflected robot occupies the far-left third rather
+		     than overlapping the directly viewed robot. -->
 		<transform name="to_world">
 			<scale x="1.0" y="0.65" z="0.65"/>
-			<translate value="7.5, 0.0, 0.0"/>
+			<rotate z="1" angle="-4.0"/>
+			<translate value="6.5, 0.0, 0.0"/>
 		</transform>
 		<ref id="mat-f13-planar-mirror" name="bsdf"/>
 	</shape>
-	<shape type="sphere" id="mesh-球体" name="mesh-球体">
-		<!-- Fig.13 uses a large curved reflector whose centre lies outside the
-		     right side of the image; only its left arc is visible behind the
-		     robot. Keep it analytic (rather than the 482-vertex source PLY) so
-		     the silhouette and reflection normals remain perfectly smooth. The
-		     radius is the exact source-mesh radius, and this centre reproduces
-		     the paper composition: arc at the right rear, reflected robot inside. -->
+	<shape type="sphere" id="mesh-f13-curved-reflector" name="mesh-f13-curved-reflector">
+		<!-- The 482-vertex export visibly facets the glossy coordinate map.  An
+		     analytic sphere with the source radius preserves the intended smooth
+		     macro geometry and the paper's right-side arc placement. -->
 		<point name="center" value="12.3156, 13.7874, -2.5335"/>
 		<float name="radius" value="11.5825"/>
 		<ref id="mat-f13-glossy-mirror" name="bsdf"/>

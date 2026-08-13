@@ -1,0 +1,1118 @@
+Lifting Lines and Tone: Image-space Stylization in Path-space
+REX WEST, Aoyama Gakuin University, Japan
+                                             Results - Teaser
+SAYAN MUKHERJEE, The University of Tokyo, JapanWasteland Scene
+
+YONGHAO YUE, Aoyama Gakuin University, Japan
+
+
+
+
+Fig. 1. Using our method, lines and tone naturally blur with camera depth-of-field (yellow) and glossy reflections (red), tone patterns maintain their
+image-space structure even in curved reflections (blue), and rendering stylistic visuals in a light transport-based system lets hatching on the van respond to
+the physically-based reflection of the sitting robot (green). Lines and tone; lifted.
+
+Many non-photorealistic rendering (NPR) styles, such as feature lines and               how image-space structure can be preserved within path-space rendering,
+hatching, are defined by image-space structure inherited from hand-drawn                enabling a broader class of expressive, physically-grounded NPR styles.
+media. While recent path-space formulations like the stylized rendering
+equation (SRE) enable stylization to interact naturally with light transport,           CCS Concepts: • Computing methodologies → Non-photorealistic ren-
+they provide no mechanism for enforcing image-space consistency.                        dering; Rendering; Ray tracing.
+    We present a conceptual framework for lifting image-space stylizations              ACM Reference Format:
+into path-space in a principled, SRE-compatible manner. Our key obser-                  Rex West, Sayan Mukherjee, and Yonghao Yue. 2026. Lifting Lines and Tone:
+vation is that image-space consistency can be achieved by establishing                  Image-space Stylization in Path-space. ACM Trans. Graph. 45, 4, Article 138
+geometrically-driven mappings from image-space to path-space. We demon-                 (July 2026), 15 pages. https://doi.org/10.1145/3811359
+strate this through two complementary stylizations: feature lines and tone.
+    For feature line rendering, we introduce a conditional lifting based on
+partial path-space variation, where a geometric path parametrization is                 1   Introduction
+combined with parallel transport to preserve image-space structure under                Several non-photorealistic rendering (NPR) styles—such as feature
+distribution effects. This enables a curvature-aware, stochastic, geometry-
+                                                                                        lines, hatching, and halftone—inherit their visual structure from
+driven formulation of line detection that generalizes prior ray-based methods.
+For tone-based styles, such as hatching and halftone, we propose a canonical
+                                                                                        hand-drawn media. Traditionally, line and tone stylizations are im-
+lifting anchored to a material-independent mapping, motivated by stationary-            plemented independently of light transport, often as image-space
+phase arguments from wave optics. Its locally invertible approximation                  post-processes. While this enforces image-space structure, it decou-
+enables evaluation of image-space tone fields at arbitrary path vertices while          ples stylization from lighting, materials, and global illumination.
+preserving image-space structure under complex light transport.                            Recent work integrates stylization directly into the light transport
+    Both methods are implemented as ordinary style functions under the SRE              formulation [Doi et al. 2021; West and Mukherjee 2024]. In particular,
+and work with existing estimation and sampling strategies; demonstrating                the stylized rendering equation (SRE) [West and Mukherjee 2024]
+                                                                                        extends the rendering equation [Kajiya 1986] with parameterized
+Authors’ Contact Information: Rex West, Aoyama Gakuin University, Japan, rexwest@       (potentially non-linear) style functions applied at each bounce. This
+gmail.com; Sayan Mukherjee, The University of Tokyo, Japan, sayan@phys.s.u-tokyo.
+ac.jp; Yonghao Yue, Aoyama Gakuin University, Japan, yonghao@it.aoyama.ac.jp.           enables stylization to interact naturally with material scattering,
+                                                                                        distribution effects, and indirect illumination.
+                                                                                           However, the SRE is fundamentally a path-space formulation and
+                                                                                        provides no mechanism for enforcing image-space structure (see
+This work is licensed under a Creative Commons Attribution 4.0 International License.   Fig. 2). As a result, styles whose defining characteristics are inher-
+© 2026 Copyright held by the owner/author(s).
+ACM 1557-7368/2026/7-ART138                                                             ently image-based remain difficult to express within this otherwise
+https://doi.org/10.1145/3811359                                                         compelling framework.
+
+                                                                                                 ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:2     •    Rex West, Sayan Mukherjee, and Yonghao Yue        Background - Failure and success modes
+              Dra 1: Ready
+
+                                                                                        that preserve image-space parallelism, account for changes in sur-
+                                                                                        face curvature, and establish a well-defined gradient suitable for
+                                                                                        line detection.
+                                                                                           We then reinterpret line detection for a given path as a stochastic
+                                                                                        search for a lower bound on (parametrized) extremal image-space gra-
+                                                                                        dients. An SRE-compatible style function follows directly from the
+                                                                                        expectation of this search process, yielding a geometry-driven for-
+        Hatching geodesics          Half-tone aliasing       Line width inconsistency   mulation that preserves image-space line structure under complex
+                                                                                        light transport and generalizes prior ray-based methods.
+                                                                                           For tone rendering, such as hatching and halftone, we instead
+                                                                                        use a canonical lifting. In contrast to lines, the defining quality of
+                                                                                        tone is an image-space pattern whose visual identity lies in coherent
+                                                                                        spacing, orientation, and phase. Preserving this structure in a path-
+                                                                                        space formulation requires establishing a mapping that is material-
+                                                                                        invariant—if the mapping depends on microfacet randomness or
+                                                                                        bidirectional scattering distribution function (BSDF) parameters,
+Fig. 2. Failure modes of prior path-space stylization (e.g., West and Mukher-           the pattern would be re-parametrized by material scattering and
+jee [2024] (bottom; left/middle) and West [2021] (bottom; right)) versus our            sampling noise.
+image-space–consistent formulation (top). Path-space hatching produces
+                                                                                           We use a style-agnostic, mirror-reflection “anchor” mapping mo-
+geodesic-like curves (left), halftone patterns alias with surface curvature
+(middle), and line widths are inconsistent in curved reflections (right). Such
+                                                                                        tivated by stationary phase arguments from wave optics, in which
+effects may be desirable stylistically, but should be controllable choices              mirror-reflections about the macro surface geometry act as canoni-
+rather than algorithm-imposed artifacts.                                                cal carriers of phase, while distribution effects correspond to neigh-
+                                                                                        borhood integration around this anchor. Because this mapping is
+                                                                                        generally non-invertible (due to caustics and partial domain cover-
+                                                                                        age), we introduce a locally invertible, numerically stable approxi-
+   Our key observation is that to achieve image-space consistency                       mation that behaves like an analytic continuation where sufficient
+in a path-space formulation we need a way to lift image-space                           geometric information is available. This enables coherent evaluation
+structure into path-space geometry. This geometric lifting supplies                     of image-space tone fields at arbitrary path vertices under indirect
+the correspondences needed by image-space styles, while leaving                         illumination, glossy reflection, refraction, and depth of field.
+the SRE’s style functions, and estimators, unchanged.                                      Viewed together, line and tone stylization differ mainly in how
+   We achieve this by establishing mappings between image-space                         they use the image–path mappings: lines rely on conditional lifting,
+coordinates and path-space geometry. However, such mappings are                         where a set of image-space parallel paths is constructed from the
+not immediately well-defined under geometric distribution effects,                      parametrization of a given path, while tone relies on a canonical lift-
+such as glossy reflection or depth of field, where a single point on                    ing, where the image-space structure is anchored to a fixed reference
+the image plane can correspond to uncountably infinite geometric                        such that distribution effects integrate naturally over it. These geo-
+paths. We address this via conditional specularity, a geometric path                    metric operators do not change the underlying formulation, provide
+parametrization that leverages the fact that certain distribution                       the necessary correspondences needed for line and tone rendering,
+effects can be modeled as an ensemble of specular events.                               and seamlessly integrate into ordinary SRE style functions.
+   We demonstrate two such mappings for two common compo-                                  Concretely, our contributions are:
+nents of hand-drawn styles: lines and tone. In both cases, we design
+geometric operators that establish the mapping needed to preserve
+image-space structure, and then use those mappings inside ordinary
+SRE style functions.
+   For line rendering, we use a conditional lifting. The objective of
+line rendering is to draw lines along perceived discontinuities in                          • A stochastic, extremal-gradient formulation of feature line
+the rendered image. In a path-space formulation, this boils down to                           detection, together with an SRE-compatible line rendering
+detecting sufficiently large gradients of path-space quantities (e.g.,                        style function.
+depth, normals, albedo) with respect to changes in image coordinate.                        • A principled treatment of distribution effects for line ren-
+For purely specular transport, such gradients are not only well-                              dering, combining conditional specularity with Levi–Civita
+defined, but there is also a notion of image-space parallelism, under                         parallel transport to maintain image-space line placement
+which path-space measurements vary smoothly with image coordi-                                and width through glossy transport and depth of field.
+nate. Extending line rendering to distribution effects, conditional                         • A material-invariant mapping from image-space to path-
+specularity lets us “freeze” a glossy path such that it acts specular                         space for tone fields.
+with respect to a parametrization. Parallel transport then provides a                       • A robust local approximation of the inverse of this mapping
+way to smoothly move the parametrization across the image plane                               that enables image-space–consistent tone patterns under com-
+such that we can construct paths for other image-space coordinates                            plex light transport.
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                                                       Lifting Lines and Tone: Image-space Stylization in Path-space• 138:3
+                                                                                                    Dra 1: Ready                                     Background - Line Method Feature Co
+                                                                                                                                                             (To be referenced in line rendering section as
+
+                                                                                                                        Glossy
+2 Background and related work
+
+
+
+
+                                                                                Choudhury+ [2009]
+2.1 Stylized rendering
+The stylized rendering equation extends the rendering equation [Ka-
+jiya 1986] by introducing a potentially non-linear style function 𝑔𝜃                                   Specular                          Diﬀuse
+                                                                                                                        Glossy
+on the exitant radiance 𝐿(x, y) at each bounce,
+
+
+
+
+                                                                                Ogaki+ [2018]
+                              ∫                                
+      𝐿(x, y) = 𝑔𝜃 𝐿𝑒 (x, y) +     𝑓𝑟 (x, y, z)𝐺 (y, z)𝐿(y, z)dz , (1)
+                                   V
+with an auxiliary form,                                                                                Specular                          Diﬀuse
+                              ∫                                                                                         Glossy
+
+      𝐿(x, y) = 𝐿𝑒 (x, y) +       𝑓𝑟 (x, y, z)𝐺 (y, z)𝑔𝜃 (𝐿(y, z)) dz ,   (2)
+
+
+
+
+                                                                                West [2021]
+                              V
+where 𝐿(x, y) represents the exitant radiance from surface point y
+towards x, 𝐿𝑒 is emitted radiance, 𝑓𝑟 is the bidirectional scattering                                  Specular                          Diﬀuse
+                                                                                                                        Glossy
+distribution function, and 𝐺 is the geometry term. The style function
+𝑔𝜃 : R𝑘 → R𝑘 operates on vector-valued radiance quantities and is
+parameterized by 𝜃 .
+
+
+
+
+                                                                                Ours
+   Recent work focuses on improving the practicality of SRE-based
+                                                                                                       Specular                          Diﬀuse
+rendering. Tong and Hachisuka [2025] introduce sampling algo-
+rithms based on multi-vertex path filtering [Deng et al. 2021; West
+et al. 2022] and neural radiance caching [Müller et al. 2021] to                Fig. 3. For a base path sample (blue), additional paths are sampled over a
+                                                                                projected region of image-space (red) and used to estimate line-producing
+mitigate the exponential cost of baseline tree sampling. These ad-
+                                                                                gradients. Choudhury and Parker [2009] restrict line detection to directly
+vances make physically-based stylized rendering feasible for com-
+                                                                                visible geometry, while Ogaki and Georgiev [2018] extend it to perfect
+plex scenes while preserving the expressiveness of the SRE.                     specular reflection/refraction, leveraging the image-space parallelism and
+   However, maintaining image-space consistency for stylizations                one-to-one mapping of image-space coordinates to specular paths. However,
+whose defining characteristics are image-based—such as lines and                this mapping breaks down under distribution effects. West [2021] partially
+tone—remains an open challenge.                                                 overcomes this by sampling additional paths in a cone around the base path,
+                                                                                enforcing a pseudo-parallel neighborhood and one-to-one mapping, but
+2.2   Feature line rendering                                                    ignoring surface curvature, leading to inconsistent line widths (e.g. lack of an
+Feature line rendering [Bénard and Hertzmann 2019; DeCarlo 2012]                hourglass shape along the second edge). Our approach explicitly accounts for
+                                                                                the geometric relationship of image-space to path-space, including surface
+places lines along perceived discontinuities in surface appearance,
+                                                                                curvature, resulting in image-space parallelism across distribution effects
+analogous to hand-drawn line drawings [Cole et al. 2008; Hertzmann              and curved surfaces, and enabling consistent line widths at arbitrary path
+2020, 2021]. These discontinuities typically correspond to extrema              depth (gray interactions indicate bounces not handled by earlier methods).
+or large gradients of view- or surface-dependent quantities such
+as depth, surface normal, curvature, or shading. Since closed-form
+expressions for these gradients are rarely available, most methods              refraction and reduce aliasing through stochastic sampling. West
+rely on approximations using local samples.                                     [2021] further integrate ray-based line rendering into physically
+   Feature line methods can be broadly categorized as image-space               based rendering by treating lines as implicit light-emitting surfaces,
+or object-space methods. Image-space methods operate on rendered                extending line detection to distribution effects.
+images or image-space buffers and place lines based on image-space                 While the method of West [2021] successfully incorporates line
+cues such as depth, normal, or shading discontinuities [Saito and               rendering into physically based light transport, it lacks an explicit
+Takahashi 1990; Lee et al. 2007; Kim et al. 2008]. Their computational          underlying formulation. Moreover, its cone-based sampling heuristic
+cost scales with image resolution rather than geometric complexity,             does not account for surface curvature and can produce inconsistent
+but line placement is limited to directly visible surfaces and is sen-          line widths on curved surfaces. These limitations highlight the need
+sitive to sampling artifacts. Object-space methods instead operate              for a geometrically principled formulation for line rendering under
+directly on surface geometry, using differential quantities such as             distribution effects that preserves image-space structure. See Fig. 10
+curvature to place lines on silhouettes, ridges, and valleys [DeCarlo           for a concrete example.
+et al. 2003, 2004; Ohtake et al. 2004; Judd et al. 2007]. While effective,
+these approaches become increasingly expensive for complex ge-                  2.3                 Tone rendering
+ometry and are difficult to integrate within general light transport.           Tone rendering methods in non-photorealistic rendering represent
+   Ray-based methods bridge these categories by estimating gra-                 tonal variation using structured patterns. This includes styles such as
+dients via finite differences of surface quantities evaluated at ray            hatching and halftone, which rely on consistent spatial relationships
+intersections. Choudhury and Parker [2009] trace stencils of cam-               in image-space to convey form, material, and illumination.
+era rays and compare surface attributes at their first intersections,              Hatching methods [Hertzmann and Zorin 2000; Praun et al. 2001]
+restricting line detection to directly visible geometry. Ogaki and              approximate tone using sets of lines whose density, orientation, and
+Georgiev [2018] extend this approach to specular reflection and                 spacing vary with shading. Some approaches [Deussen et al. 1999;
+
+                                                                                                      ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:4    •   Rex West, Sayan Mukherjee, and Yonghao Yue
+
+
+Medeiros et al. 2009] generate hatching patterns by intersecting                     the presence of distribution effects, since each conditioned path
+scene geometry with families of planes or curves, producing line                     behaves as a specular realization. This makes it a natural tool for
+patterns that follow surface geometry or geodesics. While effective                  establishing image-space derivatives of path-space quantities.
+at conveying surface shape, such geometry-driven constructions                          In Section 4, we use this construction for line rendering where
+define hatching primarily in object space, lacking controllable image-               feature lines are detected by measuring gradients of geometric quan-
+space structure.                                                                     tities along families of conditionally parallel paths.
+   Halftone techniques [Hall 1999; Deussen and Isenberg 2013] sim-
+                                                                                       Canonical lifting. A canonical lifting instead selects a particular
+ilarly approximate continuous tone using discrete patterns—such as
+                                                                                     conditioning variable 𝜉 ★ and defines a mapping
+dots or stipples—whose spatial distribution creates the perception
+of smooth shading when viewed at sufficient scale. As with hatch-                                              𝜙 (𝑠) = Φ(𝑠, 𝜉 ★) ,                     (4)
+ing, the visual identity of halftone relies on consistent image-space
+                                                                                     which acts as an anchor relating image-space coordinates to path-
+spacing and orientation.
+                                                                                     space geometry. Unlike conditional lifting, which defines local vari-
+   Traditionally, these tone-based stylizations have been implemented
+                                                                                     ation, canonical lifting establishes a global reference parameteriza-
+as a post-processes. However, this separation from light transport
+                                                                                     tion. For this purpose, 𝜉 ★ should be chosen so that 𝜙 is coherent and
+prevents tone style from interacting coherently with physical effects
+                                                                                     independent of material-specific randomness. In our case, this corre-
+such as indirect illumination, glossy reflection, or refraction.
+                                                                                     sponds to selecting a specular (mirror-like) realization of transport,
+   More recently, West and Mukherjee [2024] demonstrate exam-
+                                                                                     yielding a material-invariant mapping.
+ples of hatching and halftone as style functions within the SRE
+                                                                                        In Section 5, we use this construction for tone rendering where
+framework. However, because these stylizations are defined purely
+                                                                                     image-space patterns are evaluated with respect to the canonical
+in path-space, the resulting patterns fail to preserve image-space
+                                                                                     mapping, while distribution effects manifest as integration around
+structure, exhibiting geodesic artifacts, particularly in reflections
+                                                                                     this anchor rather than reparameterization of the pattern.
+and on curved surfaces (see Figs. 2 and 13). For some use-cases these
+artifacts can be desirable, but they should be an artistic choice, not               4   Feature Lines
+a limitation of the underlying method.
+                                                                                     Ray-based line rendering boils down to determining if a given ray
+   This highlights the need for a mechanism that allows image-
+                                                                                     passes close enough to a sufficiently large gradient of some measur-
+space–structured tone patterns to be evaluated in path-space under
+                                                                                     able quantity, and then stylizing the light traveling down that ray
+complex light transport.
+                                                                                     with a line color—exactly the job of a style function under the SRE.
+3       Lifting image-space to path-space                                               In the context of image-space consistent line rendering, the prob-
+                                                                                     lem becomes view-dependent and we need to consider the geometric
+To lift image-space S stylizations into path-space P, we formal-                     relationship between image-space and the quantities we want to
+ize the connection between image-space structure and path-space                      measure a gradient for. For path-space quantities, like surface nor-
+geometry as a parametrization of paths. We introduce a space of                      mals, we need a well-defined instance of the mapping (4) from
+conditional variables Ξ that fix a particular realization 𝜉 of distribu-             image-space to those path-space quantities that follows from the
+tional effects (e.g., lens sample or microfacet selection) that lets us              geometry of the scene (Fig. 3).
+establish a mapping,                                                                    Our goal is then to define a mapping (4) that allows us to lift
+                                Φ : S ×Ξ → P,                                  (3)   line rendering from image-space into path-space, and derive a SRE-
+                                                                                     compatible style function that satisfies the following properties:
+such that a pair (𝑠, 𝜉) of an image-space coordinate 𝑠 and conditional                  (1) Image-space consistency: line width and placement are
+variable 𝜉 uniquely determines a path x = Φ(𝑠, 𝜉).                                          controlled in image-space and remain stable under indirect
+   This view is closely related to path parametrizations used in pri-                       illumination, reflection, refraction, and depth of field.
+mary sample space methods [Kelemen et al. 2002] and manifold                            (2) Geometric correctness: the mapping from image-space to
+exploration [Jakob and Marschner 2012]—the image-space coor-                                path-space respects local surface geometry, avoiding curvature-
+dinate 𝑠 and conditioning variable 𝜉 together fully specify a path                          induced distortion.
+sample. Fixing 𝑠 and varying 𝜉 recovers the distribution of paths con-                  (3) Distribution support: the formulation applies uniformly to
+tributing to a point on the image-plane, while fixing 𝜉 and varying                         specular and non-specular (distributional) scattering.
+𝑠 defines a family of image-space–parallel paths.                                       (4) Estimator compatibility: the resulting style function admits
+   Within this framework, lifting an image-space quantity into path-                        an unbiased Monte Carlo estimator with cost comparable to
+space amounts to choosing how Φ is used. We consider two com-                               prior ray-based methods.
+plementary constructions.
+                                                                                        Rather than starting from previous methods, we take a step back
+  Conditional lifting. A conditional lifting treats 𝜉 as fixed and varies            and build our line rendering style function from the ground up over
+only the image-space coordinate 𝑠. This induces a family of paths                    several subsections.
+{Φ(𝑠, 𝜉)} that preserves the conditioned scattering events while                        In Section 4.2 we decompose the geometrics of distribution effects
+moving smoothly across the image plane. Conceptually, this cor-                      as an aggregate over “conditionally-specular” paths. We then, in
+responds to a partial variation in path-space. Conditional lifting                   Sections 4.3 and 4.4, establish a way to move those conditionally-
+provides a well-defined notion of image-space variation, even in                     specular path across the image-plane that results in a well-defined
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                                               Lifting
+                                                           Lines - Path Notation and Specular vs       Lines and Tone: Image-space Stylization in Path-space • 138:5
+                                                                                                  Glossy
+            Dra 1: Ready
+
+
+           x̄    s                                     y               z
+                                                                                        4.2   A conditionally-specular view of distributions
+
+
+
+
+                                            ′
+                                                                                        Distribution effects can be expressed as integrals over families of
+                                                                                        specular interactions. Each realization of such a distribution cor-
+Specular                                Glossy
+                                                                                        responds to a specific choice of conditional variables 𝜉 that fully
+                                                                                        determine the geometric behavior of a path. For example, 𝜉 may en-
+                                                                                        code a lens sample in a thin-lens camera or a sequence of microfacet
+                                                                                        half-vectors in a reflectance model.
+                                                                                           An image-space location 𝑠 and conditioning variable 𝜉 fully spec-
+                                                                                        ifies a unique path x(𝑠, 𝜉). Paths constructed in this way are condi-
+                                                                                        tionally specular: conditioned on 𝜉, the path behaves as a classical
+                                                                                        specular path, even though the unconditioned transport is distribu-
+Fig. 4. A geometric path x has an image-space coordinate 𝑠 and traverses                tional. This lets us rewrite the path-space measurement as a function
+the scene up to a stylized edge yz (top). While purely specular transport pro-
+                                                                                        of image-space conditioned on 𝜉, where 𝑓 (x(𝑠, 𝜉)) = 𝑓 (𝑠, 𝜉).
+vides a one-to-one mapping of image-space coordinates to paths (bottom,
+left), distribution effects like glossy reflections and depth-of-field result in
+                                                                                           With this conditionally-specular interpretation, we see that the
+uncountably infinite paths for point on the image-plane (bottom, right).                unconditioned measurement 𝑓 (𝑠)   ∫ in Eq. (5) corresponds to an expec-
+                                                                                        tation over 𝜉, such that, 𝑓 (𝑠) = Ξ 𝑓 (𝑠, 𝜉) 𝑝 (𝜉) d𝜉, and differentiating
+                                                                                        this expectation yields,
+                                                                                                                        ∫
+gradient. With a well-defined gradient, Section 4.5 shows how we                                             ∇𝑠 𝑓 (𝑠) =   ∇𝑠 𝑓 (𝑠, 𝜉) 𝑝 (𝜉) d𝜉 ,                (6)
+                                                                                                                            Ξ
+reinterpret line detection as a stochastic search for extremal image-
+space gradients using finite differences. In Section 4.6, we turn this                  under standard regularity assumptions (dominated convergence /
+search process into an SRE-compatible style function and unbiased                       Leibniz rule).
+estimators. Section 4.7 then shows how the line rendering style                            This expectation comes as a consequence of the distribution ef-
+function, and its estimators, can be recursively composed to sup-                       fects of light transport—exactly the effects we want to affect the
+port multiple line types. We include implementation details and a                       rendered lines. Thus we care about the integrand, not the integral,
+sampling algorithm in the supplemental document (??).                                   and need to establish the partial gradient ∇𝑠 𝑓 (𝑠, 𝜉) for fixed 𝜉.
+
+4.1    Problem statement                                                                4.3   Parallel transport for conditioning variables
+For image-space consistent line rendering, determining if a line                       To make the gradient ∇𝑠 𝑓 (𝑠, 𝜉) well-defined for a given 𝜉, we need
+rendering style function 𝑔𝜃 (𝐿(y, z)) should return the line color or                  a way to construct a family of auxiliary paths {x(𝑠 ′, 𝜉)} for 𝑠 ′ ∈ 𝑆
+the unmodified exitant radiance is inherently view-dependent.                          that both smoothly moves the conditioned specular events across
+   For a geometric base path x (see Fig. 4 top) that traverses from the                the image-plane and preserves image-space parallelism.
+camera to the edge of stylization (y, z), and a neighborhood 𝑆 ⊂ S                        Inspired by differential geometry, we establish this by introducing
+around 𝑠, we want to determine whether there exists a point 𝑠 ′ ∈ 𝑆                    a path transport operator [Pinkall and Polthier 1993; Polthier and
+at which the image-space gradient of a measurement 𝑓 (𝑠 ′ ) exceeds                    Schmies 1998; Crane et al. 2010; Knöppel et al. 2013; Sharp et al. 2019].
+a threshold 𝑡,                                                                         The operator enforces a partial-variation semantics: the image-space
+                                                                                       coordinate 𝑠 varies while the conditioning variable 𝜉 is held constant.
+                      ∃ 𝑠′ ∈ 𝑆   s.t.   ∥∇𝑠 𝑓 (𝑠 ′ )∥ ≥ 𝑡 .                  (5)       Under this interpretation, two paths are parallel if they correspond
+                                                                                       to the same conditioned sequence of specular events realized at
+   When 𝑓 is defined on path-space quantities (e.g., the terminal                      different neighboring image-space locations.
+surface normal), evaluating 𝑓 (𝑠 ′ ) for 𝑠 ′ ≠ 𝑠 requires a mapping from                  Formally, we define an operator T that maps an image-space
+image-space to paths, and, for ∇𝑠 𝑓 to be well-defined, this mapping                   location 𝑠 and conditioning variable 𝜉 to a geometric path x,
+must vary smoothly with 𝑠.
+   For purely specular transport, this mapping is well defined: infini-                                               T (𝑠, 𝜉) := x(𝑠, 𝜉) ,                              (7)
+tesimal image-space perturbations induce unique, smoothly varying
+                                                                                        and a corresponding differential operator T𝛿𝑠 that produces auxiliary
+specular paths, yielding a notion of image-space parallelism, which
+                                                                                        paths under an infinitesimal image-space perturbation,
+prior work [Ogaki and Georgiev 2018] has successfully exploited.
+   However, under distribution effects, such as depth of field, glossy                                                 
+                                                                                                            T𝛿𝑠 x(𝑠, 𝜉) := x(𝑠 + 𝛿𝑠, 𝜉) .                  (8)
+reflection, or rough refraction, a single image-space location maps
+to a distribution over paths (see Fig. 4 bottom). Differentiating ex-                  By construction, T𝛿𝑠 preserves the conditioned degrees of freedom
+pectations over these distributions produces gradients of averaged                     encoded in 𝜉 and modifies only those aspects of the path that are
+measurements, which is, as West [2021] put it, detecting hard feature                  forced to change by moving the image-space coordinate.
+lines on blurry data.                                                                     With this operator in hand, path-space quantities evaluated along
+   Our solution is to reinterpret distributional light transport as an                 x(𝑠, 𝜉) become smooth functions of image-space almost everywhere
+aggregate of conditionally-specular paths.                                             (barring those 𝑠 for which x(𝑠, 𝜉) intersects object boundaries, which
+
+                                                                                                 ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:6   •Dra
+          Rex West, Sayan Mukherjee, and Yonghao Yue
+              1: Ready                                                            Lines - Transport Operator
+
+         n            h                                                      n𝒯
+                              u                                                                   such that each h𝑖′ and 𝛽𝑖 represents the same conditioned specular
+             c            s
+                                                                                      h𝒯          event, now expressed at the displaced vertex x𝑖′ .
+                              t2                               t𝒯1
+                  x                                                                                  To construct h𝑖′ in a geometrically consistent manner, we build
+                                          ′δs                           x𝒯           u𝒯           parallel transport directly into the operator T𝛿𝑠 . As a path vertex
+             t1                                                           t𝒯2
+                                                                                                  moves along a surface in response to an image-space perturbation,
+                                                                                                  we transport the microfacet degrees of freedom so that the condi-
+Fig. 5. The differential operator T𝛿𝑠 provides a way to move the tangent                          tioned event remains the “same” across tangent spaces.
+vector u along surface path between two points x and x′ . Using the surface
+                                                                                                     At the 𝑖-th vertex, conditioning fixes the cosine tilt,
+normal n′ and the transport tangent vector u′ we can reconstruct the half-
+vector h′ at x′ .
+                                                                                                                                           √︃
+                                                                                                                      𝑐𝑖 = h𝑖 ·n𝑖 ,   𝑠𝑖 = 1 − 𝑐𝑖2 ,              (13)
+                                                                                                  and we decompose the half-vector into normal and tangential parts,
+have measure 0 in S), and their partial gradients ∇𝑠 𝑓 (𝑠, 𝜉) are well-
+                                                                                                               h𝑖 = 𝑐𝑖 n𝑖 + 𝑠𝑖 u𝑖 ,        u𝑖 ∈ 𝑇x𝑖 𝑆, ∥u𝑖 ∥ = 1 .         (14)
+defined. The remainder of this subsection specifies how T𝛿𝑠 is real-
+ized for common distribution effects, beginning with depth of field                               We then define the transported tangential direction by Levi–Civita
+and microfacet scattering.                                                                        parallel transport along the surface from x𝑖 to x𝑖′ ,
+   Thin lens. Depth of field introduced by a thin-lens model can be                                                           u𝑖′ = PTx𝑖 →x𝑖′ (u𝑖 ) ,                      (15)
+interpreted as a distribution over camera ray origins on the lens                                 where PTx𝑖 →x𝑖′ is the differential operator T𝛿𝑠 applied along a path
+aperture. Selecting a particular lens sample 𝑡 fixes the camera frame
+                                                                                                  on the surface geometry from x𝑖 to x𝑖′ (see Fig. 5), and reconstruct
+and for any point 𝑠 in image-space S yields a purely specular ray
+                                                                                                  the transported half-vector as,
+from the camera onward.
+   In other words, for a given 𝜉, we simply need to copy the lens                                                             h𝑖′ = 𝑐𝑖 n𝑖′ + 𝑠𝑖 u𝑖′ .                      (16)
+sample 𝑡 from the base path x(𝑠, 𝜉) to any auxiliary path x(𝑠 ′, 𝜉).                                 The choice of Levi–Civita transport is natural for our partial-
+    A microfacet view of surface scattering. Microfacet models [Tor-                              variation interpretation—it is the only surface metric-compatible
+rance and Sparrow 1967] represent a wide range of materials—from                                  connection that is torsion-free (i.e. it preserves lengths and angles in
+diffuse-like surfaces [Oren and Nayar 1994] to glossy metals [Cook                                the tangent plane) and minimal-twist (i.e. no rotation beyond what
+and Torrance 1982; Ashikmin et al. 2000] and rough dielectrics [Wal-                              is forced by the change in local chart). The continuous differential
+ter et al. 2007]—as distributions of infinitesimally small specular                               derivation, including the uniqueness of T𝛿𝑠 , is given in ?? of the
+facets. Surface scattering is described by a normal distribution func-                            supplemental document.
+tion (NDF) that specifies the statistical distribution of specular facet
+orientations [Beckmann and Spizzichino 1963; Trowbridge and Re-                                   4.4   Choosing a local chart
+itz 1975; Walter et al. 2007]. Although the aggregate surface inter-                              In implementation we realize (16) with a convenient local chart
+action is stochastic and non-specular, each individual microfacet                                 choice. At the base vertex x𝑖 , we define a view-oriented local frame,
+interaction is perfectly specular. A single surface interaction then                              t1,𝑖 = n𝑖 × v𝑖 , and t2,𝑖 = t1,𝑖 × n𝑖 , assuming the view direction
+corresponds to selecting a microfacet parametrized by its half-vector                             v𝑖 is facing away from the surface, and represent the tangential
+(i.e. facet normal) h ∈ S2 .                                                                      component u𝑖 as,
+                                                                                                                                                                      
+  Parallel transport of parametrized paths. Similar in spirit to the                                  u𝑖 = cos 𝛼𝑖 t1,𝑖 + sin 𝛼𝑖 t2,𝑖 , 𝛼𝑖 = atan 2 u𝑖 ·t2,𝑖 , u𝑖 ·t1,𝑖 . (17)
+primary sample space [Kelemen et al. 2002] or half-vector [Jakob                                  At the auxiliary vertex x𝑖′ , we construct the corresponding view-
+and Marschner 2012] parametrizations for paths, we can specify a                                                   ′ = n′ × v′ , and t′ = t′ × n′ , and reconstruct
+                                                                                                  oriented frame, t1,𝑖   𝑖      𝑖     2,𝑖  1,𝑖    𝑖
+unique path from the image-space coordinate 𝑠 and the conditioning
+variable 𝜉.
+                                                                                                                                       ′
+                                                                                                                         u𝑖′ = cos 𝛼𝑖 t1,𝑖           ′
+                                                                                                                                           + sin 𝛼𝑖 t2,𝑖 ,                 (18)
+  A geometric path under depth-of-field and glossy or rough scatter-                              from which we obtain h𝑖′ via (16).
+ing can be viewed as a conditionally-specular sequence containing                                    The outgoing direction d𝑖′ at the auxiliary vertex follows from
+the half-vectors h𝑖 and the reflection/refraction choices 𝛽𝑖 ,                                    either specular microfacet reflection,
+                                                              
+              x = (x1, 𝑡), (x2, h2, 𝛽 2 ) . . . (x𝑘 , h𝑘 , 𝛽𝑘 ) , (9)                                                      d𝑖′ = v𝑖′ − 2(v𝑖′ · h𝑖′ )h𝑖′ ,                  (19)
+from which we can express the facet-normals h𝑖 in a local tangent                                 or refraction,
+space, denoted as h𝑖∗ ,                                                                                                               √︃                           
+                                                                                                          d𝑖′ = 𝜂v𝑖′ − 𝜂 (v𝑖′ · h𝑖′ ) + 1 − 𝜂 2 1 − (v𝑖′ · h𝑖′ ) 2 h𝑖′ ,
+                                                                                                                                                                  
+                                                                                                                                                                           (20)
+                 𝜉 = 𝑡, h∗2, 𝛽 2, . . . , h𝑘∗ , 𝛽𝑘 , such that,
+                                                 
+                                                                      (10)
+                                                                  
+           x(𝑠, 𝜉) = (x1, 𝑡), (x2, h2, 𝛽 2 ) . . . (x𝑘 , h𝑘 , 𝛽 2 ) . (11)                        depending on 𝛽𝑖 , where 𝜂 = 𝜂𝑖 /𝜂𝑡 for the incident 𝜂𝑖 and transmitted
+                                                                                                  𝜂𝑡 indices of refraction at the base path vertex x𝑖 . In the context
+  Given a parametrization 𝜉 and a small perturbation 𝛿𝑠, we can                                   of paths, this relationship is recursive: the outgoing direction d𝑖′
+then construct an auxiliary path,                                                                                               ′
+                                                                                                  becomes the view direction v𝑖+1   for the next auxiliary vertex. Fig. 6
+  x(𝑠 + 𝛿𝑠, 𝜉 ) = T𝛿𝑠 x(𝑠, 𝜉 ) = (x1 , 𝑡 ), (x2′ , h2′ , 𝛽 2 ) . . . (x𝑘′ , h𝑘′ , 𝛽 2 ) , (12)
+                                                                                     
+                                                                                                  visualizes this recursive path construction process.
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+           Dra 1: Ready                                                                                Lifting Lines and Tone: Image-space Stylization in Path-space • 138:7
+                                                                          Lines - Distributions Break ings
+
+
+                             x0                                                             x′2   Note that the finite difference here is not an approximation, it is
+                                                                                         v′2                                                             (𝑠 )       ∗
+      s′                                                  h′1                                     exactly equivalent to the directional derivative |𝐷 s→s     ′ 𝑓 (𝑠 , 𝜉)| and
+                                  x′1                     x′1                      d′1            strict lower bound on the gradient at 𝑠 ∗ . It follows that if any finite
+                                                                                                  difference lower bound in 𝑆 exceeds the threshold 𝑡, then necessarily,
+(a)                    (b)                  (c)                     (d)
+                                                                                                                             max ∥∇𝑠 𝑓 (𝑦, 𝜉)∥ ≥ 𝑡 ,                                (22)
+                                                                                                                              𝑦 ∈𝑆
+Fig. 6. Auxiliary paths are constructed recursively. Starting from the fixed                      satisfying Eq. (5) (see Supplemental ??).
+lens sample and new image-space coordinate 𝑠 ′ (a), a ray is cast to determine
+the first hit point x1′ (b), the half-vector h1′ is transported to x1′ (c), and                      The search continues. While a single instance of finite difference
+the outgoing direction d1′ is computed (d). The outgoing direction d1′ then                       provides a lower bound, that lower bound may not be tight (i.e.
+becomes the incoming direction at x2′ , and the process repeats.                                  it is not the infimum), and it can fail to prove the existence of an
+                                                                                                  extremal gradient. Let us quantify this probability of failure and
+                                                                                                  explore how it diminishes as more sample pairs are drawn.
+   Given our fixed 𝜉, base path x, and transport operator T𝛿𝑠 , we                                   We can represent whether a single instance of finite-difference
+can now map points 𝑠 in some region 𝑆 of image-plane to geometric                                 fails to exceed the target threshold 𝑡 as a metric function 𝑚𝜉 for a
+paths that give us access to path-space quantities in an image-space                              fixed 𝜉 that returns 1 if the threshold is not crossed, else 0,
+consistent manner. For example, we can define a measurement func-                                                             (
+                                                                                                                                      | 𝑓 (𝑣,𝜉 ) −𝑓 (𝑢,𝜉 ) |
+tion 𝑓 (𝑠 ′, 𝜉) = n(x(𝑠 ′, 𝜉)) that returns the surface normal at the last                                                       1,          ∥𝑣−𝑢 ∥          <𝑡
+                                                                                                                  𝑚𝜉 (𝑢, 𝑣) =                                       (23)
+vertex of the path x(𝑠 ′, 𝜉).                                                                                                    0, otherwise .
+
+   The specular case. Purely specular paths require no special han-                               In practice, the metric 𝑚𝜉 can be almost any function that returns 0
+dling: specular reflection has no azimuthal degree of freedom, and                                or 1, providing significant flexibility in specifying where lines are
+the operator T𝛿𝑠 reduces to classical image-space parallelism in the                              detected.
+specular limit. Our formulation therefore recovers prior ray-based                                   If we stochastically select a pair of points 𝑢 and 𝑣 from an image-
+line rendering behavior as a special case.                                                        space region 𝑆 around the point 𝑠, we can then formulate the expec-
+                                                                                                  tation of the metric 𝑚𝜉 as,
+4.5    The search for extremal gradients
+                                                                                                                               ∫
+                                                                                                                          
+                                                                                                                E 𝑚𝜉 (𝑢, 𝑣) =       𝑚𝜉 (𝑢, 𝑣)𝑝 (𝑢, 𝑣) d𝑢d𝑣
+Now that we have an image-space consistent measurement function                                                                  𝑆2
+𝑓 (𝑠, 𝜉), we need to establish a gradient that we can use to determine
+                                                                                                                                                           
+                                                                                                                                    |𝑓 (𝑣, 𝜉) − 𝑓 (𝑢, 𝜉)|
+if we draw the line color or not.                                                                                            =𝑃                           <𝑡 ,      (24)
+                                                                                                                                           ∥𝑣 − 𝑢 ∥
+   As the transport operator T𝛿𝑠 considers an infinitesimal pertur-
+                                                                                                  which is exactly the likelihood of the finite difference for a single
+bation 𝛿𝑠, it gives rise to a well-defined partial gradient ∇𝑠 𝑓 (𝑠 ′, 𝜉)
+                                                                                                  pair (𝑢, 𝑣) not exceeding the threshold 𝑡, i.e. not finding a line pro-
+almost everywhere. Interestingly, there is a measure-zero subset of
+                                                                                                  ducing gradient. If we then draw 𝑛 independent pairs of (𝑢, 𝑣), the
+image-space where this gradient is undefined, corresponding to ob-
+                                                                                                  expectation of failure is simply the power of expectation,
+ject silhouettes, grazing-angle microfacet degeneracies, etc.—exactly                                                                       ∫                               𝑛
+where we want to draw lines. This poses no issue in finding line-                                                 
+                                                                                                    E𝑛 𝑚𝜉 (𝑢, 𝑣) = E 𝑚𝜉 (𝑢, 𝑣)
+                                                                                                                                𝑛
+                                                                                                                                    =               𝑚𝜉 (𝑢, 𝑣)𝑝 (𝑢, 𝑣) d𝑢d𝑣        , (25)
+producing gradients, as regions of undefined gradient correspond                                                                               𝑆2
+
+to discontinuities in the transport which we treat as a limiting case                             which falls off exponentially fast in 𝑛 (see Fig. 7). Conversely, the
+on arbitrarily large gradients (see Supplemental ??).                                             probability of finding at least one pair (𝑢, 𝑣) with a line-producing
+   In practice, there is often no closed-form for the partial gradient                            gradient in 𝑛 tries converges quickly towards 1, and is high when
+∇𝑠 𝑓 (𝑠 ′, 𝜉), making it impossible to formulate closed-form expres-                              𝑛 ≥ 1−E 𝑚1 (𝑢,𝑣) .
+                                                                                                          [ 𝜉      ]
+sions for the threshold problem (e.g. computing the intersection                                     At the limit (i.e. exhaustive search), the lower bound established
+of the threshold plane with the gradient field). We can, however,                                 by finite differences is guaranteed to converge to the infimum which
+compute the primal value 𝑓 (𝑠 ′, 𝜉) at arbitrary points 𝑠 ′ ∈ 𝑆, allowing                         is equivalent to the maximal gradient. We provide a thorough dis-
+us to use point sampling methods.                                                                 cussion and proof in the supplemental document.
+   One obvious choice would be to estimate the gradient magnitude
+at point samples in the region 𝑆, but this can be slow to converge                                4.6   A line rendering style function
+and produce false positives (see Supplemental ??).
+                                                                                                  By considering a simple process where we output the line color
+  Finite difference as a lower bound. A more stable, and faster con-                              𝑐 (y, z) if we successfully find a line-producing gradient in 𝑛 sample
+                                                | 𝑓 (𝑠 ′ ,𝜉 ) −𝑓 (𝑠,𝜉 ) |                         pairs, else the exitant radiance 𝐿(y, z), we come to an expected
+verging option, is to use the finite difference         ∥𝑠 ′ −𝑠 ∥         of point
+                                                                                                  stylized exitant radiance,
+samples 𝑠 and 𝑠 to establish a lower bound on the gradient ∥∇𝑠 𝑓 (𝑠 ∗, 𝜉)∥.
+                ′
+
+By the median value theorem, there exists a point 𝑠 ∗ on the line
+                                                                                                                                                            
+                                                                                                     𝑔𝜃 (𝐿(y, z)) = (1 − E𝑛 𝑚𝜉 (𝑢, 𝑣) ) 𝑐 (y, z) + E𝑛 𝑚𝜉 (𝑢, 𝑣) 𝐿(y, z) ,
+segment between 𝑠 and 𝑠 ′ such that,                                                                                                                                  (26)
+
+                                 (𝑠 )                  |𝑓 (𝑠 ′, 𝜉) − 𝑓 (𝑠, 𝜉)|                    arriving at what is effectively an SRE-compatible style function that
+           ∥∇𝑠 𝑓 (𝑠 ∗, 𝜉) ∥ ≥ |𝐷 s→s        ∗
+                                      ′ 𝑓 (𝑠 , 𝜉)| =                           .         (21)     follows from the search process.
+                                                              ∥𝑠 ′ − 𝑠 ∥
+
+                                                                                                           ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:8   •   Rex West, Sayan Mukherjee, and Yonghao Yue                                                                                                                             Lines - Line Rendering Proc
+                                                                                                                     Dra 1: Ready
+
+                                                                                                                    f(s)    ′𝒯f(s)′     E1[m(u, v)]   E4[m(u, v)]   E16[m(u, v)]    En≈∥[m(u, v)]
+   General form. We can think of the expectation (25) of not finding
+a line-producing gradient in 𝑛 tries as an equivalent “blend weight”
+
+
+
+
+                                                                                                      Depth
+𝑤𝜃 . In other words, 𝑤𝜃 specifies where lines are drawn and how
+opaque they are.
+   This allows us to decouple the sample count from line opaqueness,
+
+
+
+
+                                                                                                      Normal
+making 𝑛 an artist-controllable parameter 𝑛𝜃 ,
+                       ∫                            ! 𝑛𝜃
+               𝑤𝜃 =       𝑚𝜃,𝜉 (𝑢, 𝑣)𝑝𝜃 (𝑢, 𝑣) d𝑢d𝑣      ;       (27)
+                               𝑆𝜃2
+
+
+
+
+                                                                                                      Material ID
+we note here the term 𝑝𝜃∫(𝑢, 𝑣) can feasibly be any artist-controllable
+function that satisfies 𝑆 2 𝑝𝜃 (𝑢, 𝑣)d𝑢d𝑣 = 1. However, the same
+effect can be achieved when 𝑝𝜃 (𝑢, 𝑣) is the pdf of sample pairs
+by controlling the sample distribution.                                                               Fig. 7. Rows use depth, surface normals, and material IDs as the measure-
+   Replacing the expectations in Eq. (26) with blend weights (27),                                    ment field 𝑓 (𝑠 ), and we visualize the corresponding gradient magnitude
+we arrive at the general form of the line rendering style function,                                   ∥ ∇𝑓 (𝑠 ) ∥ estimated via a brute force finite-difference approximation. The
+                                                                                                      remaining columns visualize the expectation of the 𝑛-sample formulation in
+                                                                                                      Eq. (25), 𝐸𝑛 [𝑚𝜉 (𝑢, 𝑣) ], for increasing 𝑛 (and a converged large-𝑛 reference).
+               𝑔𝜃 (𝐿(y, z)) = (1 − 𝑤𝜃 ) 𝑐𝜃 (y, z) + 𝑤𝜃 𝐿(y, z) ,                              (28)    In this example, 𝑛 = 16 already produces a search expectation that is visually
+                                                                                                      close to the large-𝑛 result, while smaller 𝑛 results in softer line edges. The
+                                                                                                      appropriate choice of 𝑛 is density-dependent (i.e., it depends on the area of
+a simple linear interpolation of two colors.
+                                                                                                      the line stencil). The same extremal-gradient construction works for various
+   Let us note that we are not limited to this specific form. The blend                               line producing features like geometric discontinuities (depth), orientation
+weight 𝑤𝜃 expresses where lines are drawn, allowing arbitrary non-                                    changes (normals), or semantic boundaries (material IDs).
+linear stylizations at the location of lines. For example, a saturation
+stylization that makes the silhouette of objects more colorful.
+   Estimation. An unbiased estimator of the style function (28) can                                   distribution 𝑝 (𝑢, 𝑣), the probability of failing to detect a line decays
+be constructed for a specified power 𝑛 by drawing 𝑛 samples (𝑢, 𝑣) ∼                                  super-linearly with 𝑛, mirroring the line-softening observed in ray-
+𝑝𝜃 (𝑢, 𝑣) of the metric function 𝑚𝜃,𝜉 (𝑢, 𝑣), one per instance of the                                 based methods such as West [2021]. Practical implementations will
+inner-integral, and taking their product,                                                             set 𝑛 sufficiently high, e.g. 𝑛 ≥ (1 − 𝐸 [𝑚𝜉 (𝑢, 𝑣)]) −1 , to meet artistic
+                               Ö𝑛                                                                     goals. In practice, we found 12 − 16 samples works well, with larger
+                       ⟨𝑤𝜃 ⟩ =    𝑚𝜃,𝜉 (𝑢𝑖 , 𝑣𝑖 ) ,               (29)                                line widths tending to require more samples.
+                                           𝑖=1
+such that,                                                                                            4.7           Multiple line types
+                                                 !
+                                                                                                      Feature line renderings typically consist of multiple line types, each
+                             𝑛
+                             Ö                                   𝑛
+                                                                 Ö                                    defined by, for example, a distinct measurement function 𝑓 , thresh-
+   ⟨𝑔𝜃 (𝐿 (y, z) ) ⟩ = 1 −         𝑚𝜃,𝜉 (𝑢𝑖 , 𝑣𝑖 ) 𝑐𝜃 (y, z) +         𝑚𝜃,𝜉 (𝑢𝑖 , 𝑣𝑖 ) 𝐿 (y, z) ,
+                             𝑖=1                                 𝑖=1
+                                                                                                      old 𝑡, measurement region (i.e. line stencil) 𝑆, and color 𝑐𝜃 . Existing
+                                                                                               (30)   ray-based methods handle this by evaluating several candidate line
+                                                                                                      types per ray and resolving visibility through an ordering rule, com-
+which is an unbiased estimator of Eq. (28) for almost any 𝑝 (𝑢, 𝑣).                                   monly based on depth along the ray and optionally augmented with
+  Coming full circle, this estimator corresponds exactly to the                                       user-defined priorities [Ogaki and Georgiev 2018; West 2021].
+search process of drawing 𝑛 sample pairs, and returning the line                                        This behavior arises naturally in the SRE by treating each line
+color 𝑐𝜃 (y, z) if any of their metrics are zero, 𝑚𝜃,𝜉 (𝑢, 𝑣) = 0.                                    type as its own style function and composing these functions in an
+                                                                                                      order consistent with the desired occlusion rule.
+   Sample count 𝑛. In the case that 𝑁 > 𝑛 samples are drawn for a                                       Given 𝑛 (potentially) different line types, each with an instance
+fixed 𝑛, a significantly lower variance estimate of 𝑤𝜃 can be com-                                    of the line style function 𝑔𝜃𝑖 in Eq. (28) and their line-specific
+puted using the variance-minimal recurrence relation of Kettunen                                      parametrization 𝜃 𝑖 , we can define a composite style function,
+et al. [2021]. Additionally, while one can feasibly consider fractional
+                                                                                                                                                   Θ = {𝜃 1, . . . , 𝜃 𝑛 } ,
+                                                                                                                                               
+values for 𝑛, the added utility is minimal, and requires much more                                            𝑔¯𝑛,Θ = 𝑔𝜃 1 ◦ 𝑔𝜃 2 ◦ · · · ◦ 𝑔𝜃𝑛 ,                            (31)
+heavy-handed estimation strategies (e.g. stochastic truncation of a
+Taylor-series expansion [Georgiev et al. 2019; Misso et al. 2022]).                                   where the composition order reflects the chosen occlusion ordering
+                                                                                                      (e.g. increasing distance along the ray, or artist-chosen line priority).
+   Bias. Although the estimators introduced above are unbiased for                                       Expanding the composition yields,
+any fixed power 𝑛, the formulation itself exhibits a bias relative                                                                   !                           !
+                                                                                                                         𝑛  𝑖 −1                          𝑛
+to the ideal of perfectly hard lines. As line detection relies on sto-                                                  ∑︁  Ö                            Ö
+                                                                                                            𝑔¯𝑛,Θ (𝐿) =          𝑤𝜃 𝑗 (1 − 𝑤𝜃𝑖 ) 𝑐𝜃𝑖 +      𝑤 𝜃𝑚 𝐿 ,      (32)
+chastic point sampling over the region 𝑆, truly hard lines can only
+                                                                                                                            𝑖=1   𝑗=1                               𝑚=1
+be recovered in finite time when the 𝑛-sample finite-difference ex-
+pectation (25) evaluates to zero for finite 𝑛. For a fixed sampling                                   where, for readability, the dependence on the edge (y, z) is omitted.
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                                                         Lifting
+                                                                                                       Dra   1: Ready                                            Tone •- Extending
+                                                                                                                 Lines and Tone: Image-space Stylization in Path-space     138:9    the mapp
+
+
+   Stochastic composition. In practice, there is no way to know apriori                            δk : ′        𝒯         M                  δk : ′         𝒯         M
+the exact set of line types that a given edge (y, z) will intersect. Prior
+works dealt with this by implicitly using point samples 𝑠 1′ , . . . , 𝑠𝑛′                                       𝒯                                           𝒯
+(often the same as those used in large gradient detection) to search
+for line-producing surfaces. Although this process is often described
+algorithmically, it defines a mapping between point samples and
+line types, and produces a stochastic selection of ordered line types.                         Fig. 8. Conceptually, a conformal one-to-one map 𝜙𝑘 from the image space
+   We can employ a similar approach under the proposed formu-                                  𝑆 to a manifold M (left) admits a unique conformal one-to-one extension
+lation, giving us a stochastic composition of style functions. The                             from an enlarged domain to an enlarged connected subset of M (right).
+expectation of the stochastic composition quantifies the behavior                              We leverage this concept to extend tone rendering beyond the region of
+observed in prior works where lines of different types blend at in-                            path-space covered by the anchor mapping.
+tersections and overlapping regions following from an expectation,
+
+                                             
+        𝑔𝜃 (𝐿 (y, z) ) = E𝑛 𝑔¯𝑛,Θ (𝐿 (y, z) )
+                                                                                               field, and distributional effects; all while remaining compatible with
+                         ∫
+                       =     𝑔¯𝑛,Θ (𝐿 (y, z) )𝑝𝜃 (𝑠 1′ · · · 𝑠𝑛′ ) d𝑠 1′ · · · d𝑠𝑛′ ,   (33)
+                                𝑆𝜃𝑛                                                            ordinary style functions under the stylized rendering equation.
+
+
+where each image-plane point 𝑠𝑖′ is mapped to a style function                                 5   Tone Rendering
+𝑔𝜃𝑖 ∈ ∫𝑔¯𝑛,Θ , and 𝑝𝜃 (𝑠 1′ ··· 𝑠𝑛′ ) can be any weighting function satis-                     Tone-based styles such as hatching and halftone convey form, ma-
+fying 𝑆 𝑛 𝑝𝜃 (𝑠 1′ ··· 𝑠𝑛′ ) d𝑠 1′ ··· d𝑠𝑛′ = 1, though having it match the                    terial, and illumination through image-space-consistent structure.
+probability density of samples is convenient when estimating.                                  Their visual identity arises from coherent spatial patterns—e.g., line
+                                                                                               spacing, orientation, or dot density—that are defined and perceived
+   Estimation. An estimator for the composite style function can                               in the image-plane.
+be constructed by estimating the blend weight 𝑤𝜃𝑖 of each of the 𝑖                                When tone stylization is expressed directly as a path-space style
+style functions 𝑔𝜃𝑖 ,
+                                                                                               function under the stylized rendering equation, this inherent image-
+                                                                                               space structure is lost. As style functions are evaluated indepen-
+                                                                                               dently along light paths, the resulting patterns are parameterized
+                     𝑖 −1
+                   𝑛 Ö
+                                      !                            𝑛
+                                                                                 !
+                  ∑︁                                               Ö
+    ⟨𝑔𝜃 (𝐿) ⟩ =                ⟨𝑤𝜃 𝑗 ⟩ (1 − ⟨𝑤𝜃𝑖 ⟩ ) 𝑐𝜃𝑖 +              ⟨𝑤𝜃𝑚 ⟩ 𝐿 ,      (34)   by surface geometry and distribution effects like surface scattering
+                  𝑖=1   𝑗 =1                                      𝑚=1
+                                                                                               rather than image-space coordinates. In practice, this leads to char-
+                                                                                               acteristic artifacts such as geodesic distortion and depth-dependent
+where we assume the joint probability density of samples 𝑝𝜃 (𝑠 1′ ··· 𝑠𝑛′ )                    variation in pattern scale.
+follows from the sampling process and the term gracefully vanishes.                               Our goal is therefore to lift image-space tone fields into a path-
+    Note that, while correlation resulting from sample reuse across                            space formulation while preserving their defining image-space struc-
+weight estimates is partially masked by early termination of the                               ture. In contrast to line rendering, which relies on conditional cor-
+product, strict unbiasedness requires the samples of the blend weight                          respondence between nearby image-space locations, tone render-
+                                                       Î −1
+estimates ⟨𝑤𝜃𝑖 ⟩ in each of the 𝑛 + 1 product terms, 𝑖𝑗=1    ⟨𝑤𝜃 𝑗 ⟩(1 −                       ing requires a canonical lifting that anchors patterns to a material-
+             Î𝑛
+⟨𝑤𝜃𝑖 ⟩) and 𝑚=1 ⟨𝑤𝜃𝑚 ⟩ to be independent.                                                      independent image-space parameterization. This lifting must asso-
+    When using a binary metric 𝑚𝜃,𝜉 (𝑢, 𝑣), each product will evaluate                         ciate path vertices x on the scene manifold M with a meaningful
+to 0 or 1, and the composite estimator reduces to selecting exactly the                        image-space coordinate at which the tone field can be queried.
+color 𝑐𝜃𝑖 of the first line type in the ordering whose search detects                             Moreover, this association must remain valid under complex light
+a sufficiently large finite difference—all subsequent terms vanish,                            transport, including indirect illumination, glossy reflection, refrac-
+and no additional sampling is required. The unstylized radiance                                tion, and depth of field. In particular, tones observed through distri-
+𝐿(y, z) is the only recursive term in (34), and is only ever computed                          bution effects should preserve their image-space organization while
+if every weight estimate evaluates to 1, potentially early terminating                         being naturally affected (e.g. blurred) by the transport.
+recursive sampling. See supplemental ?? for further details.                                      We frame this as the construction of a mapping 𝜙 : S → P, 𝜙 =
+    This recovers the behavior of prior methods: the rendered line                             Φ(·, 𝜉 ★) for a canonical conditioning variable Ξ = {𝜉 ★ } of image-
+color corresponds to the shallowest (or highest-priority) intersected                          space coordinates 𝑠 to paths, whose vertices x lie at mapping des-
+line type along the ray. Importantly, this behavior emerges from                               tinations along the scene manifold M, together with evaluating a
+style function composition and does not require special-case logic.                            practical approximation of its inverse 𝜙 −1 at arbitrary path vertices.
+    Overall, the proposed feature line framework lets us fuse the                                 While, in principle, any locally coherent and invertible projection
+consistency of image-space line rendering with the expressiveness                              could serve this purpose, we argue that 𝜙 must satisfy two additional
+of a path-space formulation. By interpreting surface scattering and                            criteria: it should be material-invariant, so that tone structure is not
+camera effects as conditionally specular events, we preserve a prin-                           tied to specific surface properties, and it should be aligned with light
+cipled notion of image-space parallelism, letting us draw lines of                             transport, so that distribution effects are handled consistently with
+arbitrary color, width, and falloff across complex geometry, depth of                          the underlying path sampling process.
+
+                                                                                                        ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+138:10   •   Rex West, Sayan Mukherjee, and Yonghao Yue
+
+
+5.1      The mirror reflection projection 𝜙
+A well-motivated and style-agnostic choice for 𝜙 is the mapping
+induced by mirror reflection about macro surface geometry. That
+is, for a given image-space coordinate, 𝜙 traces a path obtained by
+mirror reflection at every surface interaction, independent of the
+actual material. This construction provides a canonical, material-
+invariant correspondence between image-space and path-space.
+   From a physical standpoint, this choice aligns with the geome-
+try of light transport. In a wave-optics interpretation, the mirror
+reflection path corresponds to a stationary-phase (and typically
+                                                                                                                  (a)
+dominant) contribution of light, and distribution effects effectively
+integrate around this path. Under the Huygens–Fresnel formula-
+tion, the complex field at a point x ∈ M after interaction with a
+surface 𝑀 ⊂ M can be written, up to slowly varying amplitude and
+visibility terms, as
+                 ∫
+                                                           2𝜋
+       𝑈 (x) ∝       𝑈 (y) 𝐴(x, y) 𝑒 𝑖𝜈 𝑑 (x,y) d𝐴(y) , 𝜈=    ,
+                  𝑀                                         𝜆
+where 𝑑 (x, y) denotes optical path length. In the high-frequency                         (b)                     (c)                       (d)
+regime relevant to tone patterns, stationary-phase arguments imply
+that the dominant contribution arises from points y∗ ∈ 𝑀 satisfying            Fig. 9. Even though the mirror anchor only assigns image-space coordi-
+                                                                               nates to a subset of vertices (a), these coordinates can be propagated
+                                 ∇𝑀 𝑑 (x, y∗ ) = 0 ,                           across a connected region of the scene via overlapping local neighbor-
+                                                                               hoods (yellow paths), yielding a consistent coordinate for a target vertex
+i.e., the gradient of 𝑑 projected onto the tangent space of 𝑀 vanishes,        (blue path). In practice, each continuation step reduces to a local inter-
+precisely the specular (Fermat) condition [Born and Wolf 2002]. For            polation/extrapolation problem (b–d): given nearby vertices with known
+multi-bounce transport, the accumulated optical path length,                   image-space coordinates, we estimate the query vertex’s coordinate by
+                                               𝑘 −1                            working in a local tangent-plane chart and fitting a smooth, locally invert-
+                                                                               ible map (e.g. via linear moving least squares).
+                                               ∑︁
+                       𝑑 (x0, . . . , x𝑘 ) =          𝑑 (x𝑖 , x𝑖+1 ) ,
+                                               𝑖=0
+(and thereby phase) must be stationary with respect to each inter-
+mediate vertex x𝑖 ∈ M, yielding perfectly specular reflection along
+the entire path.                                                               follow its mapping onto the scene manifold M after exactly 𝑘 spec-
+   This motivates the mirror-reflection projection as a natural anchor         ular bounces, which we denote by 𝜙𝑘 . Locally, this mapping behaves
+for lifting image-space tone structure into the scene. It is locally           smoothly and preserves angles (i.e. conformal), meaning that small
+coherent, independent of material parameters, and aligned with the             image-space neighborhoods are transferred to the scene without
+characteristic flow of light propagation. Once tones are anchored to           shearing or folding.
+this specular structure via 𝜙, distribution effects such as glossy blur           If this local mapping is also one-to-one, classical results from
+or depth of field can be interpreted as neighborhood integration               complex analysis tell us that such a map can be extended beyond its
+around this stationary path, rather than as deformations of the                original domain in a consistent way: knowing how 𝜙𝑘 behaves on 𝑆
+underlying image-space pattern.                                                effectively determines how it should behave in a larger surrounding
+   Despite these desirable properties, the mirror-reflection projec-           region. Intuitively, the mapping can be “continued” outward while
+tion has three fundamental limitations:                                        preserving its local structure, yielding a consistent correspondence
+   (1) Partial coverage: 𝜙 is not defined for all path vertices; many          between nearby parts of the scene and image-space (see Fig. 8).
+        points in M admit no valid pre-image in image-space.                      As a result, every point x ∈ 𝑀 connected to 𝜙𝑘 (𝑠) would, in prin-
+   (2) Non-bijectivity: The mapping is neither one-to-one nor                  ciple, admit a well-defined image-space coordinate 𝜙˜𝑘−1 (x). A formal
+        onto: multiple image-space points may map to the same scene            statement and proof are given in Theorem ?? of the Supplemental.
+        point, while large regions of M may not be reachable.                     While this idealized scenario does not arise in practical rendering,
+   (3) Implicit form: 𝜙 is only accessible through forward path                it motivates an intuitive observation: for tone stylization, 𝜙𝑘 need
+        construction; it generally has no closed-form expression and           only be locally coherent and approximately invertible. In practice,
+        no analytic inverse.                                                   given a path vertex x ∈ 𝑀 and a set of nearby points x1, . . . , xℓ in the
+                                                                               image of 𝜙𝑘 , it suffices to assign a consistent image-space coordinate
+5.2      Analytic continuation                                                 to x as long as all points lie within the same connected region of M.
+To build intuition about the behavior of the mirror-reflection projec-         On sufficiently small patches of image-space, the mirror-reflection
+tion 𝜙, we consider a simplified setting rather than a fully rigorous          mapping is smooth, locally one-to-one, and conformal, and thus
+one. Suppose we look at a small region 𝑆 of the image plane, and               locally invertible by the inverse function theorem.
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                                                  Lines and Tone: Image-space Stylization in Path-space • 138:11
+                                                                                          LiftingLines
+                                                         Results - Main Comparison for Feature
+         Dra 1: Ready
+                                                                       Results_LinesMainComparison
+
+Ogaki and Georgiev [2018]                                West [2021]                                                 Ours
+
+
+
+
+ 116s                                                    346s                                                        440s
+
+
+
+
+Fig. 10. Comparison of Ogaki and Georgiev [2018] (left), West [2021] (middle), and our method (right) on a scene containing depth of field and both specular
+and glossy reflections. Under directly visible surfaces (no DoF) all methods agree up to minor implementation differences (red). For flat glossy mirror
+reflections, our method preserves the characteristic softened appearance of West [2021] (yellow). Under depth-of-field the method of Ogaki and Georgiev
+[2018] breaks down while West [2021] and our method remain coherent (green). For curved specular reflections, our method preserves image-space line width
+similarly to Ogaki and Georgiev [2018], while West [2021] exhibits width drift (blue).
+
+
+5.3     Local approximations of analytic continuity                                     image-space quantities (e.g. tone patterns) or compute image-space
+Our objective is therefore not to recover a true inverse of 𝜙𝑘 , but to                 shaders at path vertices.
+construct a local, numerically stable approximation that behaves like                      In practice, we observed linear MLS strikes a favorable balance
+an analytic continuation where sufficient information is available,                     between stability and visual quality, producing significantly fewer
+and degrades gracefully elsewhere. Concretely, given a path vertex                      fold-overs and boundary artifacts than alternatives. Higher-order
+x ∈ 𝑀 for which 𝜙𝑘−1 (x) is unknown, and a set of nearby vertices                       variants, such as quadratic MLS [Joldes et al. 2015], improve local
+x1, . . . , xℓ ∈ 𝑀 with known image-space coordinates 𝜙𝑘−1 (x𝑖 ), our                   accuracy but tend to amplify noise and introduce geodesic artifacts
+                                                                                        when extrapolating beyond the convex hull of samples.
+goal is to assign a consistent image-space location 𝜙˜𝑘−1 (x) ∈ R2 . This
+                                                                                           In ?? of the supplemental document we provide comparisons
+problem can be viewed as a local interpolation or extrapolation task
+                                                                                        of several local inversion methods, and specifics on the choice of
+on the scene manifold, guided by the mirror-reflection geometry.
+                                                                                        tangent plane and methods for selecting nearby vertices.
+   A variety of strategies have appeared in graphics for similar value
+                                                                                           Overall, MLS provides a practical, locally invertible approxima-
+estimation problems, including barycentric extrapolation, Möbius
+                                                                                        tion to analytic continuation. It preserves image-space coherence
+transformations, and mean-value coordinates. While these methods
+                                                                                        where samples are available, degrades smoothly in under-sampled
+are inexpensive and easy to implement, they either lack confor-
+                                                                                        regions, and integrates naturally into Monte Carlo path sampling
+mal behavior, are unstable under extrapolation, or exhibit visible
+                                                                                        without requiring global solves or explicit parameterization.
+artifacts near boundaries. We summarize these alternatives in the
+supplemental material (?? and ??), and focus here on the method
+we found most robust in practice.
+                                                                                        6    Results
+   Moving Least Squares. We adopt a Moving Least Squares (MLS)                          We demonstrate our proposed image-space–consistent line and tone
+[Levin 1998] formulation to locally approximate 𝜙𝑘−1 . While tech-                      stylizations on a variety of scenes with indirect illumination, spec-
+nically not conformal, MLS provides a smooth, locally invertible                        ular and glossy reflection, and depth-of-field blur. Figs. 10 to 12
+mapping that is stable under moderate extrapolation and degrades                        (Section 6.1) validate the feature-line contribution, Figs. 13 and 14
+gracefully as samples become sparse.                                                    (Section 6.2) then validate the tone contribution, while Fig. 1 (Sec-
+   For the projection p𝑖 = 𝜋 (x𝑖 ) ∈ R2 of nearby vertices onto a                       tion 6.3) illustrates that these line and tone correspondences also
+local tangent plane at x, their known image-space coordinates 𝑠𝑖 =                      compose cleanly within a single stylized transport pipeline.
+𝜙 −1 (x𝑖 ) ∈ R2 , and the projected query point p = 𝜋 (x), MLS fits a                      All results were rendered with our CPU-based RGB renderer using
+local affine map that best explains the correspondence p𝑖 ↦→ 𝑠𝑖 in a                    the tree-based sampling algorithm of West and Mukherjee [2024]
+weighted least-squares sense.                                                           with our sampling modifications used to construct a cache of paths
+   Specifically, we solve,                                                              for the canonical mapping used in tone rendering, and the auxiliary
+                                                                                        path sampling along specific path traversals of the tree-sample for
+                    ℓ
+                   ∑︁                           2                                       line rendering (see Supplemental ?? and ??).
+            min          𝑤𝑖 (x) A p𝑖 + b − 𝑠𝑖       → 𝑠 = Ap + b ,         (35)
+             A,b                                                                           All timings are based on rendering performance of a Macbook
+                   𝑖=1
+                                                                                        Pro with an M3 Max processor and 128GB RAM. Unless otherwise
+where the weights 𝑤𝑖 (x) decay with the distance ∥p − p𝑖 ∥. The                         noted, comparisons use the same sampling budgets to isolate how
+computed image-space coordinate 𝑠 can then be used to query any                         each method behaves under the same transport phenomena.
+
+                                                                                                     ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+          Dra 1: Ready                                           Results - Mega Figure - Projected Styles
+                                                                           Results_ProjectionStylesCombined
+138:12   •   Rex West, Sayan Mukherjee, and Yonghao Yue
+
+
+
+
+Fig. 11. Our line formulation supports a range of artist-controllable line looks within a single rendering. From left to right: (blue) layers two distinct line
+styles, (purple) combines a very thick silhouette with a thin inner line and uses a square line stencil to sharpen corners, (magenta) uses displaced lines for a
+sketchy/offset appearance, (pink) uses a different line color for glossy reflections, and (red) shows a hatched line style.                    Results - Flat vs Curved Reﬂe
+                                                                                             Dra 1: Ready
+                                                                                                                                                                        Results_FlatVsCurved
+
+                                                                                                                                     Ogaki+ [2018] West [2021]   Ours
+6.1      Feature line rendering
+                                                                                                                          Flat
+
+
+
+
+                                                                                                                                                                           Specular
+Fig. 10 compares our feature-line rendering against the methods of
+Ogaki and Georgiev [2018] and West [2021] under a combination of
+direct visibility, glossy and specular reflection, and depth of field.
+For directly visible surfaces (red), all methods agree up to minor
+
+
+
+
+                                                                                                                                                                           Glossy
+implementation differences and sampling noise. Method differences
+become more pronounced when lines are seen through transport
+phenomena: Ogaki and Georgiev [2018] rely on specular image-
+                                                                                                                         Curved
+
+
+
+
+                                                                                                                                                                           Specular
+space parallelism that breaks down under glossy reflection (yellow)
+and depth of field (green), while West [2021] remains coherent under
+distribution effects but exhibits noticeable line-width drift in curved
+reflections (blue). Our method preserves consistent image-space
+
+
+
+
+                                                                                                                                                                           Glossy
+line width across curved geometry and through both glossy and
+specular reflection, while still allowing lines to respond naturally to
+physical blur from glossy transport and depth of field.
+   Fig. 11 highlights that our line formulation does not constrain                             Fig. 12. Detailed comparison of image-space line width under reflection. Left
+artistic expressiveness: the same geometric correspondence supports                            shows the scene layouts with a flat and curved mirror respectively. For
+a range of artist-controllable line looks within a single rendering. We                        each, we test a perfectly specular mirror (top) and a glossy mirror (bottom).
+show layered line styles (blue), silhouette/inner-line decomposition                           Columns compare Ogaki and Georgiev [2018], West [2021], and ours. Our
+with stencil-sharpened corners (purple), displaced lines for a sketchy                         method matches the specular reference behavior on both flat and curved
+offset appearance (magenta), reflection-specific line coloring under                           reflectors, and in the glossy case preserves West’s characteristic softening
+                                                                                               while avoiding curvature-induced line-width drift.
+glossy transport (pink), and hatched line fills (red). These variations
+are realized through ordinary SRE style functions on top of the same
+auxiliary-path construction, so style design remains flexible while
+image-space line structure remains stable.                                                     such as curvature-following distortion or changes in line width
+   Fig. 12 provides a more controlled diagnosis of the line-width be-                          can be aesthetically desirable in some cases—our method makes
+havior of each method by isolating two reflector geometries (flat vs.                          those effects controllable stylistic choices rather than unavoidable
+curved) and two scattering regimes (perfectly specular vs. glossy). In                         consequences of the underlying formulation.
+the specular cases, our construction matches the expected reference
+behavior and preserves line width on both flat and curved reflectors.                          6.2     Tone rendering
+In the glossy cases, we retain the characteristic softened appearance                          Fig. 13 compares tone (e.g. hatching) rendering using our method,
+produced by distributional transport, while avoiding the additional                            the Deussen et al. [1999]-inspired world-space algorithm of West and
+curvature-induced thinning/thickening that arises when auxiliary                               Mukherjee [2024], and the equivalent image-space stylization per-
+paths do not account for surface curvature. Importantly, effects                               formed directly on the output buffers. All methods produce nearly
+                                                                                               identical visuals for directly viewed surfaces close to the camera
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                             Results - Main Comparison for Projection (Hatching/Half-tone)
+                                                                    Results_ProjectionComparison   Lifting Lines and Tone: Image-space Stylization in Path-space     •   138:13
+
+
+                      Image-space                                   West and Mukherjee [2024]                                                 Ours
+
+
+
+
+ Specular                637s              DoF/Glossy                           651s                                                          777s
+
+
+
+
+Fig. 13. We render the same scene twice: once purely specular (left half of each main view) and with depth of field + glossy reflections (right half). We compare
+    Dra 1: Ready
+a image-space post-process baseline (left), the world-space tone formulation of West and Mukherjee [2024] (middle), and our image-space–consistent tone
+rendering for the same shader as the image-space post-process (right). Insets correspond to the colored boxes: red is a reflection in a flat perfect mirror, yellow
+is an in-focus region (no DoF), green lies where DoF gradually develops, and blue is a reflection in a curved glossy mirror. For this scene, all three methods
+match closely in the in-focus region (yellow). We see that West and Mukherjee [2024]’s world-space construction (plane intersections with the scene) is tuned
+to appear camera-aligned from the main view, but when the same geometry is seen at a grazing angle, the intersection directions are no longer camera-aligned
+and the pattern no longer reads as hatching (red). Our method preserves the intended image-space orientation and scale across both renders, while the
+DoF/glossy case exhibits the expected transport-induced blur without re-parameterizing the underlying pattern (green/blue).
+
+
+(yellow). However, world-space–based tone stylization can result                       functions can change depending on their parametrization. For exam-
+in geodesic artifacts in off-angles and reflections (red). In contrast,                ple, in Fig. 14 the reflection of the right-most robot is color-shifted
+image-space stylizations run on top of the rendered output and,                        and the hatching orientation is intentionally flipped to look like a
+while fast, produce hard lines on naturally blurry regions (blue).                     reflection—simulating the look-and-feel of a world-space stylization.
+Our method captures the structure of the image-space tone, and
+inherits the visual queues of complex light transport, but at the                      6.3      Combined stylizations
+cost of additional overhead. Artists can weigh the trade-off between                   The teaser in Fig. 1 provides a glimpse at some of the stylization that
+support for distribution effects and rendering overhead.                               can be achieved with the proposed line and tone rendering meth-
+   Additionally, Fig. 13 demonstrates that our line and tone con-                      ods. Beyond line and tone rendering it employs a few other subtle
+structions compose cleanly in a single rendered image. Feature lines                   style functions, leveraging that our methods can be composed and
+remain stable in width across curved geometry and through dis-                         rendered cohesively with any other style function. Here we used
+tribution effects, while tone patterns preserve their image-space                      several brightness-level controlling style functions on emission and
+structure even when seen through reflective transport and under                        reflected lighting to surgically adjust the look-and-feel of the render,
+global illumination. As our method is based on ordinary (possibly                      bringing more light to the foreground while maintaining high con-
+nonlinear) SRE style functions, the same pipeline supports combin-                     trast, and lowering the intensity of background regions—the tone
+ing multiple line types with multiple tone fields (e.g., hatching and                  stylization naturally responds to these changes in lighting. The back-
+half-tone) without sacrificing transport-aware behavior or coherent                    ground is also entirely real geometry, not a billboard, demonstrating
+image-space structure.                                                                 a unified look between near-field and far-field line rendering.
+   Fig. 14 demonstrates image-space–consistent tone in a single
+scene with five objects assigned distinct tone fields (pattern, tint,                  7     Limitations and future work
+and isotropy/anisotropy). Across all objects, tone appearance varies
+                                                                                          Feature line rendering. Like prior ray-based line rendering meth-
+with shading: highlights and shadows affect tone intensity (e.g., pat-
+                                                                                       ods, our approach operates through local stochastic tests along
+tern brightness and/or coverage) without re-parameterizing the un-
+                                                                                       sampled paths (finite-difference detection of extremal gradients),
+derlying image-space structure. This makes per-object tone choices
+                                                                                       rather than extracting explicit line primitives. Consequently, we can
+readable and stable while still reflecting illumination differences.
+                                                                                       preserve line appearance (placement and width in image-space) un-
+   The glossy floor further illustrates transport-consistent tone be-
+                                                                                       der complex transport, but we do not directly recover global stroke
+havior in reflection. As the reflected contribution becomes more
+                                                                                       structure. In other words, we have no explicit representation of
+distributional, the tone pattern exhibits a smooth transition from
+                                                                                       line connectivity, endpoints, or topology. Enriching the method to
+crisp to blurred appearance, matching the expected glossy spread
+                                                                                       construct editable line primitives (e.g., with support for operations
+while preserving coherent image-space scale and orientation. In
+                                                                                       such as trimming, merging, or higher-level stroke textures) is a very
+other words, tone blurs because transport blurs—not because the
+                                                                                       interesting direction of future work.
+pattern is stretched or distorted by surface parameterization. In ad-
+                                                                                          Our estimator also inherits the usual accuracy–cost tradeoffs of
+dition, just like any ordinary style function, our tone rendering style
+                                                                                       Monte Carlo methods. With limited samples, line detection can miss
+
+                                                                                                   ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+         Dra 1: Ready                                            Results - Mega Figure - Projected Styles
+                                                                           Results_ProjectionStylesCombined
+138:14   •   Rex West, Sayan Mukherjee, and Yonghao Yue
+
+
+
+
+Fig. 14. Five objects rendered with different tone fields (pattern, tint, and isotropy/anisotropy), illustrating per-object tone control within a single scene. Across
+all objects, the tone pattern (brightness and/or pattern thickness) follows the underlying shading, so highlights and shadows modulate the same image-space
+pattern rather than re-parameterizing it. The glossy floor additionally demonstrates a smooth, transport-driven transition in tone blur in reflection, preserving
+coherent image-space structure while exhibiting the expected glossy spread.
+
+
+very thin features, and the resulting lines exhibit a controllable soft-                       design principles to additional image-based stylizations (e.g., blue-
+ening. Future work could explore importance sampling or guiding                                noise stippling, brush-stroke fields, simulated watercolor painting,
+strategies for finite-difference pairs (sampling where gradients are                           etc.) remains a promising direction.
+likely to be large) to reduce variance and improve robustness.
+   Finally, our auxiliary-path construction is principled when distri-                         8    Conclusion
+bution effects admit a conditionally specular interpretation (e.g., mi-
+crofacet BSDFs and thin-lens). For broader scattering models—such                              We introduced path-space formulations for feature line and tone ren-
+as purely diffuse reflection, layered materials, subsurface scatter-                           dering that preserve coherent image-space structure under physically-
+ing, or participating media—the notion of “fixing the realized event”                          based light transport. For feature lines, we expressed line detection
+is less direct. Developing analogous event-preserving correspon-                               as a stochastic extremal-gradient process and showed how condi-
+dences for these cases (for instance, by designing connections in an                           tional specularity together with Levi–Civita parallel transport yields
+appropriate scattering-parameter space, or deriving transport rules                            a principled notion of image-space parallelism and a well-defined
+for more general distributions) would greatly broaden applicability.                           gradient, preserving line placement and width under distribution
+                                                                                               effects. For tone, we anchored image-space tone fields to a material-
+                                                                                               invariant mapping motivated by stationary-phase arguments, and
+   Tone rendering. Our tone formulation relies on a material-invariant                         evaluated them at arbitrary path vertices via a robust local inverse
+anchor mapping and on evaluating an approximation of its inverse                               approximation based on Moving Least Squares. Together, these
+at arbitrary path vertices using local fitting. This is necessarily ap-                        methods integrate naturally into the stylized rendering equation
+proximate: the mirror reflection-based anchor mapping is partial                               as unbiased Monte Carlo style functions, enabling line and tone
+and non-bijective, and the local inverse can become ill-conditioned                            stylization to interact meaningfully with global illumination while
+near occlusion boundaries, in sparsely sampled regions, or when ex-                            maintaining their defining image-space structure.
+trapolating far from any valid mirror pre-image. While our Moving
+Least Squares construction and fallback hierarchy are robust in prac-
+tice, they do not guarantee global injectivity or strict conformality;                         Acknowledgments
+in extreme cases this can produce fold-overs or distortions.                                   We express our gratitude to the reviewers and the following Sketch-
+   In addition, our anchor mapping is motivated by geometric optics                            Fab and Blend Swap users: dark_igorek for the iron howl (truck)
+and stationary-phase behavior. It does not model wave phenomena                                in Fig. 1. Repka788rus for the robot rk11 in Fig. 1. komov for the
+such as diffraction or interference, which may become relevant                                 walking robot in Fig. 1. YadroGames for the house in Fig. 1. TuppsM
+for extremely fine or near-Nyquist tone patterns. Follow-up work                               for the hover bike in Fig. 1. rodrigoscar for the sitting robot in Fig. 1.
+could investigate alternative anchor mapping constructions (that                               dark_igorek for the kansai spirit (van) in Fig. 1. Aliaksandr.melas for
+incorporate additional transport information) or adaptive sample                               the badlands landscape in Fig. 1. kagamine.anjellalice99 for the five
+selection for local inversion (including visibility-aware or depth-                            robots in Figs. 1, 11 and 14. Stanford Computer Graphics Laboratory
+aware neighborhoods) to improve robustness.                                                    for the Stanford bunny in Fig. 2. ruwo for the camboto in Figs. 2
+   Finally, while we focus on feature lines and tone as representa-                            and 12. wundersound for the battle sprinter in Figs. 7 and 13. Black
+tive image-space styles, extending the same correspondence-driven                              Snow for the Nissan Skyline GTR in Fig. 10.
+
+ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+                                                                                                     Lifting Lines and Tone: Image-space Stylization in Path-space     •   138:15
+
+
+   This work has been partially funded by JST FOREST Program                              Csaba Kelemen, László Szirmay-Kalos, György Antal, and Ferenc Csonka. 2002. A
+(JPMJFR206R, Japan), the Center of Innovations for Sustainable                                Simple and Robust Mutation Strategy for the Metropolis Light Transport Algorithm.
+                                                                                              Computer Graphics Forum 21, 3 (Proc. EUROGRAPHICS 2002) (Sept. 2002), 531–540.
+Quantum AI (JST Grant Number JPMJPF2221, Japan), and JSPS                                     doi:10.1111/1467-8659.t01-1-00703
+KAKENHI Grant Number 24K22830 (Japan).                                                    Markus Kettunen, Eugene D’Eon, Jacopo Pantaleoni, and Jan Novák. 2021. An Unbiased
+                                                                                              Ray-Marching Transmittance Estimator. ACM Trans. Graph. 40, 4 (Proc. SIGGRAPH
+                                                                                              2021), Article 137 (July 2021), 20 pages. doi:10.1145/3450626.3459937
+                                                                                          Yongjin Kim, Jingyi Yu, Xuan Yu, and Seungyong Lee. 2008. Line-Art Illustration of
+References                                                                                    Dynamic and Specular Surfaces. ACM Trans. Graph. 27, 5 (Proc. SIGGRAPH Asia
+                                                                                              2008), Article 156 (Dec. 2008), 10 pages. doi:10.1145/1409060.1409109
+Michael Ashikmin, Simon Premože, and Peter Shirley. 2000. A Microfacet-Based BRDF         Felix Knöppel, Keenan Crane, Ulrich Pinkall, and Peter Schröder. 2013. Globally Optimal
+    Generator. In Proc. SIGGRAPH ’00. 65–74. doi:10.1145/344779.344814                        Direction Fields. ACM Trans. Graph. 32, 4 (Proc. SIGGRAPH 2013), Article 59 (July
+Petr Beckmann and André Spizzichino. 1963. The Scattering of Electromagnetic Waves            2013), 10 pages. doi:10.1145/2461912.2462005
+    from Rough Surfaces. Pergamon Press, NY.                                              Yunjin Lee, Lee Markosian, Seungyong Lee, and John F. Hughes. 2007. Line Drawings
+Max Born and Emil Wolf. 2002. Principles of Optics: Electromagnetic Theory of Propaga-        via Abstracted Shading. ACM Trans. Graph. 26, 3 (Proc. SIGGRAPH 2007), Article
+    tion, Interference and Diffraction of Light (7th ed.). Cambridge University Press.        18 (July 2007), 5 pages. doi:10.1145/1275808.1276400
+Pierre Bénard and Aaron Hertzmann. 2019. Line Drawings from 3D Models: A Tutorial.        David Levin. 1998. The Approximation Power of Moving Least-Squares. Math. Comput.
+    Foundations and Trends® in Computer Graphics and Vision 11, 1-2 (2019), 1–159.            67, 224 (Oct. 1998), 1517–1531. doi:10.1090/S0025-5718-98-00974-0
+    doi:10.1561/0600000075                                                                Jonatas Medeiros, Mario Sousa, Luiz Velho, and Carla Freitas. 2009. Perspective Con-
+A. N. M. Imroz Choudhury and Steven G. Parker. 2009. Ray Tracing NPR-Style Fea-               touring in Illustrative Visualization. In Proc. SIBGRAPI 2009. 48–55. doi:10.1109/
+    ture Lines. In Proc. NPAR ’09 (New Orleans, Louisiana). 5–14. doi:10.1145/1572614.        SIBGRAPI.2009.49
+    1572616                                                                               Zackary Misso, Benedikt Bitterli, Iliyan Georgiev, and Wojciech Jarosz. 2022. Unbiased
+Forrester Cole, Aleksey Golovinskiy, Alex Limpaecher, Heather Stoddart Barros, Adam           and Consistent Rendering Using Biased Estimators. ACM Trans. Graph. 41, 4 (Proc.
+    Finkelstein, Thomas Funkhouser, and Szymon Rusinkiewicz. 2008. Where Do People            SIGGRAPH 2022), Article 48 (July 2022), 13 pages. doi:10.1145/3528223.3530160
+    Draw Lines? ACM Trans. Graph. 27, 3 (Proc. SIGGRAPH 2008), Article 88 (Aug.           Thomas Müller, Fabrice Rousselle, Jan Novák, and Alexander Keller. 2021. Real-Time
+    2008), 11 pages. doi:10.1145/1360612.1360687                                              Neural Radiance Caching for Path Tracing. ACM Trans. Graph. 40, 4 (Proc. SIG-
+Robert L. Cook and Kenneth E. Torrance. 1982. A Reflectance Model for Computer                GRAPH 2021), Article 36 (July 2021), 16 pages. doi:10.1145/3450626.3459812
+    Graphics. ACM Trans. Graph. 1, 1 (Jan. 1982), 7–24. doi:10.1145/357290.357293         Shinji Ogaki and Iliyan Georgiev. 2018. Production Ray Tracing of Feature Lines. In
+Keenan Crane, Mathieu Desbrun, and Peter Schröder. 2010. Trivial Connections on               SIGGRAPH Asia 2018 Technical Briefs (Tokyo, Japan) (SA ’18). Article 15, 4 pages.
+    Discrete Surfaces. Computer Graphics Forum 29, 5 (2010), 1525–1533. doi:10.1111/j.        doi:10.1145/3283254.3283273
+    1467-8659.2010.01761.x                                                                Yutaka Ohtake, Alexander Belyaev, and Hans-Peter Seidel. 2004. Ridge-Valley Lines
+Doug DeCarlo. 2012. Depicting 3D Shape Using Lines. In Proc. SPIE 8291, Human Vision          on Meshes via Implicit Surface Fitting. ACM Trans. Graph. 23, 3 (Proc. SIGGRAPH
+    and Electronic Imaging XVII. Article 829116, 16 pages. doi:10.1117/12.916463              2004) (Aug. 2004), 609–612. doi:10.1145/1015706.1015768
+Doug DeCarlo, Adam Finkelstein, and Szymon Rusinkiewicz. 2004. Interactive Render-        Michael Oren and Shree K. Nayar. 1994. Generalization of Lambert’s Reflectance Model.
+    ing of Suggestive Contours with Temporal Coherence. In Proc. NPAR ’04 (Annecy,            In Proc. SIGGRAPH ’94. 239–246. doi:10.1145/192161.192213
+    France). 15–24, 145. doi:10.1145/987657.987661                                        Ulrich Pinkall and Konrad Polthier. 1993. Computing Discrete Minimal Surfaces and
+Doug DeCarlo, Adam Finkelstein, Szymon Rusinkiewicz, and Anthony Santella. 2003.              Their Conjugates. 2, 1 (1993), 15–36. doi:10.1080/10586458.1993.10504266
+    Suggestive Contours for Conveying Shape. ACM Trans. Graph. 22, 3 (Proc. SIG-          Konrad Polthier and Markus Schmies. 1998. Straightest Geodesics on Polyhedral
+    GRAPH 2003) (July 2003), 848–855. doi:10.1145/882262.882354                               Surfaces. In Mathematical Visualization: Algorithms, Applications and Numerics,
+Xi Deng, Miloš Hašan, Nathan Carr, Zexiang Xu, and Steve Marschner. 2021. Path                Hans-Christian Hege and Konrad Polthier (Eds.). Springer Berlin Heidelberg, Berlin,
+    Graphs: Iterative Path Space Filtering. ACM Trans. Graph. 40, 6 (Proc. SIGGRAPH           Heidelberg, 135–150. doi:10.1007/978-3-662-03567-2_11
+    Asia 2021), Article 276 (Dec. 2021), 15 pages. doi:10.1145/3478513.3480547            Emil Praun, Hugues Hoppe, Matthew Webb, and Adam Finkelstein. 2001. Real-Time
+Oliver Deussen, Jörg Hamel, Andreas Raab, Stefan Schlechtweg, and Thomas Strothotte.          Hatching. In Proc. SIGGRAPH ’01. 581–586. doi:10.1145/383259.383328
+    1999. An Illustration Technique Using Hardware-Based Intersections and Skeletons.     Takafumi Saito and Tokiichiro Takahashi. 1990. Comprehensible Rendering of 3-D
+    In Proc. Graphics Interface ’99 (Kingston, Ontario, Canada). 175–182. doi:10.20380/       Shapes. Comput. Graph. 24, 4 (Proc. SIGGRAPH ’90) (Sept. 1990), 197–206. doi:10.
+    GI1999.23                                                                                 1145/97879.97901
+Oliver Deussen and Tobias Isenberg. 2013. Halftoning and Stippling. In Image and          Nicholas Sharp, Yousuf Soliman, and Keenan Crane. 2019. The Vector Heat Method.
+    Video-Based Artistic Stylisation, Paul Rosin and John Collomosse (Eds.). Springer         ACM Trans. Graph. 38, 3, Article 24 (June 2019), 19 pages. doi:10.1145/3243651
+    London, London, 45–61. doi:10.1007/978-1-4471-4519-6_3                                Xiaochun Tong and Toshiya Hachisuka. 2025. Practical Stylized Nonlinear Monte Carlo
+Kohei Doi, Yuki Morimoto, and Reiji Tsuruno. 2021. Global Illumination-Aware Stylised         Rendering. In SIGGRAPH 2025 Conference Papers. Article 84, 11 pages. doi:10.1145/
+    Shading. Computer Graphics Forum 40, 7 (Proc. Pacific Graphics 2021) (Oct. 2021),         3721238.3730686
+    11–20. doi:10.1111/cgf.14397                                                          Kenneth E. Torrance and Ephraim M. Sparrow. 1967. Theory for Off-Specular Reflection
+Iliyan Georgiev, Zackary Misso, Toshiya Hachisuka, Derek Nowrouzezahrai, Jaroslav             from Roughened Surfaces. J. Opt. Soc. Am. 57, 9 (Sept. 1967), 1105–1114. doi:10.
+    Křivánek, and Wojciech Jarosz. 2019. Integral Formulations of Volumetric Trans-           1364/JOSA.57.001105
+    mittance. ACM Trans. Graph. 38, 6 (Proc. SIGGRAPH Asia 2019), Article 154 (Nov.       T. S. Trowbridge and K. P. Reitz. 1975. Average Irregularity Representation of a Rough
+    2019), 17 pages. doi:10.1145/3355089.3356559                                              Surface for Ray Reflection. J. Opt. Soc. Am. 65, 5 (May 1975), 531–536. doi:10.1364/
+Peter Hall. 1999. Nonphotorealistic Rendering by Q-mapping. Computer Graphics                 JOSA.65.000531
+    Forum 18, 1 (March 1999), 27–39. doi:10.1111/1467-8659.00300                          Bruce Walter, Stephen R. Marschner, Hongsong Li, and Kenneth E. Torrance. 2007.
+Aaron Hertzmann. 2020. Why Do Line Drawings Work? A Realism Hypothesis. Per-                  Microfacet Models for Refraction through Rough Surfaces. In Rendering Techniques
+    ception 49, 4 (2020), 439–451. doi:10.1177/0301006620908207                               (Proc. EGSR ’07) (Grenoble, France). 195–206. doi:10.2312/EGWR/EGSR07/195-206
+Aaron Hertzmann. 2021. The Role of Edges in Line Drawing Perception. Perception 50,       Rex West. 2021. Physically-based Feature Line Rendering. ACM Trans. Graph. 40, 6
+    3 (2021), 266–275. doi:10.1177/0301006621994407                                           (Proc. SIGGRAPH Asia 2021), Article 246 (Dec. 2021), 11 pages. doi:10.1145/3478513.
+Aaron Hertzmann and Denis Zorin. 2000. Illustrating Smooth Surfaces. In Proc. SIG-            3480550
+    GRAPH ’00. 517–526. doi:10.1145/344779.345074                                         Rex West, Iliyan Georgiev, and Toshiya Hachisuka. 2022. Marginal Multiple Importance
+Wenzel Jakob and Steve Marschner. 2012. Manifold Exploration: A Markov Chain                  Sampling. In SIGGRAPH Asia 2022 Conference Papers. Article 42, 8 pages. doi:10.
+    Monte Carlo Technique for Rendering Scenes with Difficult Specular Transport.             1145/3550469.3555388
+    ACM Trans. Graph. 31, 4 (Proc. SIGGRAPH 2012), Article 58 (July 2012), 13 pages.      Rex West and Sayan Mukherjee. 2024. Stylized Rendering as a Function of Expectation.
+    doi:10.1145/2185520.2185554                                                               ACM Trans. Graph. 43, 4 (Proc. SIGGRAPH 2024), Article 96 (July 2024), 19 pages.
+Grand Roman Joldes, Habibullah Amin Chowdhury, Adam Wittek, Barry Doyle, and                  doi:10.1145/3658161
+    Karol Miller. 2015. Modified Moving Least Squares with Polynomial Bases for
+    Scattered Data Approximation. Appl. Math. Comput. 266 (2015), 893–902. doi:10.
+    1016/j.amc.2015.05.150
+Tilke Judd, Frédo Durand, and Edward H. Adelson. 2007. Apparent Ridges for Line
+    Drawing. ACM Trans. Graph. 26, 3 (Proc. SIGGRAPH 2007), Article 19 (2007), 7 pages.
+    doi:10.1145/1276377.1276401
+James T. Kajiya. 1986. The Rendering Equation. Comput. Graph. 20, 4 (Proc. SIGGRAPH
+    ’86) (Aug. 1986), 143–150. doi:10.1145/15886.15902
+
+
+                                                                                                    ACM Trans. Graph., Vol. 45, No. 4, Article 138. Publication date: July 2026.
+

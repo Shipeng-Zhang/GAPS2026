@@ -1,0 +1,341 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1800" height="760" viewBox="0 0 1800 760" role="img" aria-labelledby="title desc">
+  <title id="title">Spatial tile and SPP batch decomposition</title>
+  <desc id="desc">A stylized rendered image is split into spatial tiles. One tile is expanded into successive sample batches, processed in parallel by multiple GPUs, and accumulated into a final image.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbfdff"/>
+      <stop offset="1" stop-color="#f3f7fc"/>
+    </linearGradient>
+    <linearGradient id="sceneSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e9f4fb"/>
+      <stop offset="1" stop-color="#f9fbfd"/>
+    </linearGradient>
+    <linearGradient id="sceneGround" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#dce5ee"/>
+    </linearGradient>
+    <linearGradient id="tileHot" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff8f70"/>
+      <stop offset="1" stop-color="#e33d3d"/>
+    </linearGradient>
+    <linearGradient id="gpuA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3979b9"/>
+      <stop offset="1" stop-color="#173f73"/>
+    </linearGradient>
+    <linearGradient id="gpuB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#36a887"/>
+      <stop offset="1" stop-color="#176b5a"/>
+    </linearGradient>
+    <linearGradient id="gpuC" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b6fc2"/>
+      <stop offset="1" stop-color="#51417d"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="170%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#17324e" flood-opacity=".14"/>
+    </filter>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#17324e" flood-opacity=".18"/>
+    </filter>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="hatchA" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(25)">
+      <line x1="0" y1="0" x2="0" y2="9" stroke="#254866" stroke-width="1.4" opacity=".28"/>
+    </pattern>
+    <pattern id="hatchB" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#172f46" stroke-width="1.2" opacity=".20"/>
+    </pattern>
+    <pattern id="noiseDots" width="13" height="13" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="3" r="1.1" fill="#173f73" opacity=".30"/>
+      <circle cx="10" cy="9" r=".8" fill="#da514c" opacity=".25"/>
+    </pattern>
+    <marker id="arrowNavy" markerWidth="13" markerHeight="13" refX="10" refY="6.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L13,6.5 L0,13 Z" fill="#173f73"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="13" markerHeight="13" refX="10" refY="6.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L13,6.5 L0,13 Z" fill="#db4946"/>
+    </marker>
+    <marker id="arrowSmall" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L11,5.5 L0,11 Z" fill="#173f73"/>
+    </marker>
+    <clipPath id="sceneClip"><rect width="450" height="330" rx="20"/></clipPath>
+    <clipPath id="finalClip"><rect width="450" height="330" rx="23"/></clipPath>
+
+    <!-- Compact vector scene reused before and after decomposition. -->
+    <g id="scene">
+      <rect width="450" height="330" fill="url(#sceneSky)"/>
+      <path d="M0 171 L61 113 L103 145 L156 76 L224 151 L278 95 L344 150 L402 104 L450 145 L450 211 L0 211Z" fill="#d6e3ec"/>
+      <path d="M0 180 L68 128 L106 156 L157 92 L222 165 L278 111 L342 166 L402 121 L450 158" fill="none" stroke="#9eafbc" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect y="194" width="450" height="136" fill="url(#sceneGround)"/>
+      <path d="M0 228 C93 204 171 221 241 206 C323 188 376 201 450 178 L450 330 L0 330Z" fill="#eef3f7"/>
+      <!-- building -->
+      <path d="M195 110 H347 L382 148 V250 H181 V148Z" fill="#dfe7ed" stroke="#36516a" stroke-width="5"/>
+      <path d="M171 150 L268 83 L393 151" fill="none" stroke="#27445e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="281" y="166" width="52" height="84" rx="3" fill="#aebdca" stroke="#36516a" stroke-width="4"/>
+      <rect x="209" y="166" width="45" height="40" rx="3" fill="#eff5f8" stroke="#36516a" stroke-width="4"/>
+      <path d="M231 166 V206 M209 186 H254" stroke="#7890a4" stroke-width="3"/>
+      <path d="M181 148 H382" stroke="url(#hatchA)" stroke-width="19" opacity=".6"/>
+      <!-- left car -->
+      <path d="M18 238 L46 198 Q59 181 88 181 H143 Q167 182 185 208 L211 235 L222 270 H13Z" fill="#8299aa" stroke="#203b53" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M56 200 Q64 189 90 189 H135 Q150 190 164 211 H48Z" fill="#e8f3f7" stroke="#203b53" stroke-width="4"/>
+      <path d="M34 238 H205" stroke="#d9e5ec" stroke-width="5"/>
+      <circle cx="61" cy="268" r="28" fill="#eef3f7" stroke="#203b53" stroke-width="7"/>
+      <circle cx="177" cy="268" r="28" fill="#eef3f7" stroke="#203b53" stroke-width="7"/>
+      <circle cx="61" cy="268" r="12" fill="#9eb0bd"/>
+      <circle cx="177" cy="268" r="12" fill="#9eb0bd"/>
+      <rect x="19" y="237" width="199" height="20" fill="url(#hatchA)" opacity=".9"/>
+      <!-- robot -->
+      <circle cx="386" cy="171" r="18" fill="#eaf1f5" stroke="#203b53" stroke-width="5"/>
+      <path d="M370 192 L402 191 L413 235 L369 235Z" fill="#a9bac7" stroke="#203b53" stroke-width="5"/>
+      <path d="M371 203 L349 238 M401 202 L423 239 M378 235 L371 287 M405 235 L416 287" fill="none" stroke="#203b53" stroke-width="9" stroke-linecap="round"/>
+      <path d="M366 288 H381 M409 288 H423" stroke="#203b53" stroke-width="8" stroke-linecap="round"/>
+      <path d="M371 192 L402 191 L413 235 L369 235Z" fill="url(#hatchB)"/>
+      <!-- reflection -->
+      <path d="M249 287 C290 269 347 275 406 297 C370 316 302 321 255 307Z" fill="#9baeba" opacity=".35"/>
+      <path d="M266 294 C307 279 351 286 390 301" fill="none" stroke="#6d8495" stroke-width="3" opacity=".55"/>
+    </g>
+
+    <!-- GPU icon, intentionally pictographic. -->
+    <g id="gpuIcon">
+      <rect x="0" y="0" width="110" height="76" rx="14" fill="currentColor"/>
+      <rect x="13" y="13" width="84" height="50" rx="10" fill="#fff" opacity=".12"/>
+      <circle cx="55" cy="38" r="21" fill="none" stroke="#fff" stroke-width="5" opacity=".95"/>
+      <circle cx="55" cy="38" r="6" fill="#fff"/>
+      <path d="M55 17 C66 20 71 27 72 37 M76 39 C73 50 66 56 56 58 M53 59 C42 56 36 50 34 40 M34 36 C37 27 44 20 52 18" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+      <path d="M18 76 V85 M35 76 V85 M52 76 V85 M69 76 V85 M86 76 V85" stroke="currentColor" stroke-width="5"/>
+    </g>
+  </defs>
+
+  <rect width="1800" height="760" rx="34" fill="url(#paper)"/>
+
+  <!-- Stage markers are pure pictograms: grid, sample stack, convergence. -->
+  <g fill="none" stroke="#b9c8d5" stroke-width="3">
+    <path d="M317 91 H898"/>
+    <path d="M1102 91 H1583"/>
+  </g>
+  <g>
+    <g transform="translate(278 91)">
+      <circle r="24" fill="#173f73"/>
+      <path d="M-12-12H12V12H-12Z M0-12V12 M-12 0H12" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g transform="translate(958 91)">
+      <circle r="24" fill="#db4946"/>
+      <path d="M-13-5L0-12 13-5 0 2Z M-13 2L0 9 13 2 M-13 9L0 16 13 9" fill="none" stroke="#fff" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g transform="translate(1643 91)">
+      <circle r="24" fill="#237d68"/>
+      <path d="M-13-10L0-3 13-10 M-13 0L0 7 13 0 M0-3V15" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M-6 10L0 16 8 7" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <!-- LEFT: full image, cut into spatial tiles. -->
+  <g filter="url(#shadow)">
+    <rect x="65" y="163" width="476" height="356" rx="29" fill="#fff"/>
+    <g clip-path="url(#sceneClip)" transform="translate(78 176)">
+      <use href="#scene" xlink:href="#scene"/>
+      <rect width="450" height="330" fill="url(#noiseDots)" opacity=".22"/>
+      <!-- 3 x 2 spatial partition -->
+      <path d="M150 0V330 M300 0V330 M0 165H450" stroke="#fff" stroke-width="8" opacity=".94"/>
+      <path d="M150 0V330 M300 0V330 M0 165H450" stroke="#173f73" stroke-width="2.2" opacity=".82"/>
+      <!-- active tile -->
+      <rect x="150" y="165" width="150" height="165" fill="#ed5a51" opacity=".19"/>
+      <rect x="155" y="170" width="140" height="155" rx="8" fill="none" stroke="#df4946" stroke-width="9" filter="url(#glow)"/>
+    </g>
+    <rect x="78" y="176" width="450" height="330" rx="20" fill="none" stroke="#173f73" stroke-width="5"/>
+  </g>
+
+  <!-- Tile extraction trajectory. -->
+  <path d="M445 548 C542 599 619 576 671 509" fill="none" stroke="#db4946" stroke-width="8" stroke-linecap="round" marker-end="url(#arrowRed)"/>
+  <g transform="translate(505 553) rotate(10)">
+    <rect width="49" height="49" rx="8" fill="url(#tileHot)" opacity=".24"/>
+    <rect x="6" y="6" width="37" height="37" rx="5" fill="none" stroke="#db4946" stroke-width="5"/>
+  </g>
+
+  <!-- CENTER: the selected tile becomes a stack of SPP batches. -->
+  <g transform="translate(645 154)">
+    <!-- translucent depth rails -->
+    <path d="M73 384 L313 250 M73 384 L313 384 M73 384 L313 518" stroke="#9fb3c5" stroke-width="3" stroke-dasharray="8 10" opacity=".65"/>
+
+    <!-- batch 4, far -->
+    <g transform="translate(230 78)" opacity=".48">
+      <path d="M0 36 L118 0 L188 48 L68 85Z" fill="#e8eef5" stroke="#6d86a0" stroke-width="3"/>
+      <g fill="#173f73">
+        <circle cx="31" cy="39" r="4"/><circle cx="66" cy="30" r="4"/><circle cx="101" cy="21" r="4"/><circle cx="136" cy="30" r="4"/>
+        <circle cx="52" cy="57" r="4"/><circle cx="87" cy="48" r="4"/><circle cx="122" cy="40" r="4"/><circle cx="157" cy="49" r="4"/>
+      </g>
+    </g>
+    <!-- batch 3 -->
+    <g transform="translate(174 163)" opacity=".64">
+      <path d="M0 36 L118 0 L188 48 L68 85Z" fill="#dee9f4" stroke="#4c7093" stroke-width="3"/>
+      <g fill="#2776b5">
+        <circle cx="26" cy="40" r="4.5"/><circle cx="58" cy="31" r="4.5"/><circle cx="92" cy="22" r="4.5"/><circle cx="128" cy="28" r="4.5"/>
+        <circle cx="48" cy="59" r="4.5"/><circle cx="82" cy="50" r="4.5"/><circle cx="116" cy="41" r="4.5"/><circle cx="151" cy="48" r="4.5"/>
+      </g>
+    </g>
+    <!-- batch 2 -->
+    <g transform="translate(118 248)" opacity=".82">
+      <path d="M0 36 L118 0 L188 48 L68 85Z" fill="#d9eee8" stroke="#237d68" stroke-width="4"/>
+      <g fill="#237d68">
+        <circle cx="27" cy="40" r="5"/><circle cx="61" cy="31" r="5"/><circle cx="95" cy="22" r="5"/><circle cx="132" cy="29" r="5"/>
+        <circle cx="48" cy="59" r="5"/><circle cx="83" cy="50" r="5"/><circle cx="118" cy="41" r="5"/><circle cx="154" cy="49" r="5"/>
+      </g>
+    </g>
+    <!-- batch 1, active -->
+    <g transform="translate(62 333)" filter="url(#softShadow)">
+      <path d="M0 36 L118 0 L188 48 L68 85Z" fill="#fff0ed" stroke="#db4946" stroke-width="6"/>
+      <g fill="#db4946">
+        <circle cx="27" cy="40" r="5.5"/><circle cx="61" cy="31" r="5.5"/><circle cx="95" cy="22" r="5.5"/><circle cx="132" cy="29" r="5.5"/>
+        <circle cx="48" cy="59" r="5.5"/><circle cx="83" cy="50" r="5.5"/><circle cx="118" cy="41" r="5.5"/><circle cx="154" cy="49" r="5.5"/>
+      </g>
+      <!-- active rays rising from this batch -->
+      <g stroke="#db4946" stroke-width="3" opacity=".7">
+        <path d="M27 40 L11 -18"/><path d="M61 31 L55 -29"/><path d="M95 22 L103 -38"/><path d="M132 29 L153 -27"/>
+      </g>
+      <g fill="#db4946" opacity=".75"><circle cx="11" cy="-18" r="4"/><circle cx="55" cy="-29" r="4"/><circle cx="103" cy="-38" r="4"/><circle cx="153" cy="-27" r="4"/></g>
+    </g>
+
+    <!-- batch clock / sequential cadence -->
+    <path d="M395 113 C450 174 450 316 395 398" fill="none" stroke="#173f73" stroke-width="6" stroke-linecap="round" marker-end="url(#arrowNavy)"/>
+    <g transform="translate(428 235)">
+      <circle r="38" fill="#fff" stroke="#173f73" stroke-width="5"/>
+      <path d="M0 -21 V0 L16 10" fill="none" stroke="#173f73" stroke-width="5" stroke-linecap="round"/>
+      <circle r="5" fill="#173f73"/>
+    </g>
+  </g>
+
+  <!-- CENTER-RIGHT: dynamic GPU dispatch as three colored lanes. -->
+  <g>
+    <path d="M1078 267 C1143 267 1149 227 1205 227" fill="none" stroke="#3979b9" stroke-width="7" marker-end="url(#arrowNavy)"/>
+    <path d="M1078 353 H1205" fill="none" stroke="#237d68" stroke-width="7" marker-end="url(#arrowNavy)"/>
+    <path d="M1078 439 C1143 439 1149 479 1205 479" fill="none" stroke="#725b9d" stroke-width="7" marker-end="url(#arrowNavy)"/>
+    <g transform="translate(1218 183)" color="#286ca8" filter="url(#softShadow)"><use href="#gpuIcon" xlink:href="#gpuIcon"/></g>
+    <g transform="translate(1218 309)" color="#237d68" filter="url(#softShadow)"><use href="#gpuIcon" xlink:href="#gpuIcon"/></g>
+    <g transform="translate(1218 435)" color="#67518f" filter="url(#softShadow)"><use href="#gpuIcon" xlink:href="#gpuIcon"/></g>
+
+    <!-- small incoming tiles show dynamic work stealing without text -->
+    <g transform="translate(1125 190)"><rect width="28" height="28" rx="5" fill="#dbeaf5" stroke="#3979b9" stroke-width="3"/></g>
+    <g transform="translate(1160 317)"><rect width="28" height="28" rx="5" fill="#dcf0ea" stroke="#237d68" stroke-width="3"/></g>
+    <g transform="translate(1125 453)"><rect width="28" height="28" rx="5" fill="#e8e1f2" stroke="#725b9d" stroke-width="3"/></g>
+  </g>
+
+  <!-- Accumulation funnel. -->
+  <g>
+    <path d="M1337 221 C1400 232 1415 290 1454 318" fill="none" stroke="#3979b9" stroke-width="6" opacity=".8"/>
+    <path d="M1337 347 C1395 347 1415 347 1454 347" fill="none" stroke="#237d68" stroke-width="6" opacity=".8"/>
+    <path d="M1337 473 C1400 462 1415 404 1454 376" fill="none" stroke="#725b9d" stroke-width="6" opacity=".8"/>
+    <circle cx="1454" cy="347" r="31" fill="#fff" stroke="#173f73" stroke-width="5" filter="url(#softShadow)"/>
+    <path d="M1438 347 H1470 M1454 331 V363" stroke="#173f73" stroke-width="6" stroke-linecap="round"/>
+    <path d="M1486 347 H1519" stroke="#173f73" stroke-width="7" marker-end="url(#arrowNavy)"/>
+  </g>
+
+  <!-- RIGHT: reconstructed image with one crisp completed tile and subtle convergence rings. -->
+  <g filter="url(#shadow)">
+    <rect x="1459" y="215" width="296" height="224" rx="24" fill="#fff"/>
+    <g clip-path="url(#finalClip)" transform="translate(1472 228) scale(.6)">
+      <use href="#scene" xlink:href="#scene"/>
+      <rect width="450" height="330" fill="url(#hatchA)" opacity=".16"/>
+    </g>
+    <rect x="1472" y="228" width="270" height="198" rx="14" fill="none" stroke="#237d68" stroke-width="5"/>
+    <path d="M1562 228V426 M1652 228V426 M1472 327H1742" stroke="#fff" stroke-width="3.5" opacity=".65"/>
+  </g>
+
+  <!-- Bottom invariant: the same 32 samples are conserved, partitioned into
+       four equal 8-sample batches, processed sequentially, then accumulated. -->
+  <g transform="translate(88 604)">
+    <rect x="0" y="0" width="1624" height="126" rx="40" fill="#eef3f8"/>
+
+    <!-- All samples: four visually separated groups, 4 x 8 = 32. -->
+    <g transform="translate(28 20)">
+      <rect width="316" height="86" rx="28" fill="#fff" stroke="#b8c7d3" stroke-width="3"/>
+      <g fill="#879aaa">
+        <g transform="translate(20 20)">
+          <circle cx="0" cy="0" r="5.5"/><circle cx="18" cy="0" r="5.5"/><circle cx="36" cy="0" r="5.5"/><circle cx="54" cy="0" r="5.5"/>
+          <circle cx="0" cy="22" r="5.5"/><circle cx="18" cy="22" r="5.5"/><circle cx="36" cy="22" r="5.5"/><circle cx="54" cy="22" r="5.5"/>
+        </g>
+        <g transform="translate(94 20)">
+          <circle cx="0" cy="0" r="5.5"/><circle cx="18" cy="0" r="5.5"/><circle cx="36" cy="0" r="5.5"/><circle cx="54" cy="0" r="5.5"/>
+          <circle cx="0" cy="22" r="5.5"/><circle cx="18" cy="22" r="5.5"/><circle cx="36" cy="22" r="5.5"/><circle cx="54" cy="22" r="5.5"/>
+        </g>
+        <g transform="translate(168 20)">
+          <circle cx="0" cy="0" r="5.5"/><circle cx="18" cy="0" r="5.5"/><circle cx="36" cy="0" r="5.5"/><circle cx="54" cy="0" r="5.5"/>
+          <circle cx="0" cy="22" r="5.5"/><circle cx="18" cy="22" r="5.5"/><circle cx="36" cy="22" r="5.5"/><circle cx="54" cy="22" r="5.5"/>
+        </g>
+        <g transform="translate(242 20)">
+          <circle cx="0" cy="0" r="5.5"/><circle cx="18" cy="0" r="5.5"/><circle cx="36" cy="0" r="5.5"/><circle cx="54" cy="0" r="5.5"/>
+          <circle cx="0" cy="22" r="5.5"/><circle cx="18" cy="22" r="5.5"/><circle cx="36" cy="22" r="5.5"/><circle cx="54" cy="22" r="5.5"/>
+        </g>
+      </g>
+      <!-- four group separators make conservation count immediately visible -->
+      <path d="M84 13V61 M158 13V61 M232 13V61" stroke="#d7e0e7" stroke-width="2" stroke-dasharray="4 5"/>
+      <!-- completeness rail: all four groups belong to one fixed budget -->
+      <path d="M20 68 V73 H296 V68" fill="none" stroke="#879aaa" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <!-- Pure pictographic split operator. -->
+    <path d="M363 63 H398" stroke="#173f73" stroke-width="5" marker-end="url(#arrowSmall)"/>
+    <g transform="translate(425 63)">
+      <circle r="22" fill="#173f73"/>
+      <path d="M-10 0 H-2 M-2 0 L9-11 M-2 0 L9 0 M-2 0 L9 11" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="11" cy="-11" r="3.2" fill="#fff"/><circle cx="11" cy="0" r="3.2" fill="#fff"/><circle cx="11" cy="11" r="3.2" fill="#fff"/>
+    </g>
+    <path d="M450 63 H478" stroke="#173f73" stroke-width="5" marker-end="url(#arrowSmall)"/>
+
+    <!-- Four equal-capacity batches. Every box contains exactly eight samples. -->
+    <g transform="translate(494 26)">
+      <g id="batch8">
+        <rect width="142" height="60" rx="20" fill="#fff" stroke="#db4946" stroke-width="3"/>
+        <g fill="#db4946" transform="translate(25 20)">
+          <circle cx="0" cy="0" r="5.5"/><circle cx="29" cy="0" r="5.5"/><circle cx="58" cy="0" r="5.5"/><circle cx="87" cy="0" r="5.5"/>
+          <circle cx="0" cy="20" r="5.5"/><circle cx="29" cy="20" r="5.5"/><circle cx="58" cy="20" r="5.5"/><circle cx="87" cy="20" r="5.5"/>
+        </g>
+      </g>
+      <use href="#batch8" xlink:href="#batch8" x="162"/>
+      <use href="#batch8" xlink:href="#batch8" x="324"/>
+      <use href="#batch8" xlink:href="#batch8" x="486"/>
+
+      <!-- sequential cadence across batches -->
+      <path d="M144 30 H156 M306 30 H318 M468 30 H480" stroke="#173f73" stroke-width="3.5" marker-end="url(#arrowSmall)"/>
+      <path d="M14 0 C128-24 486-24 614 0" fill="none" stroke="#173f73" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrowSmall)" opacity=".8"/>
+      <g transform="translate(314 -9)">
+        <circle r="17" fill="#fff" stroke="#173f73" stroke-width="3"/>
+        <path d="M0-9V0L7 5" fill="none" stroke="#173f73" stroke-width="3" stroke-linecap="round"/>
+        <circle r="3" fill="#173f73"/>
+      </g>
+
+      <!-- each completed batch contributes to one online accumulation bus -->
+      <path d="M71 60V79 M233 60V79 M395 60V79 M557 60V79 M71 79H623" fill="none" stroke="#7a91a4" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <!-- Online accumulation and conserved final sample budget. -->
+    <path d="M1118 105 H1150" stroke="#7a91a4" stroke-width="4"/>
+    <g transform="translate(1180 84)">
+      <circle r="28" fill="#fff" stroke="#237d68" stroke-width="4" filter="url(#softShadow)"/>
+      <path d="M-11 0H11 M0-11V11" stroke="#237d68" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <path d="M1209 84 H1244" stroke="#237d68" stroke-width="5" marker-end="url(#arrowSmall)"/>
+
+    <!-- Compact final reservoir still contains 32 marks: nothing was removed. -->
+    <g transform="translate(1262 33)">
+      <rect width="146" height="58" rx="20" fill="#fff" stroke="#237d68" stroke-width="3"/>
+      <g fill="#237d68" opacity=".9" transform="translate(17 14)">
+        <g>
+          <circle cx="0" cy="0" r="3.3"/><circle cx="16" cy="0" r="3.3"/><circle cx="32" cy="0" r="3.3"/><circle cx="48" cy="0" r="3.3"/><circle cx="64" cy="0" r="3.3"/><circle cx="80" cy="0" r="3.3"/><circle cx="96" cy="0" r="3.3"/><circle cx="112" cy="0" r="3.3"/>
+          <circle cx="0" cy="10" r="3.3"/><circle cx="16" cy="10" r="3.3"/><circle cx="32" cy="10" r="3.3"/><circle cx="48" cy="10" r="3.3"/><circle cx="64" cy="10" r="3.3"/><circle cx="80" cy="10" r="3.3"/><circle cx="96" cy="10" r="3.3"/><circle cx="112" cy="10" r="3.3"/>
+          <circle cx="0" cy="20" r="3.3"/><circle cx="16" cy="20" r="3.3"/><circle cx="32" cy="20" r="3.3"/><circle cx="48" cy="20" r="3.3"/><circle cx="64" cy="20" r="3.3"/><circle cx="80" cy="20" r="3.3"/><circle cx="96" cy="20" r="3.3"/><circle cx="112" cy="20" r="3.3"/>
+          <circle cx="0" cy="30" r="3.3"/><circle cx="16" cy="30" r="3.3"/><circle cx="32" cy="30" r="3.3"/><circle cx="48" cy="30" r="3.3"/><circle cx="64" cy="30" r="3.3"/><circle cx="80" cy="30" r="3.3"/><circle cx="96" cy="30" r="3.3"/><circle cx="112" cy="30" r="3.3"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- Low peak-memory gauge: bounded residency, not reduced total work. -->
+    <g transform="translate(1466 31)">
+      <path d="M0 48 A48 48 0 0 1 96 48" fill="none" stroke="#cbd6df" stroke-width="13" stroke-linecap="round"/>
+      <path d="M0 48 A48 48 0 0 1 59 2" fill="none" stroke="#237d68" stroke-width="13" stroke-linecap="round"/>
+      <path d="M48 48 L64 16" stroke="#173f73" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="48" cy="48" r="7" fill="#173f73"/>
+      <path d="M25 66 H71" stroke="#237d68" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
