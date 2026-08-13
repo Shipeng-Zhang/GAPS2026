@@ -238,7 +238,7 @@
 	<emitter type="directional" id="emit-Light" name="emit-Light">
 		<!-- A strong key plus weak environment fill reproduces the teaser's
 		     bright foreground without erasing the dark lower car/house planes. -->
-		<rgb value="2.500000 2.500000 2.500000" name="irradiance"/>
+		<rgb value="1.800000 1.800000 1.800000" name="irradiance"/>
 		<!-- Camera-aligned key: the horizontal projection follows the camera's
 		     forward vector so cast shadows recede behind the characters. -->
 		<vector name="direction" x="-0.420000" y="-0.820000" z="-0.390000"/>
@@ -247,7 +247,7 @@
 		<!-- Section 6.3 styles directly visible emission separately. Keep the
 		     transport contribution weak here so occluded/downward-facing planes
 		     remain dark; the visible paper-sky level is restored by that style. -->
-		<rgb value="0.200000 0.200000 0.200000" name="radiance"/>
+		<rgb value="0.140000 0.140000 0.140000" name="radiance"/>
 	</emitter>
 
 <!-- Shapes -->
