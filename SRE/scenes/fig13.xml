@@ -7,6 +7,16 @@
 	<default name="max_depth" value="4"/>
 	<default name="integrator" value="sre_cuda"/>
 	<default name="style_config" value="../configs/f13_tone.json"/>
+	<!-- Transport controls shared by the paper's left/specular and
+	     right/DoF+glossy experiments.  Style presets override these through
+	     metadata.scene_parameters; the defaults preserve the left experiment. -->
+	<default name="focus_distance" value="18.0"/>
+	<default name="aperture_radius" value="0.0"/>
+	<default name="floor_specular_weight" value="0.52"/>
+	<default name="floor_roughness" value="0.042"/>
+	<default name="floor_specular_reflectance" value="0.90, 0.90, 0.90"/>
+	<default name="curved_reflector_material" value="mat-f13-glossy-mirror"/>
+	<default name="curved_reflector_roughness" value="0.010"/>
 
 <!-- Camera and Rendering Parameters -->
 
@@ -24,8 +34,8 @@
 		<float name="near_clip" value="0.100000"/>
 		<float name="far_clip" value="100.000000"/>
 		<!-- Fig. 13's left experiment is purely specular and has no camera DoF. -->
-		<float name="focus_distance" value="18.0"/>
-		<float name="aperture_radius" value="0.0"/>
+		<float name="focus_distance" value="$focus_distance"/>
+		<float name="aperture_radius" value="$aperture_radius"/>
 		<transform name="to_world">
 			<rotate x="1" angle="-163.1564579873814"/>
 			<rotate y="1" angle="-49.28376954117144"/>
@@ -52,15 +62,15 @@
 		     robot reflection in Fig. 13.  The thin lens is focused on the direct
 		     robot, so this blur remains concentrated in reflected paths. -->
 		<bsdf type="blendbsdf">
-			<float name="weight" value="0.52"/>
+			<float name="weight" value="$floor_specular_weight"/>
 			<bsdf type="diffuse">
 				<rgb value="0.80, 0.80, 0.80" name="reflectance"/>
 			</bsdf>
 			<bsdf type="roughconductor">
 				<string name="distribution" value="ggx"/>
-				<float name="alpha" value="0.042"/>
+				<float name="alpha" value="$floor_roughness"/>
 				<string name="material" value="none"/>
-				<rgb value="0.90, 0.90, 0.90" name="specular_reflectance"/>
+				<rgb value="$floor_specular_reflectance" name="specular_reflectance"/>
 			</bsdf>
 		</bsdf>
 	</bsdf>
@@ -92,6 +102,17 @@
 		     those two views, so a one-sided conductor made the reflected side
 		     an artificial solid-black disk. -->
 		<bsdf type="conductor">
+			<string name="material" value="none"/>
+			<rgb name="specular_reflectance" value="0.99, 0.99, 0.99"/>
+		</bsdf>
+	</bsdf>
+	<bsdf type="twosided" id="mat-f13-curved-glossy">
+		<!-- Fig. 13 right experiment: conditionally lift the same sampled GGX
+		     micro-normal through every auxiliary path.  Outer SPP then produces
+		     transport blur while retaining the canonical hatch parameterization. -->
+		<bsdf type="roughconductor">
+			<string name="distribution" value="ggx"/>
+			<float name="alpha" value="$curved_reflector_roughness"/>
 			<string name="material" value="none"/>
 			<rgb name="specular_reflectance" value="0.99, 0.99, 0.99"/>
 		</bsdf>
@@ -351,7 +372,7 @@
 		     the sphere immediately behind the legs in the planar-mirror view. -->
 		<point name="center" value="4.24385, 7.70337, -18.29073"/>
 		<float name="radius" value="11.5825"/>
-		<ref id="mat-f13-glossy-mirror" name="bsdf"/>
+		<ref id="$curved_reflector_material" name="bsdf"/>
 	</shape>
 
 <!-- Volumes -->

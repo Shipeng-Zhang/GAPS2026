@@ -138,3 +138,20 @@ Use `tone_hatch` and `tone_halftone` to consume the reconstructed 2D
 functions remain world-space styles for the original SRE experiments.
 `f13_tone.json` is the Fig. 13 line+hatch preset; `f13_halftone.json` uses the
 same mapping with dots to validate the second tone family.
+# Fig. 13 transport presets
+
+The Fig. 13 scene has two deliberately separate presets:
+
+- `f13_tone.json` reproduces the left experiment: pinhole camera, perfect
+  planar mirror, and perfect curved mirror.
+- `f13_tone_dof_glossy.json` extends that preset for the right experiment:
+  the total tone/line construction is unchanged, while a thin-lens sample and
+  low-roughness GGX transport create depth-of-field and glossy blur.
+
+The right preset keeps the flat mirror ideal, matching the red Fig. 13 inset.
+Its `metadata.scene_parameters` block is the intended ablation surface:
+`aperture_radius` controls DoF, `curved_reflector_roughness` controls the blue
+curved-mirror inset, and `floor_roughness`/`floor_specular_weight` control the
+ground reflection.  The paper does not publish exact scene values for these
+parameters, so the checked-in values are calibrated starting points rather
+than claimed ground-truth constants.

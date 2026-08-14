@@ -137,9 +137,13 @@ def _load_scene(
     # for a shape_id metric caused those rings to disappear when robot 4 was
     # converted to geometric-normal finite differences.
     preserve_shape_ids = False
+    config_data: Mapping[str, Any] = {}
     try:
-        with config_path.open("r", encoding="utf-8") as handle:
-            config_data = json.load(handle)
+        try:
+            from .config import load_config_data
+        except ImportError:
+            from config import load_config_data
+        config_data = load_config_data(config_path)
         preserve_shape_ids = _feature_lines_require_shape_identity(config_data)
     except (OSError, ValueError, TypeError, AttributeError):
         # Configuration loading in the integrator remains authoritative and
@@ -153,6 +157,29 @@ def _load_scene(
         "res": str(resolution),
         "max_depth": str(max_depth),
     }
+    metadata = config_data.get("metadata", {})
+    scene_parameters = (
+        metadata.get("scene_parameters", {})
+        if isinstance(metadata, Mapping)
+        else {}
+    )
+    if not isinstance(scene_parameters, Mapping):
+        raise ValueError("metadata.scene_parameters must be an object")
+    reserved = set(substitutions)
+    overlap = reserved.intersection(str(key) for key in scene_parameters)
+    if overlap:
+        raise ValueError(
+            "metadata.scene_parameters cannot override renderer substitutions: "
+            f"{sorted(overlap)}"
+        )
+    for key, value in scene_parameters.items():
+        if not isinstance(key, str) or not key:
+            raise ValueError("scene parameter names must be non-empty strings")
+        if not isinstance(value, (str, int, float, bool)):
+            raise ValueError(
+                f"scene parameter '{key}' must be a scalar, got {type(value).__name__}"
+            )
+        substitutions[key] = str(value).lower() if isinstance(value, bool) else str(value)
     scene_text = scene_path.read_text(encoding="utf-8")
     needs_windows_asset_aliases = os.name == "nt" and "\ufffd" in scene_text
     if (
@@ -277,8 +304,7 @@ def _config_mse_reference(
 ) -> Path | None:
     if override is not None:
         return override.resolve()
-    with config_path.open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
+    data = _resolved_config_data(config_path)
     metadata = data.get("metadata", {})
     if not isinstance(metadata, Mapping):
         return None
@@ -293,8 +319,7 @@ def _config_mse_reference(
 
 def _requires_bounded_cuda_wavefront(config_path: Path) -> bool:
     """Whether disabling spatial streaming is unsafe for this style config."""
-    with config_path.open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
+    data = _resolved_config_data(config_path)
     if bool(data.get("feature_lines", {}).get("enabled", False)):
         return True
     if bool(data.get("tone_mapping", {}).get("enabled", False)):
@@ -310,8 +335,7 @@ def _requires_bounded_cuda_wavefront(config_path: Path) -> bool:
 
 def _recommended_cuda_wavefront(config_path: Path) -> int:
     """Select a throughput-oriented budget without unbounding recursive DAGs."""
-    with config_path.open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
+    data = _resolved_config_data(config_path)
     configured_budget = data.get("metadata", {}).get(
         "cuda_max_wavefront_size"
     )
@@ -355,8 +379,7 @@ def _recommended_cuda_wavefront(config_path: Path) -> int:
 
 def _recommended_spp_per_pass(config_path: Path, spp: int) -> int:
     """Select a throughput pass width without applying it to recursive tone."""
-    with config_path.open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
+    data = _resolved_config_data(config_path)
     bindings = [
         data.get("default", {}),
         *data.get("materials", {}).values(),
@@ -368,6 +391,15 @@ def _recommended_spp_per_pass(config_path: Path, spp: int) -> int:
         and not any(_binding_is_recursive_heavy(binding) for binding in bindings)
     )
     return min(int(spp), 32 if feature_only else 16)
+
+
+def _resolved_config_data(config_path: Path) -> dict[str, Any]:
+    """Read the effective config used by the integrator and render helpers."""
+    try:
+        from .config import load_config_data
+    except ImportError:
+        from config import load_config_data
+    return load_config_data(config_path)
 
 
 def _binding_is_recursive_heavy(binding: Any) -> bool:

@@ -118,6 +118,12 @@ def test_auto_wavefront_matches_style_complexity():
     assert _recommended_spp_per_pass(
         root / "configs" / "f13_tone.json", 256
     ) == 16
+    assert _recommended_cuda_wavefront(
+        root / "configs" / "f13_tone_dof_glossy.json"
+    ) == DEFAULT_TERMINAL_TONE_MAX_WAVEFRONT_SIZE
+    assert _recommended_spp_per_pass(
+        root / "configs" / "f13_tone_dof_glossy.json", 256
+    ) == 16
 
 
 def test_cli_can_force_single_sample_low_memory_passes():

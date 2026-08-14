@@ -521,8 +521,10 @@ def test_fig13_scene_has_portable_paper_aligned_reflectors() -> None:
     assert '<point name="center" value="4.24385, 7.70337, -18.29073"/>' in scene
     assert '<float name="radius" value="11.5825"/>' in scene
     assert '<float name="fov" value="79.0"/>' in scene
-    assert '<float name="focus_distance" value="18.0"/>' in scene
-    assert '<float name="aperture_radius" value="0.0"/>' in scene
+    assert '<default name="focus_distance" value="18.0"/>' in scene
+    assert '<default name="aperture_radius" value="0.0"/>' in scene
+    assert '<float name="focus_distance" value="$focus_distance"/>' in scene
+    assert '<float name="aperture_radius" value="$aperture_radius"/>' in scene
     assert 'id="mat-f13-mirror-frame"' in scene
     assert scene.count('id="mesh-f13-planar-frame-') == 4
     assert scene.count('<float name="radius" value="0.075"/>') == 4
@@ -537,3 +539,30 @@ def test_fig13_scene_has_portable_paper_aligned_reflectors() -> None:
         "</shape>", 1
     )[0]
     assert '<transform name="to_world">' not in planar
+
+
+def test_fig13_right_preset_enables_dof_glossy_transport_and_keeps_leg_gaps() -> None:
+    root = Path(__file__).resolve().parents[1]
+    config = load_config(root / "configs" / "f13_tone_dof_glossy.json")
+
+    # The child preset inherits the complete left-hand tone configuration.
+    assert config.tone_mapping.enabled
+    assert config.tone_mapping.anchor_samples == 16
+    assert config.feature_lines.resample_delta_reflections
+    assert config.feature_lines.resample_glossy_reflections
+    assert 0.0 < config.feature_lines.glossy_line_strength < 0.3
+    assert "mat-f13-curved-glossy" in config.materials
+
+    ordinary = config.materials["default-bsdf"].estimator.function
+    floor = config.materials["mat-Material.001"].estimator.function
+    legs = [
+        config.shapes[name].estimator.function
+        for name in ("mesh-Cylinder_011", "mesh-Cylinder_004", "mesh-Cylinder_003")
+    ]
+    assert all(leg.spacing > ordinary.spacing for leg in legs)
+    assert all(
+        leg.activation_thresholds[0] > ordinary.activation_thresholds[0]
+        for leg in legs
+    )
+    assert all(leg.max_coverage < ordinary.max_coverage for leg in legs)
+    assert floor.max_coverage < ordinary.max_coverage

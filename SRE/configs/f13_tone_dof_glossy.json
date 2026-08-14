@@ -1,0 +1,77 @@
+{
+  "extends": "f13_tone.json",
+  "metadata": {
+    "description": "Lifting Lines and Tone Fig. 13 right experiment: thin-lens depth of field plus a smooth low-roughness GGX curved reflector",
+    "paper_alignment": "The flat reflector remains a perfect mirror. The curved reflector and floor use conditionally lifted GGX events, while the thin-lens sample is shared by each auxiliary family; blur is therefore produced by outer-path integration rather than screen-space filtering.",
+    "usage": "python ./sre/render.py --scene ./scenes/fig13.xml --config ./configs/f13_tone_dof_glossy.json --width 1080 --height 786 --spp 128 --spp-per-pass 4 --max-depth 4",
+    "scene_parameters": {
+      "focus_distance": 18.0,
+      "aperture_radius": 0.050,
+      "floor_specular_weight": 0.60,
+      "floor_roughness": 0.030,
+      "floor_specular_reflectance": "0.94, 0.94, 0.94",
+      "curved_reflector_material": "mat-f13-curved-glossy",
+      "curved_reflector_roughness": 0.010
+    }
+  },
+  "feature_lines": {
+    "resample_delta_reflections": true,
+    "resample_glossy_reflections": true,
+    "glossy_line_strength": 0.22,
+    "glossy_line_color": [0.18, 0.18, 0.19]
+  },
+  "materials": {
+    "mat-f13-curved-glossy": {
+      "estimator": "identity"
+    },
+    "mat-Material.001": {
+      "function": {
+        "activation_thresholds": [0.58, 0.84],
+        "family_widths": [0.58, 0.40],
+        "max_coverage": 0.34,
+        "darkness_gamma": 1.02,
+        "edge_softness": 0.38,
+        "max_value": 0.94,
+        "ink": [0.014, 0.014, 0.016]
+      }
+    }
+  },
+  "shapes": {
+    "mesh-Cylinder_011": {
+      "function": {
+        "spacing": 8.8,
+        "activation_thresholds": [0.62, 0.86],
+        "family_widths": [0.52, 0.36],
+        "min_coverage": 0.012,
+        "max_coverage": 0.29,
+        "darkness_gamma": 1.12,
+        "edge_softness": 0.34,
+        "paper": [1.000, 1.000, 0.999]
+      }
+    },
+    "mesh-Cylinder_004": {
+      "function": {
+        "spacing": 8.8,
+        "activation_thresholds": [0.62, 0.86],
+        "family_widths": [0.52, 0.36],
+        "min_coverage": 0.012,
+        "max_coverage": 0.29,
+        "darkness_gamma": 1.12,
+        "edge_softness": 0.34,
+        "paper": [1.000, 1.000, 0.999]
+      }
+    },
+    "mesh-Cylinder_003": {
+      "function": {
+        "spacing": 8.8,
+        "activation_thresholds": [0.62, 0.86],
+        "family_widths": [0.52, 0.36],
+        "min_coverage": 0.012,
+        "max_coverage": 0.29,
+        "darkness_gamma": 1.12,
+        "edge_softness": 0.34,
+        "paper": [1.000, 1.000, 0.999]
+      }
+    }
+  }
+}

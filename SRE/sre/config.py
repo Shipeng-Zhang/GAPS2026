@@ -89,15 +89,62 @@ def _binding(spec: Mapping[str, Any] | None) -> MaterialStyle:
     return MaterialStyle(build_estimator(values), predicate) # 组装成MaterialStyle对象
 
 
+def _deep_merge_config(
+    parent: Mapping[str, Any], child: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Recursively overlay a small scene preset on a complete SRE config.
+
+    Lists intentionally replace their parent value.  In particular, feature
+    line dictionaries are ordered and cannot be merged safely by index.  This
+    keeps the inherited Fig. 13 DoF/glossy preset compact without introducing
+    a second, drifting copy of every tone-hatch material.
+    """
+    merged = dict(parent)
+    for key, value in child.items():
+        if key == "extends":
+            continue
+        inherited = merged.get(key)
+        if isinstance(inherited, Mapping) and isinstance(value, Mapping):
+            merged[key] = _deep_merge_config(inherited, value)
+        else:
+            merged[key] = value
+    return merged
+
+
+def load_config_data(
+    source: str | Path, _stack: tuple[Path, ...] = ()
+) -> dict[str, Any]:
+    """Load JSON plus an optional relative ``extends`` chain.
+
+    ``extends`` is deliberately a file-only convenience: runtime dictionaries
+    remain self-contained and retain their previous validation semantics.
+    """
+    path = Path(source).resolve()
+    if path in _stack:
+        cycle = " -> ".join(str(item) for item in (*_stack, path))
+        raise ValueError(f"Cyclic SRE config inheritance: {cycle}")
+    with path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, Mapping):
+        raise ValueError(f"SRE config root must be an object: {path}")
+    data = dict(data)
+    parent_name = data.get("extends")
+    if parent_name is None:
+        return data
+    if not isinstance(parent_name, str) or not parent_name.strip():
+        raise ValueError("SRE config 'extends' must be a non-empty path string")
+    parent_path = (path.parent / parent_name).resolve()
+    parent = load_config_data(parent_path, (*_stack, path))
+    return _deep_merge_config(parent, data)
+
+
 def load_config(source: str | Path | Mapping[str, Any] | None) -> SREConfig:
     if source is None:
         data: dict[str, Any] = {}
     elif isinstance(source, Mapping):
         data = dict(source)
     else:
-        path = Path(source)
-        with path.open("r", encoding="utf-8") as handle:
-            data = json.load(handle)
+        data = load_config_data(source)
     unknown = set(data) - {
         "default", "materials", "shapes", "metadata", "feature_lines",
         "tone_mapping", "lighting_style",

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
-from sre.config import load_config
+from sre.config import load_config, load_config_data
 from sre.estimators import (
     DirectApplicationEstimator,
     IdentityEstimator,
@@ -38,6 +38,31 @@ def test_material_level_and_first_hit_parameterization():
     repeated = StyleContext(depth=2, material_id="paper", occurrence=2)
     assert isinstance(config.resolve("paper", "shape", active), DirectApplicationEstimator)
     assert isinstance(config.resolve("paper", "shape", repeated), IdentityEstimator)
+
+
+def test_file_config_inheritance_deep_merges_objects_and_replaces_lists(tmp_path):
+    parent = tmp_path / "parent.json"
+    child = tmp_path / "child.json"
+    parent.write_text(
+        '{"metadata":{"mode":"left","nested":{"a":1,"b":2}},'
+        '"feature_lines":{"enabled":true,"auxiliary_samples":4,'
+        '"types":[{"measurement":"depth"}]},'
+        '"default":{"estimator":"identity"}}',
+        encoding="utf-8",
+    )
+    child.write_text(
+        '{"extends":"parent.json","metadata":{"mode":"right",'
+        '"nested":{"b":3}},"feature_lines":{"types":['
+        '{"measurement":"normal"}]}}',
+        encoding="utf-8",
+    )
+
+    data = load_config_data(child)
+
+    assert "extends" not in data
+    assert data["metadata"] == {"mode": "right", "nested": {"a": 1, "b": 3}}
+    assert data["feature_lines"]["auxiliary_samples"] == 4
+    assert data["feature_lines"]["types"] == [{"measurement": "normal"}]
 
 
 def test_cross_hatching_is_object_space_and_brightness_dependent():

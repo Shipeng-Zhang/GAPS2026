@@ -50,7 +50,7 @@
         "stencil_radius": 0.90,
         "comparisons": 16,
         "color": [0.11, 0.11, 0.115],
-        "include_materials": ["mat-f13-glossy-mirror"],
+        "include_materials": ["mat-f13-glossy-mirror", "mat-f13-curved-glossy"],
         "min_depth": 0,
         "max_depth": 0
       },
